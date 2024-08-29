@@ -10,7 +10,7 @@ local door = component.os_doorcontroller
 function pong(address, from, port, distance, message)
     if message == "ping" then
         print("ping")
-        m.send(from, mainport, "pong")
+        m.send(from, port, "pong")
         print("pong")
     end
 end
