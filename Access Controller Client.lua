@@ -5,7 +5,7 @@ local component = require("component")
 local event = require("event")
 local m = component.modem
 local words = {}
-local mainport = 1 --Change to change port, also change top comment
+global mainport = 1 --Change to change port, also change top comment
 local door = component.os_doorcontroller
 function pong(address, from, port, distance, message)
     if message == "ping" then
