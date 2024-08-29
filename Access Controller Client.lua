@@ -7,7 +7,7 @@ local m = component.modem
 local words = {}
 local mainport = 1 --Change to change port, also change top comment
 local door = component.os_doorcontroller
-function pong(address, from, port, distance, message)
+function pong(_, address, from, port, distance, message)
     if message == "ping" then
         print("ping")
         m.send(from, port, "pong")
