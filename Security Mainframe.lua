@@ -18,12 +18,22 @@ Function AlarmManager(lockdown)
         m.broadcast(mainport, ALLCLEAR)
     end
 end
+Function DoorManager(from, card)
+    for h, j in pairs(Cards) do
+        if card == j then
+            m.send(router, mainport, tostring(from) .. " mainframe authorized")
+        elseif card ~= j and h == #Cards then
+            m.send(router, mainport, tostring(from) .. " mainframe denied"
+        end
+    end
+end
 Function RequestManager(requestType,from,data)
     if requestType == "open" then
-        
+        DoorManager(from,data)
     end
 end
 Function MainFunc(receiver, sender, port, dist, message)
+    os.sleep(0.06)
     words = {}
     print("Got a message from " .. from .. " on port " .. port .. ":" .. tostring(message))
     if message == ALARM or message == LOCKDOWN then
@@ -37,34 +47,10 @@ Function MainFunc(receiver, sender, port, dist, message)
         if k == 2 then
             from = v
         elseif k == 3 and v == "openrequest" then
-            
+            requestType == "openDoor"
         elseif k == 4 and requestType == "openDoor" then
             RequestManager("open",from,v)
-            for h, j in pairs(Cards) do
-                if v == j then
-                    m.send(router, 1, tostring(from) .. " mainframe authorized")
-                end
-            end
         end
-        os.sleep(0.06)
     end
 end
 event.listen("modem_message", MainFunc)
-while true do
-    os.sleep(0.06)
-    for k, v in pairs(words) do --looks through words
-        print(k, v)
-        if k == 2 then
-            from = v
-        elseif k == 3 and v == "openrequest" then
-            requestType = "openDoor"
-        elseif k == 4 and requestType == "openDoor" then
-            for h, j in pairs(Cards) do
-                if v == j then
-                    m.send(router, 1, tostring(from) .. " mainframe authorized")
-                end
-            end
-        end
-        os.sleep(0.06)
-    end
-end
