@@ -3,7 +3,7 @@ local event = require("event")
 local m = component.modem
 local words = {}
 local mainport = 1 --Change to change port, also change top comment
-local pongs = {"a21d01d1-fefa-4bf5-8af9-77850f43f60c"}
+local pongs = {"a21d01d1-fefa-4bf5-8af9-77850f43f60c"} --update list to be list of everything to ping
 m.open(mainport)
 print(m.isOpen(mainport))
 local router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
@@ -13,7 +13,7 @@ print("mainframe = ", mainframe)
 local countervalue = 0
 function mainfunction(_, _, from, port, _, message)
     if message == "pong" then
-        countervalue = countervalue + 1
+        countervalue += 1
     end
 end
 event.listen("modem_message", mainfunction)
@@ -24,7 +24,7 @@ while true do
         m.send(v, mainport, "ping")
     end
     os.sleep(20)
-    if countervalue ~= 1 then --change to amount of items in pongs
+    if countervalue ~= #pongs then
         m.send(mainframe, mainport, "LOCKDOWN")
     end
 end
