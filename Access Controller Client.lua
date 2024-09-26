@@ -7,22 +7,18 @@ local m = component.modem
 local words = {}
 local mainport = 1 --Change to change port, also change top comment
 local door = component.os_doorcontroller
-function pong(_, address, from, port, distance, message)
+function pong(receiver, address, from, port, distance, message)
     if message == "ping" then
         print("ping")
         m.send(from, port, "pong")
         print("pong")
     end
 end
-function stop()
-    os.exit() 
-end
 m.open(mainport)
 print(m.isOpen(mainport))
 local router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
 print("router = ", router)
 event.listen("modem_message", pong())
-event.listen("interrupted", stop())
 while true do
     local eventName, address, playerName, cardData, cardUniqueId, isCardLocked, side = event.pull("magData") --takes data from magreader
     m.send(router, mainport, "mainframe ACS1 openrequest " .. tostring(cardData))
