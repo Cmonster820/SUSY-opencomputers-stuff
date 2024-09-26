@@ -11,6 +11,14 @@ m.open(mainport)
 print(m.isOpen(mainport))
 local router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
 print("router = ", router)
+Function MainFunc(receiver, sender, port, dist, message)
+    words = {}
+    local requestType = ""
+    for w in string.gmatch(message, "[^ ]+") do --splits the message by word into table words
+        table.insert(words, w)
+    end
+end
+event.listen("modem_message", MainFunc)
 while true do
     local requestType = ""
     words = {}
