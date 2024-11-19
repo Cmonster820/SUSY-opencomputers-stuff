@@ -8,10 +8,11 @@ local words = {}
 local mainport = 1 --Change to change port, also change top comment
 m.open(mainport)
 print(m.isOpen(mainport))
-local mainframe = "5287b40b-8bcb-4bfc-af82-fbd76ce133ed" --change to mainframe modem address
-print("mainframe = ", mainframe)
-local ACS1 = "a21d01d1-fefa-4bf5-8af9-77850f43f60c" --change to Access Controller 1 modem address
-print("Access Controller 1 = ", ACS1)
+local nameList = {mainframe, ACS1} --list of names, parallel with addresses
+local addressList = {"5287b40b-8bcb-4bfc-af82-fbd76ce133ed", "a21d01d1-fefa-4bf5-8af9-77850f43f60c"}
+for k, v in pairs(nameList) do
+    print(k, v, addressList[k])
+end
 while true do
     words = {}
     local _, _, from, port, _, message = event.pull("modem_message")
@@ -23,11 +24,10 @@ while true do
     for k, v in pairs(words) do --looks through words
         print(k, v)
         --routing part:
-        if k == 1 and v == "ACS1" then
-            print(m.send(tostring(ACS1), mainport, tostring(message)))
-        elseif k == 1 and v == "mainframe" then
-            print(m.send(tostring(mainframe), mainport, tostring(message)))
+        for l, b in pairs(namelist) do
+            if b == k then
+                m.send(addressList[l], mainport, message)
+            end
         end
-        os.sleep(0.06)
     end
 end
