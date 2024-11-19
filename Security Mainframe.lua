@@ -23,7 +23,7 @@ Function DoorManager(from, card)
         if card == j then
             m.send(router, mainport, tostring(from) .. " mainframe authorized")
         elseif card ~= j and h == #Cards then
-            m.send(router, mainport, tostring(from) .. " mainframe denied"
+            m.send(router, mainport, tostring(from) .. " mainframe denied")
         end
     end
 end
