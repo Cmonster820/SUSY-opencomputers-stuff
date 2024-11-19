@@ -18,20 +18,23 @@ m.open(mainport)
 print(m.isOpen(mainport))
 local router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
 print("router = ", router)
-event.listen("modem_message", pong())
+event.listen("modem_message", pong)
 while true do
     local eventName, address, playerName, cardData, cardUniqueId, isCardLocked, side = event.pull("magData") --takes data from magreader
     m.send(router, mainport, "mainframe ACS1 openrequest " .. tostring(cardData))
     print("Authorizing")
+    event.ignore("modem_message", pong)
     words = {}
     local _, _, from, port, _, message = event.pull("modem_message")
     os.sleep(0.06)
+    event.listen("modem_message", pong)
     for w in string.gmatch(message, "[^ ]+") do --splits the message by word into table words
         table.insert(words, w)
     end
     print("Got a message from " .. from .. " on port " .. port .. ":" .. tostring(message))
     if message == "ping" then
         pong()
+        goto 28
     end
     for k, v in pairs(words) do --looks through words
         print(k, v)
