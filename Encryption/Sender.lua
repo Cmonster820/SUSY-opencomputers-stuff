@@ -35,14 +35,34 @@ __packet =
 Function RequestrPublic(destination)
   m.send(destination, mainport, tostring(simpledestination) .. " " .. tostring(name) .. " prepare")
 end
-Function sendEncrypted(destination, rPublic)
+Function sendEncrypted(destination, data, rPublic)
+  print("Encrypting [         ]")
   rPublic = serialization.unserialize(rPublic)
+  print("Encrypting [=        ]")
   rPublic = d.deserializeky(rPublic, "ec-public")
+  print("Encrypting [==       ]")
   sPublic, sPrivate = d.generateKeyPair(384)
+  print("Encrypting [===      ]")
   encryptionKey = d.md5(d.ecdh(sPrivate, rPublic))
+  print("Encrypting [====     ]")
   __packet.header.iv = component.data.random(16)
+  print("Encrypting [=====    ]")
   __packet.header.sPublic = sPublic.serialize()
-  
+  print("Encrypting [======   ]")
+  __packet.data = data
+  print("Encrypting [=======  ]")
+  __packet.data = d.encrypt(serialization.serialize(__packet.data), encryptionKey, __packet.header.iv)
+  print("Encrypting [======== ]")
+  __packet.data = tostring(simpledestination) .. " " .. tostring(name) .. " " .. __packet.data .. " " .. tostring(simplesubdestination) .. " " .. tostring(simplefrom)
+  print("Encrypting [=========]")
+  print("Encrypted")
+  print("Sending [  ]")
+  m.send(destination, mainport, simpledestination .. " " .. name .. " " .. serialization.serialize(__packet))
+  rPublic = nil
+  incompletedata = nil
+  simplesubdestination = nil
+  simplefrom = nil
+  packet.header.sPublic = nil
 end
 Function MainFunc(receiver, from, port, dist, message)
   words = {}
@@ -78,10 +98,8 @@ Function MainFunc(receiver, from, port, dist, message)
       simplesubdestination = v
     elseif k == 6 then
       simplesubfrom = v
-    elseif incompletedata ~= nil and simplesubdestination ~= nil and simplefrom ~= nil and rPublic ~= nil then
-      slightlyMoreCompleteData = tostring(simpledestination) .. " " .. tostring(name) .. " " .. tostring(incompletedata) .. " " .. tostring(simplesubdestination) .. " " .. tostring(simplefrom)
-    elseif __packet.data ~= nil and rPublic ~= nil then
-      sendEncrypted(truedestination, rPublic)
+    elseif __packet.data ~= nil and rPublic ~= nil and incompletedata ~= nil then
+      sendEncrypted(truedestination, incompletedata, rPublic)
     end
   end
 end
