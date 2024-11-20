@@ -23,6 +23,7 @@ simplesubfrom = nil
 simpledestination = nil
 simplesubdestination = nil
 storemessagetosend = nil
+messagetopass = nil
 __packet = 
 {
   header =
@@ -38,6 +39,15 @@ Function processTX(receiver, from, port, dist, message)
   for w in string.gmatch(tostring(message), "[^ ]+") do
     table.insert(words, w)
   end
+  for k, v in pairs(words) do
+    if k == 1  then
+      local destination = v
+    elseif k == 2 then
+      local from = v
+    elseif k == 3 then
+      messagetopass = v
+    elseif k == 4 then
+      local subdestination = v
 end
 Function MainFunc(receiver, from, port, dist, message)
   words = {}
