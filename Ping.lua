@@ -1,7 +1,7 @@
-local component = require("component")
-local event = require("event")
+component = require("component")
+event = require("event")
 m = component.modem
-local words = {}
+words = {}
 mainport = 1 --Change to change port, also change top comment
 pongs = {"a21d01d1-fefa-4bf5-8af9-77850f43f60c"} --update list to be list of everything to ping
 m.open(mainport)
@@ -15,6 +15,7 @@ function detectIssues()
     if countervalue ~= #pongs then
        m.send(mainframe, mainport, "LOCKDOWN") 
     end
+    goto 26
 end
 function mainfunction(_, _, from, port, _, message)
     if message == "pong" then
@@ -22,10 +23,9 @@ function mainfunction(_, _, from, port, _, message)
     end
 end
 event.listen("modem_message", mainfunction)
-while true do
-    words = {}
-    for k,v in pairs(pongs) do -- looks through pongs for addresses
-        m.send(v, mainport, "ping")
-    end
-    event.timer(20, detectIssues)
+words = {}
+for k,v in pairs(pongs) do -- looks through pongs for addresses
+    m.send(v, mainport, "ping")
 end
+event.timer(20, detectIssues)
+
