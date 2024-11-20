@@ -10,7 +10,6 @@ d = component.data
 serialization = require("serialization")
 router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9"
 simpledestination = "" --replace with target, may also make something to automatically set this
-simplefrom = "" --replace with device name
 truedestination = ""
 nameList = {} --parallel with addresslist, see router for better explanation maybe I actually dont remember if i put one there
 addressList = {}
@@ -21,7 +20,6 @@ simplesubdestination = nil
 simplesubfrom = nil
 name = "" --name of this node
 incompletedata = nil
-rPrivate = nil --change to result of key pair generation, the same for all senders
 __packet = 
 {
   header =
@@ -35,7 +33,7 @@ __packet =
 Function RequestrPublic(destination)
   m.send(destination, mainport, tostring(simpledestination) .. " " .. tostring(name) .. " prepare")
 end
-Function sendEncrypted(destination, data, rPublic)
+Function sendEncrypted(destination, rPublic)
   print("Encrypting [         ]")
   rPublic = serialization.unserialize(rPublic)
   print("Encrypting [=        ]")
@@ -53,16 +51,24 @@ Function sendEncrypted(destination, data, rPublic)
   print("Encrypting [=======  ]")
   __packet.data = d.encrypt(serialization.serialize(__packet.data), encryptionKey, __packet.header.iv)
   print("Encrypting [======== ]")
-  __packet.data = tostring(simpledestination) .. " " .. tostring(name) .. " " .. __packet.data .. " " .. tostring(simplesubdestination) .. " " .. tostring(simplefrom)
   print("Encrypting [=========]")
   print("Encrypted")
-  print("Sending [  ]")
+  print("Sending [ ]")
   m.send(destination, mainport, simpledestination .. " " .. name .. " " .. serialization.serialize(__packet))
+  print("Sending [=]")
+  print("Sent [=]")
   rPublic = nil
   incompletedata = nil
   simplesubdestination = nil
   simplefrom = nil
-  packet.header.sPublic = nil
+  __packet.header.sPublic = nil
+  __packet.header.iv = nil
+  __packet.data =  nil
+  truedestination = nil
+  simplefrom = nil
+  subdestination = nil
+  storeMessageToSend = nil
+  nextIsrPublic = nil
 end
 Function MainFunc(receiver, from, port, dist, message)
   words = {}
@@ -74,11 +80,11 @@ Function MainFunc(receiver, from, port, dist, message)
     if k == 1 then
       simpledestination = v
     elseif k == 2 then
-      simplefrom = v
+      simplesubfrom = v
     elseif k == 3 and v == "sendEncrypted" then
       storeMessageToSend = 1
       for l, b in pairs(nameList) do
-        if b == simplefrom then
+        if b == simpledestination then
           truedestination = addressList[l]
         end
       end
@@ -98,9 +104,13 @@ Function MainFunc(receiver, from, port, dist, message)
       simplesubdestination = v
     elseif k == 6 then
       simplesubfrom = v
+    elseif __packet.data == nil and rPublic ~= nil and incompletedata ~= nil then
+      __packet.data = tostring(simpledestination) .. " " .. tostring(name) .. " " .. __packet.data .. " " .. tostring(simplesubdestination) .. " " .. tostring(simplesubfrom)
     elseif __packet.data ~= nil and rPublic ~= nil and incompletedata ~= nil then
-      sendEncrypted(truedestination, incompletedata, rPublic)
+      sendEncrypted(truedestination, rPublic)
     end
   end
 end
 event.listen("modem_message", MainFunc)
+event.pull("interrupted")
+event.ignore("modem_message", MainFunc)
