@@ -1,12 +1,12 @@
 --format: [Destination] [From] [Message]
 --PORT: 1
 --Router address: a88bbfe2-7e88-48a6-9c58-a67e48f07ee9 (testing world)
-local component = require("component")
-local event = require("event")
+component = require("component")
+event = require("event")
 m = component.modem
-local words = {}
-local mainport = 1 --Change to change port, also change top comment
-local Cards = {"123"}
+words = {}
+mainport = 1 --Change to change port, also change top comment
+Cards = {"123"}
 m.open(mainport)
 print(m.isOpen(mainport))
 router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
