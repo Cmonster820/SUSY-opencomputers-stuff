@@ -16,11 +16,25 @@ sPublic = nil
 sPrivate = nil
 simplefrom = nil
 Function receiveMessage()
+  event.ignore("modem_message", MainFunc)
   local receiver, from, port, dist, message = event.pull("modem_message")
   words = {}
-  
-  local message = serialization.unserialize(message)
-  
+  for w in string.gmatch(tostring(message), "[^]+") do
+    table.insert(words, w)
+  end
+  for k, v in pairs(words) do
+    if k == 2 then
+      simplefrom = v
+    elseif k == 3 then
+      message = v
+    end
+  end
+  message = serialization.unserialize(message)
+  sPublic = d.deserializeKey(message.header.sPublic,"ec-public")
+  local decryptionKey = d.md5(d.ecdh(rPrivate, sPublic))
+  local data = d.decrypt(message.data, decryptionKey, message.header.iv)
+  local data = serialization.unserialize(data)
+  words = {}
 end
 Function shakeHands(receiver, simplefrom, port, dist, message, from) -- in this case, from is the encrypted message router
   rPublic, rPrivate = component.data.generateKeyPair(384)
