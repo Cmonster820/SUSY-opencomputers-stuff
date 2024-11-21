@@ -33,7 +33,7 @@ Function ProcessRouterCommands(receiver, from, port, dist, message)
   end
   local receiver, secondfrom, port, dist, message = event.pull("modem_message")
   if secondfrom ~= from then
-    goto 36
+    goto 35
   else
     local secondfrom = from
   end
@@ -50,7 +50,7 @@ Function ProcessRouterCommands(receiver, from, port, dist, message)
   io.open("/usr/router/addresses.txt", "a")
   addresses:write("\n" .. tostring(from))
   addresses:close()
-  goto 87
+  goto 88
 end
 Function MainFunc(receiver, from, port, dist, message)
   words = {}
@@ -82,6 +82,7 @@ Function MainFunc(receiver, from, port, dist, message)
       local target = line
     end
   end
+  addresses:close()
   m.send(target, mainport, tostring(simpletarget) .. " " .. tostring(simplefrom) .. " " .. tostring(data))
 end
 event.listen("modem_message", MainFunc)
