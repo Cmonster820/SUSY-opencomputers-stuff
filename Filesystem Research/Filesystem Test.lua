@@ -29,7 +29,7 @@ function ProcessRouterCommands(receiver, from, port, dist, message)
   event.ignore("modem_message", MainFunc)
   end
 end
-function MainFunc(receiver, from, port, dist, message)
+function MainFunc(_, receiver, from, port, dist, message)
   local message = serialization.unserialize(message)
   io.open("/usr/router/names.txt", "r")
   local n = 1
@@ -49,7 +49,7 @@ function MainFunc(receiver, from, port, dist, message)
     end
   end
   addresses:close()
-  m.send(target, mainport, tostring(simpletarget) .. " " .. tostring(simplefrom) .. " " .. tostring(data))
+  m.send(target, mainport, serialization.serialize(message))
 end
 event.listen("modem_message", MainFunc)
 event.pull("interrupted")
