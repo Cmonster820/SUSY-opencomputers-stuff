@@ -85,13 +85,13 @@ Function awaitAndProcessRX(receiver, from, port)
       print("Parsing Message [==== ] - Origin Node In Origin Network Acquired, Reconstructing Message")
     end
   end
-  print("Parsing Message [=====]")
+  print("Parsing Message [=====] - Reconstructing Message")
   print("Message Parsed")
   local message = serialization.unserialize(serializedmessage)
   local from = from .. "/" .. subfrom
-  print("Sending Message [ ]")
+  print("Sending Message [ ] - Message Reconstructed, Sending")
   m.send(router, mainportl, tostring(destination) .. " " .. tostring(from) .. " " .. tostring(message))
-  print("Sending Message [=]")
+  print("Sending Message [=] - Sent")
   print("Message Sent")
   sPublic = nil
   sPrivate = nil
@@ -139,13 +139,13 @@ Function awaitKeyAndEncryptAndSend(destination, subdestination, from, subfrom, p
       rPublic = v
     end
   end
-  print("Encrypting [         ]")
+  print("Encrypting [         ] - Unserializing rPublic")
   rPublic = serialization.unserialize(rPublic)
-  print("Encrypting [=        ]")
+  print("Encrypting [=        ] - rPublic Unserialized, Reconstructing rPublic")
   rPublic = d.deserializekey(rPublic, "ec-public")
-  print("Encrypting [==       ]")
+  print("Encrypting [==       ] - rPublic Reconstructed, Generating sPublic, sPrivate")
   sPublic, sPrivate = d.generateKeyPair(384)
-  print("Encrypting [===      ]")
+  print("Encrypting [===      ] - sPublic, sPrivate Generated, Generating Encryption Key")
   encryptionKey = d.md5(d.ecdh(sPrivate, rPublic))
   print("Encrypting [====     ]")
   __packet.header.iv = d.random(16)
