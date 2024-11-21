@@ -39,7 +39,7 @@ print(m.isOpen(mainport))
 router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
 print("router =", router)
 event.listen("modem_message", pong)
-Function Handshake()
+function Handshake()
     event.ignore("modem_message", pong)
     print("Handshake [     ] - Constructing Packet")
     __packet.routingData.destination = "mainframe"
@@ -59,7 +59,7 @@ Function Handshake()
     print("Handing off to Encryption Processor")
     return rPublic
 end
-Function EncryptAndSendCardData(cardData)
+function EncryptAndSendCardData(cardData)
     rPublic = Handshake()
     print("Picking Up Encryption Process")
     print("Encrypting [      ] - Generating Key Pair")
