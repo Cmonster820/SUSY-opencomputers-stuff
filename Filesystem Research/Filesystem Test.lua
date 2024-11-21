@@ -18,7 +18,8 @@ Function MainFunc(receiver, from, port, dist, message)
   end
   for k, v in pairs(words) do
     if k == 1 and v == "router" then
-      
+      ProcessRouterCommands(receiver, from, port, dist, message)
+    end
 end
 event.listen("modem_message", MainFunc)
 event.pull("interrupted")
