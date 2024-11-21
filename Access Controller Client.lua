@@ -45,7 +45,13 @@ Function Handshake()
     __packet.routingData.destination = "mainframe"
     __packet.data = "prepare"
     print("Handshake [=   ] - Packet Constructed, Sending Packet")
-    serialization.serialzize
+    local packet = serialization.serialize(__packet)
+    m.send(router, mainport, packet)
+    print("Handshake [==  ] - Packet Sent, Awaiting rPublic")
+    local receiver, from, port, dist, message = event.pull("modem_message")
+    print("Handshake [=== ] - rPublic Received, Deserializing")
+    local message = serialization.unserialize(message)
+    
 end
 Function EncryptAndSendCardData(cardData)
     rPublic = Handshake()
