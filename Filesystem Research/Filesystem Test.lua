@@ -10,7 +10,13 @@ m.open(mainport)
 print(m.isOpen(mainport))
 nameList = {mainframe, ACS1} --list of names, parallel with addresses
 addressList = {"5287b40b-8bcb-4bfc-af82-fbd76ce133ed", "a21d01d1-fefa-4bf5-8af9-77850f43f60c"}
-
+if filesystem.exists("/usr/router/") == false then
+  filesystem.makeDirectory("/usr/router/")
+  names = io.open("/usr/router/names.txt", "w")
+  names:close()
+  addresses = io.open("user/router/addresses.txt", "w")
+  addresses:close()
+end
 Function MainFunc(receiver, from, port, dist, message)
   words = {}
   for w in string.gmatch(tostring(message), "[^ ]+") do
