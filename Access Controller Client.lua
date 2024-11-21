@@ -4,6 +4,7 @@
 component = require("component")
 event = require("event")
 m = component.modem
+d = component.data
 words = {}
 mainport = 1 --Change to change port, also change top comment
 door = component.os_doorcontroller
@@ -41,20 +42,26 @@ print("router =", router)
 event.listen("modem_message", pong)
 Function Handshake()
     event.ignore("modem_message", pong)
-    print("Handshake [    ] - Constructing Packet")
+    print("Handshake [     ] - Constructing Packet")
     __packet.routingData.destination = "mainframe"
     __packet.data = "prepare"
-    print("Handshake [=   ] - Packet Constructed, Sending Packet")
+    print("Handshake [=    ] - Packet Constructed, Sending Packet")
     local packet = serialization.serialize(__packet)
     m.send(router, mainport, packet)
-    print("Handshake [==  ] - Packet Sent, Awaiting rPublic")
+    print("Handshake [==   ] - Packet Sent, Awaiting rPublic")
     local receiver, from, port, dist, message = event.pull("modem_message")
-    print("Handshake [=== ] - rPublic Received, Deserializing")
+    print("Handshake [===  ] - Packet Received, Deserializing")
     local message = serialization.unserialize(message)
-    
+    print("Handshake [==== ] - Packet Deserialized, Reconstructing Key Object")
+    local rPublic = d.deserializeKey(message.data,"ec-public")
+    print("Handshake [=====] - Key Object Reconstructed, Handshake Complete")
+    print("Handshake COMPLETE")
+    print("Hands Have Been Shaken")
+    return rPublic
 end
 Function EncryptAndSendCardData(cardData)
     rPublic = Handshake()
+    
 end
 while true do
     local eventName, address, playerName, cardData, cardUniqueId, isCardLocked, side = event.pull("magData") --takes data from magreader
