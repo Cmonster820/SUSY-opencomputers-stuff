@@ -50,37 +50,39 @@ Function awaitAndProcessRX(receiver, from, port)
       local message = v
     end
   end
-  print("Decrypting Message [    ]")
+  print("Decrypting Packet [    ] - Unserializing Packet")
   local message = serialization.unserialize(message)
-  print("Decrypting Message [=   ]")
+  print("Decrypting Packet [=   ] - Message Unserialized, Deserializing Key")
   sPublic = d.deserializeKey(message.header.sPublic,"ec-public")
-  print("Decrypting Message [==  ]")
+  print("Decrypting Packet [==  ] - Key Deserialized, Generating Decryption Key")
   local decryptionKey = d.md5(d.ecdh(rPrivate, sPublic))
-  print("Decrypting Message [=== ]")
+  print("Decrypting Packet [=== ] - Decryption Key Generated, Decrypting Packet")
   message = d.decrypt(message.data, decryptionKey, message.header.iv)
-  print("Decrypting Message [====]")
-  print("Message Decrypted")
-  print("Parsing Message [     ]")
+  print("Decrypting Packet [====] - Packet Decrypted")
+  print("Packet Decrypted")
+  print("Unserializing Routing Data")
   message = serialization.unserialize(message)
+  print("Routing Data Unserialized, Disassembling Data")
   words = {}
   for w in string.gmatch(tostring(message), "[^ ]+") do
     table.insert(words, w)
   end
+  print("Parsing Routing Data [    ] - Data Disassembled, Acquiring Origin Network")
   for k, v in pairs(words) do
     if k == 1 then
       local destination = v
     elseif k == 2 then
       local from = v
-      print("Parsing Message [=   ]")
+      print("Parsing Routing Data [=   ] - Origin Network Acquired, Acquiring Serialized Message")
     elseif k == 3 then
       local serializedmessage = v
-      print("Parsing Message [==  ]")
+      print("Parsing Routing Data [==  ] - Serialized Message Acquired, Acquiring Destination Within Local Network")
     elseif k == 4 then
       local destination = v
-      print("Parsing Message [=== ]")
+      print("Parsing Message [=== ] - Destination Within Local Network Acquired, Acquiring Origin Node In Origin Network")
     elseif k == 5 then
       local subfrom = v
-      print("Parsing Message [==== ]")
+      print("Parsing Message [==== ] - Origin Node In Origin Network Acquired, Reconstructing Message")
     end
   end
   print("Parsing Message [=====]")
@@ -89,11 +91,15 @@ Function awaitAndProcessRX(receiver, from, port)
   local from = from .. "/" .. subfrom
   print("Sending Message [ ]")
   m.send(router, mainportl, tostring(destination) .. " " .. tostring(from) .. " " .. tostring(message))
+  print("Sending Message [=]")
+  print("Message Sent")
   sPublic = nil
   sPrivate = nil
   rPublic = nil
   rPrivate = nil
-  
+  message = nil
+  words = {}
+  goto 209
 end
 Function handshake(receiver, from, port, dist, message)
   event.ignore("modem_message", MainFunc)
@@ -107,7 +113,7 @@ Function handshake(receiver, from, port, dist, message)
     end
   end
   rPublic, rPrivate = component.data.generateKeyPair(384)
-  m.send(encryptedrouter, mainport, tostring(from) .. " " .. tostring(name) .. " rPublic:" .. tostring(rPublic.serialize()))
+  m.send(encryptedrouter, mainport, tostring(from) .. " " .. tostring(name) .. " rPublic: " .. tostring(serialization.serialize(rPublic)))
   awaitAndProcessRX(receiver, from, port)
 end
 Function processRX(receiver, from, port, dist, message)
@@ -119,7 +125,7 @@ end
 Function awaitKeyAndEncryptAndSend(destination, subdestination, from, subfrom, passmessage)
   local receiver, from, port, dist, message = event.pull("modem_message")
   if string.find(message, "rPublic:") == nil then
-    goto 
+    goto 126
   end
   words = {}
   for w in string.gmatch(tostring(message), "[^ ]+") do
@@ -136,13 +142,13 @@ Function awaitKeyAndEncryptAndSend(destination, subdestination, from, subfrom, p
   print("Encrypting [         ]")
   rPublic = serialization.unserialize(rPublic)
   print("Encrypting [=        ]")
-  rPublic = d.deserializeky(rPublic, "ec-public")
+  rPublic = d.deserializekey(rPublic, "ec-public")
   print("Encrypting [==       ]")
   sPublic, sPrivate = d.generateKeyPair(384)
   print("Encrypting [===      ]")
   encryptionKey = d.md5(d.ecdh(sPrivate, rPublic))
   print("Encrypting [====     ]")
-  __packet.header.iv = component.data.random(16)
+  __packet.header.iv = d.random(16)
   print("Encrypting [=====    ]")
   __packet.header.sPublic = sPublic.serialize()
   print("Encrypting [======   ]")
@@ -167,7 +173,7 @@ Function awaitKeyAndEncryptAndSend(destination, subdestination, from, subfrom, p
   sPublic = nil
   sPrivate = nil
   messagetopass = nil
-  goto 
+  goto 209
 end
 Function processTX(receiver, from, port, dist, message)
   event.ignore("modem_message", MainFunc)
