@@ -35,13 +35,22 @@ function ReceiveAndDecrypt()
     local receiver, from, port, distance, message = event.pull("modem_message")
     print("Encrypted Message Received \n Decrypting Message [       ] - Unserializing Packet")
     local message = serialization.unserialize(message)
-    print("Decrypting Message [=      ] - Packet Unserialized, Deserializing sPublic")
+    print("Decrypting Message [=     ] - Packet Unserialized, Deserializing sPublic")
     sPublic = d.deserializeKey(message.data.__encryptedpacket.header.sPublic,"ec-public")
-    print("Decrypting Message [==     ] - sPublic Deserialized, Generating Decryption Key")
+    print("Decrypting Message [==    ] - sPublic Deserialized, Generating Decryption Key")
     local decryptionKey = d.md5(d.ecdh(rPrivate, sPublic))
-    print("Decrypting Message [===    ] - Decryption Key Generated, Decrypting Message")
-    local data = component.data.decrypt(message.data.__encryptedpacket.data, decryptionKey, message.data.__encryptedpacket.header.iv)
-    local message = serialization.unserialize(data)
+    print("Decrypting Message [===   ] - Decryption Key Generated, Decrypting Message")
+    local data = d.decrypt(message.data.__encryptedpacket.data, decryptionKey, message.data.__encryptedpacket.header.iv)
+    print("Decrypting Message [====  ] - Message Decrypted, Unserializing Message")
+    local data = serialization.unserialize(data)
+    print("Decrypting Message [===== ] - Message Unserialized, Extracting Routing Data")
+    local from = message.routingData.from
+    print("Message Decrypted [======]")
+    sPublic = nil
+    sPrivate = nil
+    rPublic = nil
+    rPrivate = nil
+    ProcessMessage(from, data)
 end
 function RespondToHandshake(receiver, from, port, distance, message)
     event.ignore("modem_message", MainFunc)
