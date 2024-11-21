@@ -37,7 +37,59 @@ __packet =
 
   data = nil
 }
+Function awaitAndProcessRX(receiver, from, port)
+  words = {}
+  print("Awaiting Message")
+  local receiver, addressfrom, sourceport, dist, message = event.pull("modem_message")
+  print("Message Received")
+  for w in string.gmatch(tostring(message), "[^ ]+") do
+    table.insert(words, w)
+  end
+  for k, v in pairs(words) do
+    if k == 3 then
+      local message = v
+    end
+  end
+  print("Decrypting Message [    ]")
+  local message = serialization.unserialize(message)
+  print("Decrypting Message [=   ]")
+  sPublic = d.deserializeKey(message.header.sPublic,"ec-public")
+  print("Decrypting Message [==  ]")
+  local decryptionKey = d.md5(d.ecdh(rPrivate, sPublic))
+  print("Decrypting Message [=== ]")
+  message = d.decrypt(message.data, decryptionKey, message.header.iv)
+  print("Decrypting Message [====]")
+  print("Message Decrypted")
+  print("Parsing Message [     ]")
+  message = serialization.unserialize(message)
+  words = {}
+  for w in string.gmatch(tostring(message), "[^ ]+") do
+    table.insert(words, w)
+  end
+  for k, v in pairs(words) do
+    if k == 1 then
+      local destination = v
+    elseif k == 2 then
+      local from = v
+      print("Parsing Message [=   ]")
+    elseif k == 3 then
+      local serializedmessage = v
+      print("Parsing Message [==  ]")
+    elseif k == 4 then
+      local destination = v
+      print("Parsing Message [=== ]")
+    elseif k == 5 then
+      local subfrom = v
+      print("Parsing Message [==== ]")
+    end
+  end
+  print("Parsing Message [=====]")
+  print("Message Parsed")
+  local from = from .. "/" .. subfrom
+  print("Sending Message [ ]")
+end
 Function handshake(receiver, from, port, dist, message)
+  event.ignore("modem_message", MainFunc)
   words = {}
   for w in string.gmatch(tostring(message), "[^ ]+") do
     table.insert(words, w)
@@ -49,6 +101,7 @@ Function handshake(receiver, from, port, dist, message)
   end
   rPublic, rPrivate = component.data.generateKeyPair(384)
   m.send(encryptedrouter, mainport, tostring(from) .. " " .. tostring(name) .. " rPublic:" .. tostring(rPublic.serialize()))
+  awaitAndProcessRX(receiver, from, port)
 end
 Function processRX(receiver, from, port, dist, message)
   words = {}
@@ -56,7 +109,7 @@ Function processRX(receiver, from, port, dist, message)
     table.insert(words, w)
   end
 end
-Function awaitKeyAndEncryptAndSend(destination, subdestination, passfrom, subfrom, passmessage)
+Function awaitKeyAndEncryptAndSend(destination, subdestination, from, subfrom, passmessage)
   local receiver, from, port, dist, message = event.pull("modem_message")
   if string.find(message, "rPublic:") == nil then
     goto 
@@ -86,7 +139,7 @@ Function awaitKeyAndEncryptAndSend(destination, subdestination, passfrom, subfro
   print("Encrypting [=====    ]")
   __packet.header.sPublic = sPublic.serialize()
   print("Encrypting [======   ]")
-  __packet.data = tostring(destination) .. " " .. tostring(passfrom) .. " " .. passmessage .. " " .. tostring(subdestination) .. " " .. tostring(subfrom)
+  __packet.data = tostring(destination) .. " " .. tostring(from) .. " " .. passmessage .. " " .. tostring(subdestination) .. " " .. tostring(subfrom)
   print("Encrypting [=======  ]")
   __packet.data = d.encrypt(serialization.serialize(__packet.data), encryptionKey, __packet.header.iv)
   print("Encrypting [======== ]")
@@ -127,8 +180,10 @@ Function processTX(receiver, from, port, dist, message)
     elseif k == 5 then
       local subfrom = v
     end
-    m.send(encryptedrouter, mainport, tostring(destination) .. " " .. tostring(name) .. " " .. "prepare")
-    awaitKeyAndEncryptAndSend(destination, subdestination, from, subfrom, message)
+  end
+  messagetopass = serialization.serialize(messagetopass)
+  m.send(encryptedrouter, mainport, tostring(destination) .. " " .. tostring(name) .. " " .. "prepare")
+  awaitKeyAndEncryptAndSend(destination, subdestination, name, subfrom, messagetopass)
 end
 Function MainFunc(receiver, from, port, dist, message)
   words = {}
@@ -136,8 +191,6 @@ Function MainFunc(receiver, from, port, dist, message)
     handshake(receiver, from, port, dist, message)
   elseif from == router then
     processTX(receiver, from, port, dist, message)
-  elseif from == encryptedrouter then
-    processRX(receiver, from, port, dist, message)
   end
 end
 event.listen("modem_message", MainFunc)
