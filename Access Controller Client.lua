@@ -1,13 +1,32 @@
 --format: [Destination] [From] [Message]
 --PORT: 1
 --Router address: a88bbfe2-7e88-48a6-9c58-a67e48f07ee9 (testing world)
-local component = require("component")
-local event = require("event")
+component = require("component")
+event = require("event")
 m = component.modem
-local words = {}
-local mainport = 1 --Change to change port, also change top comment
-local door = component.os_doorcontroller
-function pong(receiver, address, from, port, distance, message)
+words = {}
+mainport = 1 --Change to change port, also change top comment
+door = component.os_doorcontroller
+serialization  = require("serialization")
+__packet =
+{
+    routing data =
+    {
+        destination = nil
+        from = name
+    }
+    data = nil
+}
+__encryptedpacket = 
+{
+    header =
+    {
+        iv = nil
+        sPublic = nil
+    }
+    data = nil
+}
+function pong(receiver, from, port, distance, message)
     if message == "ping" then
         print("ping")
         m.send(from, port, "pong")
@@ -25,8 +44,7 @@ while true do
     print("Authorizing")
     event.ignore("modem_message", pong)
     words = {}
-    local _, _, from, port, _, message = event.pull("modem_message")
-    os.sleep(0.06)
+    local receiver, from, port, dist, message = event.pull("modem_message")
     event.listen("modem_message", pong)
     for w in string.gmatch(message, "[^ ]+") do --splits the message by word into table words
         table.insert(words, w)
