@@ -16,7 +16,7 @@ if filesystem.exists("/usr/router/") == false then
   addresses = io.open("user/router/addresses.txt", "a")
   addresses:close()
 end
-Function ProcessRouterCommands(receiver, from, port, dist, message)
+function ProcessRouterCommands(receiver, from, port, dist, message)
   event.ignore("modem_message", MainFunc)
   words = {}
   for w in string.gmatch(tostring(message), "[^ ]+") do
@@ -52,7 +52,7 @@ Function ProcessRouterCommands(receiver, from, port, dist, message)
   addresses:close()
   goto 88
 end
-Function MainFunc(receiver, from, port, dist, message)
+function MainFunc(receiver, from, port, dist, message)
   words = {}
   for w in string.gmatch(tostring(message), "[^ ]+") do
     table.insert(words, w)
