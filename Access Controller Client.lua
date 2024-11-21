@@ -3,7 +3,7 @@
 --Router address: a88bbfe2-7e88-48a6-9c58-a67e48f07ee9 (testing world)
 local component = require("component")
 local event = require("event")
-local m = component.modem
+m = component.modem
 local words = {}
 local mainport = 1 --Change to change port, also change top comment
 local door = component.os_doorcontroller
@@ -16,8 +16,8 @@ function pong(receiver, address, from, port, distance, message)
 end
 m.open(mainport)
 print(m.isOpen(mainport))
-local router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
-print("router = ", router)
+router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
+print("router =", router)
 event.listen("modem_message", pong)
 while true do
     local eventName, address, playerName, cardData, cardUniqueId, isCardLocked, side = event.pull("magData") --takes data from magreader
