@@ -85,8 +85,15 @@ Function awaitAndProcessRX(receiver, from, port)
   end
   print("Parsing Message [=====]")
   print("Message Parsed")
+  local message = serialization.unserialize(serializedmessage)
   local from = from .. "/" .. subfrom
   print("Sending Message [ ]")
+  m.send(router, mainportl, tostring(destination) .. " " .. tostring(from) .. " " .. tostring(message))
+  sPublic = nil
+  sPrivate = nil
+  rPublic = nil
+  rPrivate = nil
+  
 end
 Function handshake(receiver, from, port, dist, message)
   event.ignore("modem_message", MainFunc)
