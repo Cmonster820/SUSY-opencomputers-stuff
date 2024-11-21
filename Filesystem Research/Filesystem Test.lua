@@ -26,6 +26,10 @@ Function MainFunc(receiver, from, port, dist, message)
     if k == 1 and v == "router" then
       ProcessRouterCommands(receiver, from, port, dist, message)
     end
+    if k == 1 then
+      io.open("usr/router/names.txt", "r")
+    end
+  end
 end
 event.listen("modem_message", MainFunc)
 event.pull("interrupted")
