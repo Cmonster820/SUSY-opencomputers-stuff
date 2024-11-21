@@ -8,8 +8,6 @@ words = {}
 mainport = 1 --Change to change port, also change top comment
 m.open(mainport)
 print(m.isOpen(mainport))
-nameList = {mainframe, ACS1} --list of names, parallel with addresses
-addressList = {"5287b40b-8bcb-4bfc-af82-fbd76ce133ed", "a21d01d1-fefa-4bf5-8af9-77850f43f60c"}
 serialization = require("serialization")
 if filesystem.exists("/usr/router/") == false then
   filesystem.makeDirectory("/usr/router/")
@@ -52,7 +50,7 @@ Function ProcessRouterCommands(receiver, from, port, dist, message)
   io.open("/usr/router/addresses.txt", "a")
   addresses:write("\n" .. tostring(from))
   addresses:close()
-  goto 89
+  goto 87
 end
 Function MainFunc(receiver, from, port, dist, message)
   words = {}
