@@ -8,9 +8,10 @@ words = {}
 mainport = 1 --Change to change port, also change top comment
 door = component.os_doorcontroller
 serialization  = require("serialization")
+name = nil --change this to from a file later
 __packet =
 {
-    routing data =
+    routingData =
     {
         destination = nil
         from = name
@@ -38,35 +39,41 @@ print(m.isOpen(mainport))
 router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
 print("router =", router)
 event.listen("modem_message", pong)
+Function Handshake()
+    event.ignore("modem_message", pong)
+    print("Handshake [    ] - Constructing Packet")
+    __packet.routingData.destination = "mainframe"
+    __packet.data = "prepare"
+    print("Handshake [=   ] - Packet Constructed, Sending Packet")
+    serialization.serialzize
+end
+Function EncryptAndSendCardData(cardData)
+    rPublic = Handshake()
+end
 while true do
     local eventName, address, playerName, cardData, cardUniqueId, isCardLocked, side = event.pull("magData") --takes data from magreader
-    m.send(router, mainport, "mainframe ACS1 openrequest " .. tostring(cardData))
+    EncryptAndSendCardData(cardData)
     print("Authorizing")
     event.ignore("modem_message", pong)
     words = {}
     local receiver, from, port, dist, message = event.pull("modem_message")
     event.listen("modem_message", pong)
-    for w in string.gmatch(message, "[^ ]+") do --splits the message by word into table words
-        table.insert(words, w)
-    end
     print("Got a message from " .. from .. " on port " .. port .. ":" .. tostring(message))
     if message == "ping" then
-        pong()
-        goto 28
+        pong(receiver, from, port, distance, message)
+        goto 
     end
-    for k, v in pairs(words) do --looks through words
-        print(k, v)
-        if k == 3 and v == "authorized" then
-            print("Authorized")
-            door.open()
-            print("Door Open")
-            os.sleep(2)
-            door.close()
-            print("Door Closed")
-        elseif k == 3 and v == "denied" then
-            print("Access Denied")
-            door.close()
-        end
+    local message = serialization.unserialize(message)
+    if message.data == "authorized" then
+        print("Authorized")
+        door.open()
+        print("Door Open")
+        os.sleep(2)
+        door.close()
+        print("Door Closed")
+    elseif message.data == "denied" then
+        print("Access Denied")
+        door.close()
     end
 end
 
