@@ -43,7 +43,6 @@ function AddDeviceToNetwork(receiver, from, port, dist, message)
   addresses:close()
 end
 function ProcessRouterCommands(receiver, from, port, dist, message)
-  event.ignore("modem_message", MainFunc)
   if message == "LOCKDOWN" or message == "ALARM" then
     for line in io.lines("/home/router/addresses.txt") do
       m.send(line, mainport, "ALARM")
@@ -75,8 +74,6 @@ function MainFunc(_, receiver, from, port, dist, message)
   addresses:close()
   m.send(target, mainport, serialization.serialize(message))
 end
-::relisten::
 event.listen("modem_message", MainFunc)
-goto relisten
 event.pull("interrupted")
 event.ignore("modem_message", MainFunc)
