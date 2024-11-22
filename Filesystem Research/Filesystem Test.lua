@@ -13,10 +13,10 @@ __packet =
 {
   routingData =
   {
-    from = nil
+    from = nil,
     destination = nil
   }
-  data = nil
+  data = nil,
 }
 if filesystem.exists("/home/router/") == false then
   filesystem.makeDirectory("/home/router/")
