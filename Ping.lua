@@ -12,20 +12,20 @@ mainframe = "5287b40b-8bcb-4bfc-af82-fbd76ce133ed" --change to mainframe modem a
 print("mainframe = ", mainframe)
 countervalue = 0
 function detectIssues()
-    if countervalue ~= #pongs then
-       m.send(mainframe, mainport, "LOCKDOWN") 
-    end
-    goto 26
+  if countervalue ~= #pongs then
+     m.send(mainframe, mainport, "LOCKDOWN") 
+  end
 end
 function mainfunction(_, _, from, port, _, message)
-    if message == "pong" then
-        countervalue += 1
-    end
+  if message == "pong" then
+    countervalue += 1
+  end
 end
 event.listen("modem_message", mainfunction)
 words = {}
 for k,v in pairs(pongs) do -- looks through pongs for addresses
-    m.send(v, mainport, "ping")
+  m.send(v, mainport, "ping")
 end
-event.timer(20, detectIssues)
-
+while true do
+  event.timer(20, detectIssues)
+end
