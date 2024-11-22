@@ -53,6 +53,22 @@ end
 function MainFunc(_, receiver, from, port, dist, message)
   if message == "newtonetwork" then
     AddDeviceToNetwork(receiver, from, port, dist, message)
+  elseif message == "requestmainframe" then
+    local n = 1
+    for line in io.lines("/home/router/names.txt") do
+      local n += 1
+      if line == "mainframe" then
+        local lineinaddresses = n
+      end
+    end
+    local n = 1
+    for line in io.lines("/home/router/addresses.txt") do
+      local n += 1
+      if n == lineinaddresses then
+        m.send(from, port, line)
+      end
+    end
+    local n = 1
   end
   local message = serialization.unserialize(message)
   if message.routingData.from == "router" then
