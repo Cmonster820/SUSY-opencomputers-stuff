@@ -18,9 +18,9 @@ __packet =
   }
   data = nil
 }
-if filesystem.exists("/usr/router/") == false then
-  filesystem.makeDirectory("/usr/router/")
-  names = io.open("/usr/router/names.txt", "a")
+if filesystem.exists("/home/router/") == false then
+  filesystem.makeDirectory("/home/router/")
+  names = io.open("/home/router/names.txt", "a")
   names:close()
   addresses = io.open("user/router/addresses.txt", "a")
   addresses:close()
@@ -31,18 +31,15 @@ function ProcessRouterCommands(receiver, from, port, dist, message)
 end
 function MainFunc(_, receiver, from, port, dist, message)
   local message = serialization.unserialize(message)
-  io.open("/usr/router/names.txt", "r")
   local n = 1
-    for line in io.lines("/usr/router/names.txt") do
+    for line in io.lines("/home/router/names.txt") do
       local n = n+1
       if line == message.routingData.from then
         local lineinaddresses = n
-        names:close()
       end
     end
-  io.open("/usr/router/addresses.txt", "r")
   local n = 1
-  for line in io.lines("/usr/addresses.txt") do
+  for line in io.lines("/home/router/addresses.txt") do
     local n = n+1
     if n == lineinaddresses then
       local target = line
