@@ -48,11 +48,12 @@ function ProcessRouterCommands(receiver, from, port, dist, message)
     for line in io.lines("/home/router/addresses.txt") do
       m.send(line, mainport, "ALARM")
     end
-  elseif message == "newtonetwork" then
-    AddDeviceToNetwork(receiver, from, port, dist, message)
   end
 end
 function MainFunc(_, receiver, from, port, dist, message)
+  if message == "newtonetwork" then
+    AddDeviceToNetwork(receiver, from, port, dist, message)
+  end
   local message = serialization.unserialize(message)
   if message.routingData.from == "router" then
     ProcessRouterCommands(receiver, from, port, dist, message)
