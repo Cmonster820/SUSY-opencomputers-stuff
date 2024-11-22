@@ -27,11 +27,12 @@ if filesystem.exists("/home/router/") == false then
 end
 function AddDeviceToNetwork(receiver, from, port, dist, message)
   m.send(from, port, "send name in 0.25 seconds")
+  ::rereceivename::
   local _, receiver, from, port, dist, message = event.pull("modem_message")
   for line in io.lines("/home/router/names.txt") do
     if message == line then
       m.send(from, port, "name taken")
-      goto 29
+      goto rereceivename
     end
   end
   names = io.open("/home/router/names.txt", "a")
@@ -40,7 +41,7 @@ function AddDeviceToNetwork(receiver, from, port, dist, message)
   addresses = io.open("/home/router/addresses.txt", "a")
   addresses:write(from .. "\n")
   addresses:close()
-  goto 77
+  goto relisten
 end
 function ProcessRouterCommands(receiver, from, port, dist, message)
   event.ignore("modem_message", MainFunc)
@@ -74,6 +75,7 @@ function MainFunc(_, receiver, from, port, dist, message)
   addresses:close()
   m.send(target, mainport, serialization.serialize(message))
 end
+::relisten::
 event.listen("modem_message", MainFunc)
 event.pull("interrupted")
 event.ignore("modem_message", MainFunc)
