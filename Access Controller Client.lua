@@ -13,7 +13,7 @@ m.open(mainport)
 print(m.isOpen(mainport))
 if fs.exists("/home/data.txt") == true then
     local n = 0
-    for line in io.lines("/home/data.txt")
+    for line in io.lines("/home/data.txt") do
         local n = n+1
         if n == 1 then
             router = line
@@ -61,6 +61,11 @@ __encryptedpacket =
     }
     data = nil
 }
+__requestpacket = 
+{
+    type = nil,
+    data = nil
+}
 function pong(_, receiver, from, port, distance, message)
     if message == "ping" then
         print("ping")
@@ -102,7 +107,9 @@ function EncryptAndSendCardData(cardData)
     print("Encrypting [===   ] - Initiation Vector Generated, Storing sPublic to Packet Header")
     __encryptedpacket.header.sPublic = sPublic.serialize()
     print("Encrypting [====  ] - sPublic Stored to Packet Header, Storing cardData to Packet Data")
-    __encryptedpacket.data = cardData
+    __requestpacket.type = "open"
+    __requestpacket.data = tostring(cardData)
+    __encryptedpacket.data = __requestpacket
     print("Encrypting [===== ] - cardData Stored to Packet Data, Serializing and Encrypting Packet Data")
     __encryptedpacket.data = d.encrypt(serialization.serialize(__encryptedpacket.data), encryptionKey, __encryptedpacket.header.iv)
     print("Encrypting [======] - Packet Data Encrypted and Serialized")
@@ -122,6 +129,8 @@ function EncryptAndSendCardData(cardData)
     __encryptedpacket.header.iv = nil
     __encryptedpacket.header.sPublic = nil
     __encryptedpacket.data = nil
+    __requestpacket.type = nil
+    __requestpacket.data = nil
     print("Packets Reset, Resuming Operation")
     event.listen("modem_message", pong)
 end
