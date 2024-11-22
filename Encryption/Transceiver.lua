@@ -1,5 +1,5 @@
 --[[
-DEPRECATED
+DEPRECATED -- I MAY USE THIS BUT IT REALLY SHOULDN'T BE USED UNLESS I PICK THIS BACK UP AND FIX IT
 internetwork encryption transceiver
 all internetwork messages will be serialized
 format: [Destination] [From] [Message or command] [message if 3 command] [subdestination] [subfrom]
