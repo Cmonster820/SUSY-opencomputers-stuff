@@ -28,10 +28,12 @@ if filesystem.exists("/home/router/") == false then
 end
 function AddDeviceToNetwork(receiver, from, port, dist, message)
   m.send(from, port, "send name in 0.25 seconds")
+  ::rereceivename::
   local _, receiver, from, port, dist, message = event.pull("modem_message")
   for line in io.lines("/home/router/names.txt") do
     if message == line then
       m.send(from, port, "name taken")
+      goto rereceivename
     end
   end
   names = io.open("/home/router/names.txt", "a")
