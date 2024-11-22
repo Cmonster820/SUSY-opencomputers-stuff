@@ -1,9 +1,12 @@
---internetwork encryption transceiver
---all internetwork messages will be serialized
---format: [Destination] [From] [Message or command] [message if 3 command] [subdestination] [subfrom]
---PORT: 1 (encrypted messages on 2)
---Router address: a88bbfe2-7e88-48a6-9c58-a67e48f07ee9 (testing world)
---THIS FILE IS INTENDED FOR ROUTING MESSAGES TO NODES OUTSIDE OF A ROUTING NETWORK, THROUGH A LARGER NETWORK, INTO A NODE INSIDE ANOTHER, I WILL MAKE A SEPARATE SET OF FILES (or most likely a tranceiver file) FOR INTRANETWORK ENCRYPTION
+--[[
+DEPRECATED
+internetwork encryption transceiver
+all internetwork messages will be serialized
+format: [Destination] [From] [Message or command] [message if 3 command] [subdestination] [subfrom]
+PORT: 1 (encrypted messages on 2)
+Router address: a88bbfe2-7e88-48a6-9c58-a67e48f07ee9 (testing world)
+THIS FILE IS INTENDED FOR ROUTING MESSAGES TO NODES OUTSIDE OF A ROUTING NETWORK, THROUGH A LARGER NETWORK, INTO A NODE INSIDE ANOTHER, I WILL MAKE A SEPARATE SET OF FILES (or most likely a tranceiver file) FOR INTRANETWORK ENCRYPTION
+]]--
 component = require("component")
 event = require("event")
 m = component.modem
@@ -123,7 +126,7 @@ Function processRX(receiver, from, port, dist, message)
   end
 end
 Function awaitKeyAndEncryptAndSend(destination, subdestination, from, subfrom, passmessage)
-  local receiver, from, port, dist, message = event.pull("modem_message")
+  local _, receiver, from, port, dist, message = event.pull("modem_message")
   if string.find(message, "rPublic:") == nil then
     goto 126
   end
@@ -198,7 +201,7 @@ Function processTX(receiver, from, port, dist, message)
   m.send(encryptedrouter, mainport, tostring(destination) .. " " .. tostring(name) .. " " .. "prepare")
   awaitKeyAndEncryptAndSend(destination, subdestination, name, subfrom, messagetopass)
 end
-Function MainFunc(receiver, from, port, dist, message)
+Function MainFunc(_, receiver, from, port, dist, message)
   words = {}
   if string.find(message, "prepare") ~= nil then
     handshake(receiver, from, port, dist, message)
