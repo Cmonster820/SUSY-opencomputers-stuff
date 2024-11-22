@@ -5,10 +5,43 @@ component = require("component")
 event = require("event")
 m = component.modem
 d = component.data
+fs = require("filesystem")
 mainport = 1 --Change to change port, also change top comment
 door = component.os_doorcontroller
 serialization  = require("serialization")
-name = nil --change this to from a file later
+m.open(mainport)
+print(m.isOpen(mainport))
+if fs.exists("/home/data.txt") == true then
+    local n = 0
+    for line in io.lines("/home/data.txt")
+        local n = n+1
+        if n == 1 then
+            router = line
+        elseif n == 2 then
+            name = line
+        end
+    end
+    local n = 0
+elseif fs.exists("/home/data.txt") == false then
+    datafile = io.open("/home/data.txt", "a")
+    m.broadcast(mainport, "newtonetwork")
+    local _, receiver, from, port, dist, message = event.pull("modem_message")
+    datafile:write(tostring(from))
+    router = from
+    os.sleep(0.25)
+    m.send(router, port, "ACS1")
+    local _, receiver, from, port, dist, message = event.pull("modem_message")
+    if message == "name taken" then
+        local n = 1
+        while message == "name taken" do
+            n = n+1
+            local _, receiver, from, port, dist, message = event.pull("modem_message")
+            name = "ACS" .. tostring(n)
+        end
+    end
+    datafile:write("\n" .. tostring(name))
+    datafile:close()
+end
 __packet =
 {
     routingData =
@@ -27,16 +60,13 @@ __encryptedpacket =
     }
     data = nil
 }
-function pong(receiver, from, port, distance, message)
+function pong(_, receiver, from, port, distance, message)
     if message == "ping" then
         print("ping")
         m.send(from, port, "pong")
         print("pong")
     end
 end
-m.open(mainport)
-print(m.isOpen(mainport))
-router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
 print("router =", router)
 event.listen("modem_message", pong)
 function Handshake()
@@ -48,7 +78,7 @@ function Handshake()
     local packet = serialization.serialize(__packet)
     m.send(router, mainport, packet)
     print("Handshake [==   ] - Packet Sent, Awaiting rPublic")
-    local receiver, from, port, dist, message = event.pull("modem_message")
+    local _, receiver, from, port, dist, message = event.pull("modem_message")
     print("Handshake [===  ] - Packet Received, Deserializing")
     local message = serialization.unserialize(message)
     print("Handshake [==== ] - Packet Deserialized, Reconstructing Key Object")
@@ -99,7 +129,7 @@ while true do
     EncryptAndSendCardData(cardData)
     print("Authorizing")
     event.ignore("modem_message", pong)
-    local receiver, from, port, dist, message = event.pull("modem_message")
+    local _, receiver, from, port, dist, message = event.pull("modem_message")
     event.listen("modem_message", pong)
     print("Got a message from " .. from .. " on port " .. port .. ":" .. tostring(message))
     if message == "ping" then
