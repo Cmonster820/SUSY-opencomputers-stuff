@@ -4,6 +4,7 @@
 component = require("component")
 event = require("event")
 m = component.modem
+filesystem = require("filesystem")
 words = {}
 mainport = 1 --Change to change port, also change top comment
 m.open(mainport)
