@@ -41,7 +41,7 @@ function AddDeviceToNetwork(receiver, from, port, dist, message)
   addresses = io.open("/home/router/addresses.txt", "a")
   addresses:write(from .. "\n")
   addresses:close()
-  goto relisten
+  break
 end
 function ProcessRouterCommands(receiver, from, port, dist, message)
   event.ignore("modem_message", MainFunc)
