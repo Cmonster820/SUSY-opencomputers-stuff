@@ -61,6 +61,37 @@ __encryptedpacket =
     }
     data = nil
 }
+function InitiateHandShake(destination)
+  __packet.routingData.destination = destination
+  __packet.data = "prepare"
+  m.send(router, mainport, serialization.serialize(__packet))
+  local _, receiver, from, port, dist, message = event.pull("modem_message")
+  __packet.data = nil
+  __packet.routingData.destination = nil
+  local message = serialization.unserialize(message)
+  rPublic = message.data
+  return rPublic
+end
+function EncryptAndSendMessage(destination,data) 
+  rPublic = InitiateHandShake(destination)
+  rPublic = d.deserializeKey(rPublic,"ec-public")
+  sPublic, sPrivate = d.generateKeyPair(384)
+  local encryptionKey = d.md5(d.ecdh(sPrivate, rPublic))
+  __packet.__encryptedpacket.header.iv = component.data.random(16)
+  __packet.__encryptedpacket.header.sPublic = sPublic.serialize()
+  __packet.__encryptedpacket.data = data
+  __packet.data = d.encrypt(serialization.serialize(__packet.data), encryptionKey, __packet.header.iv)
+  __packet.routingData.destination = destination
+  m.send(router, mainport, serialization.serialize(__packet))
+  __packet.__encryptedpacket.header.iv = nil
+  __packet.__encryptedpacket.header.sPublic = nil
+  __packet.__encryptedpacket.data = nil
+  __packet.routingData.destination = nil
+  rPublic = nil
+  rPrivate = nil
+  sPublic = nil
+  sPrivate = nil
+end
 function RequestManager(from, data)
   if data.__requestpacket.type == "open" then
   local amtofnot = 0
