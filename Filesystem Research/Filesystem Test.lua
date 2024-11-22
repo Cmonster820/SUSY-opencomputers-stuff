@@ -1,89 +1,96 @@
---format: [Destination] [From] [Message] (Message is serialized- change to format made 11/21/24)
+--format: see __packet
 --PORT: 1
---Router address: a88bbfe2-7e88-48a6-9c58-a67e48f07ee9 (testing world)
+--Router address:  (testing world)
 component = require("component")
 event = require("event")
 m = component.modem
+filesystem = require("filesystem")
 words = {}
 mainport = 1 --Change to change port, also change top comment
 m.open(mainport)
 print(m.isOpen(mainport))
 serialization = require("serialization")
-if filesystem.exists("/usr/router/") == false then
-  filesystem.makeDirectory("/usr/router/")
-  names = io.open("/usr/router/names.txt", "a")
+__packet =
+{
+  routingData =
+  {
+    from = nil,
+    destination = nil
+  },
+  data = nil
+}
+if filesystem.exists("/home/router/") == false then
+  filesystem.makeDirectory("/home/router/")
+  names = io.open("/home/router/names.txt", "a")
   names:close()
   addresses = io.open("user/router/addresses.txt", "a")
   addresses:close()
 end
-Function ProcessRouterCommands(receiver, from, port, dist, message)
-  event.ignore("modem_message", MainFunc)
-  words = {}
-  for w in string.gmatch(tostring(message), "[^ ]+") do
-    table.insert(words, w)
-  end
-  for k, v in pairs(words) do
-    if k == 1 then
-      local target = v
-    elseif k == 2 then
-      local sender = v
-    elseif k == 3 and v == "newtonetwork" then
-      m.send(from, port, "Transmit Name in 1 second") --name will be sent as the entire message part, not serialized, so splitting is not necessary
-    end
-  end
-  local receiver, secondfrom, port, dist, message = event.pull("modem_message")
-  if secondfrom ~= from then
-    goto 35
-  else
-    local secondfrom = from
-  end
-  local name = message
-  for line in io.lines("/usr/router/names.txt") do
-    if line == name then
+function AddDeviceToNetwork(receiver, from, port, dist, message)
+  m.send(from, port, "send name in 0.25 seconds")
+  ::rereceivename::
+  local _, receiver, from, port, dist, message = event.pull("modem_message")
+  for line in io.lines("/home/router/names.txt") do
+    if message == line then
       m.send(from, port, "name taken")
-      goto 36
+      goto rereceivename
     end
   end
-  io.open("/usr/router/names.txt", "a")
-  names:write("\n" .. tostring(name))
+  names = io.open("/home/router/names.txt", "a")
+  names:write(message .. "\n")
   names:close()
-  io.open("/usr/router/addresses.txt", "a")
-  addresses:write("\n" .. tostring(from))
+  addresses = io.open("/home/router/addresses.txt", "a")
+  addresses:write(from .. "\n")
   addresses:close()
-  goto 88
 end
-Function MainFunc(receiver, from, port, dist, message)
-  words = {}
-  for w in string.gmatch(tostring(message), "[^ ]+") do
-    table.insert(words, w)
+function ProcessRouterCommands(receiver, from, port, dist, message)
+  if message == "LOCKDOWN" or message == "ALARM" then
+    for line in io.lines("/home/router/addresses.txt") do
+      m.send(line, mainport, "ALARM")
+    end
   end
-  for k, v in pairs(words) do
-    if k == 1 and v == "router" then
-      ProcessRouterCommands(receiver, from, port, dist, message)
-    end
-    if k == 1 then
-      local simpletarget = v
-      for line in io.lines("/usr/names.txt") do
-        if line == v then
-          local lineinaddresses = k
-          names:close()
-        end
+end
+function MainFunc(_, receiver, from, port, dist, message)
+  if message == "newtonetwork" then
+    AddDeviceToNetwork(receiver, from, port, dist, message)
+  elseif message == "requestmainframe" then
+    local n = 1
+    for line in io.lines("/home/router/names.txt") do
+      local n += 1
+      if line == "mainframe" then
+        local lineinaddresses = n
       end
-    elseif k == 2 then
-      local simplefrom = v
-    elseif k == 3 then
-      local data = v
     end
+    local n = 1
+    for line in io.lines("/home/router/addresses.txt") do
+      local n += 1
+      if n == lineinaddresses then
+        m.send(from, port, line)
+      end
+    end
+    local n = 1
+  end
+  local message = serialization.unserialize(message)
+  if message.routingData.from == "router" then
+    ProcessRouterCommands(receiver, from, port, dist, message)
+    return nil
   end
   local n = 1
-  for line in io.lines("/usr/addresses.txt") do
+    for line in io.lines("/home/router/names.txt") do
+      local n = n+1
+      if line == message.routingData.from then
+        local lineinaddresses = n
+      end
+    end
+  local n = 1
+  for line in io.lines("/home/router/addresses.txt") do
     local n = n+1
     if n == lineinaddresses then
       local target = line
     end
   end
   addresses:close()
-  m.send(target, mainport, tostring(simpletarget) .. " " .. tostring(simplefrom) .. " " .. tostring(data))
+  m.send(target, mainport, serialization.serialize(message))
 end
 event.listen("modem_message", MainFunc)
 event.pull("interrupted")
