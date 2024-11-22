@@ -62,17 +62,17 @@ __encryptedpacket =
     data = nil
 }
 function RequestManager(from, data)
-  if data.requestpacket.type == "open" then
+  if data.__requestpacket.type == "open" then
   local amtofnot = 0
   for k, v in pairs(cards) do
-    if data.requestpacket.data == v then
+    if data.__requestpacket.data == v then
       __packet.routingData.destination = from
       __packet.data = "authorized"
       m.send(router, mainport, serialization.serialize(__packet))
       __packet.routingData.destination = nil
       __packet.data = nil
       break
-    elseif data.requestpacket.data ~= v then
+    elseif data.__requestpacket.data ~= v then
       local amtofnot = amtofnot + 1
     elseif amtofnot == #cards then
       __packet.routingData.destination = from
@@ -84,7 +84,7 @@ function RequestManager(from, data)
   end
 end
 function ProcessMessage(from, data)
-  if data.requestpacket ~= nil then
+  if data.__requestpacket ~= nil then
     RequestManager(from, data)
   end
 end
