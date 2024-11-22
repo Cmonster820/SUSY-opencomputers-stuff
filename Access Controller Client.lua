@@ -37,6 +37,7 @@ elseif fs.exists("/home/data.txt") == false then
             n = n+1
             local _, receiver, from, port, dist, message = event.pull("modem_message")
             name = "ACS" .. tostring(n)
+            m.send(router, mainport, name)
         end
     end
     datafile:write("\n" .. tostring(name))
