@@ -8,11 +8,41 @@ d = component.data
 mainport = 1 --Change to change port, also change top comment
 door = component.os_doorcontroller
 serialization  = require("serialization")
-name = nil --change this to from a file later
+name = "mainframe"
 sPublic = nil
 sPrivate = nil
 rPublic = nil
 rPrivate = nil
+cards = {"123"}
+m.open(mainport)
+print(m.isOpen(mainport))
+if fs.exists("/home/data.txt") == true then
+  local n = 0
+  for line in io.lines("/home/data.txt") do
+    local n = n+1
+    if n == 1 then
+      router = line
+    elseif n == 2 then
+      name = line
+    end
+  end
+  local n = 0
+elseif fs.exists("/home/data.txt") == false then
+  datafile = io.open("/home/data.txt", "a")
+  m.broadcast(mainport, "newtonetwork")
+  local _, receiver, from, port, dist, message = event.pull("modem_message")
+  datafile:write(tostring(from))
+  router = from
+  os.sleep(0.25)
+  m.send(router, port, "mainframe")
+  local _, receiver, from, port, dist, message = event.pull("modem_message")
+  if message == "name taken" then
+    io.stderr:write("Name Taken, Exiting")
+    os.exit()
+  end
+  datafile:write("\n" .. tostring(name))
+  datafile:close()
+end
 __packet =
 {
     routingData =
@@ -31,52 +61,78 @@ __encryptedpacket =
     }
     data = nil
 }
+function RequestManager(from, data)
+  if data.requestpacket.type == "open" then
+  local amtofnot = 0
+  for k, v in pairs(cards) do
+    if data.requestpacket.data == v then
+      __packet.routingData.destination = from
+      __packet.data = "authorized"
+      m.send(router, mainport, serialization.serialize(__packet))
+      __packet.routingData.destination = nil
+      __packet.data = nil
+      break
+    elseif data.requestpacket.data ~= v then
+      local amtofnot = amtofnot + 1
+    elseif amtofnot == #cards then
+      __packet.routingData.destination = from
+      __packet.data = "denied"
+      m.send(router, mainport, serialization.serialize(__packet))
+      __packet.data = nil
+      __packet.routingData.destination = nil
+    end
+  end
+end
+function ProcessMessage(from, data)
+  if data.requestpacket ~= nil then
+    RequestManager(from, data)
+  end
+end
 function ReceiveAndDecrypt()
-    local receiver, from, port, distance, message = event.pull("modem_message")
-    print("Encrypted Message Received \n Decrypting Message [       ] - Unserializing Packet")
-    local message = serialization.unserialize(message)
-    print("Decrypting Message [=     ] - Packet Unserialized, Deserializing sPublic")
-    sPublic = d.deserializeKey(message.data.__encryptedpacket.header.sPublic,"ec-public")
-    print("Decrypting Message [==    ] - sPublic Deserialized, Generating Decryption Key")
-    local decryptionKey = d.md5(d.ecdh(rPrivate, sPublic))
-    print("Decrypting Message [===   ] - Decryption Key Generated, Decrypting Message")
-    local data = d.decrypt(message.data.__encryptedpacket.data, decryptionKey, message.data.__encryptedpacket.header.iv)
-    print("Decrypting Message [====  ] - Message Decrypted, Unserializing Message")
-    local data = serialization.unserialize(data)
-    print("Decrypting Message [===== ] - Message Unserialized, Extracting Routing Data")
-    local from = message.routingData.from
-    print("Message Decrypted [======]")
-    sPublic = nil
-    sPrivate = nil
-    rPublic = nil
-    rPrivate = nil
-    ProcessMessage(from, data)
+  local receiver, from, port, distance, message = event.pull("modem_message")
+  print("Encrypted Message Received \n Decrypting Message [       ] - Unserializing Packet")
+  local message = serialization.unserialize(message)
+  print("Decrypting Message [=     ] - Packet Unserialized, Deserializing sPublic")
+  sPublic = d.deserializeKey(message.data.__encryptedpacket.header.sPublic,"ec-public")
+  print("Decrypting Message [==    ] - sPublic Deserialized, Generating Decryption Key")
+  local decryptionKey = d.md5(d.ecdh(rPrivate, sPublic))
+  print("Decrypting Message [===   ] - Decryption Key Generated, Decrypting Message")
+  local data = d.decrypt(message.data.__encryptedpacket.data, decryptionKey, message.data.__encryptedpacket.header.iv)
+  print("Decrypting Message [====  ] - Message Decrypted, Unserializing Message")
+  local data = serialization.unserialize(data)
+  print("Decrypting Message [===== ] - Message Unserialized, Extracting Routing Data")
+  local from = message.routingData.from
+  print("Message Decrypted [======]")
+  sPublic = nil
+  sPrivate = nil
+  rPublic = nil
+  rPrivate = nil
+  ProcessMessage(from, data)
 end
 function RespondToHandshake(receiver, from, port, distance, message)
-    event.ignore("modem_message", MainFunc)
-    print("Responding to Handshake [    ] - Storing Routing Data")
-    __packet.routingData.destination = message.routingData.from
-    print("Responding to Handshake [=   ] - Routing Data Stored, Generating Key Pair")
-    rPublic, rPrivate = d.generateKeyPair(384)
-    print("Responding to Handshake [==  ] - Key Pair Generated, Serializing rPublic and Storing to Packet Data")
-    __packet.data = rPublic.serialize()
-    print("Responding to Handshake [=== ] - rPublic Serialized and Stored to Packet Data, Serializing and Sending Packet")
-    m.send(from, port, serialization.serialize(__packet))
-    print("Responding to Handshake [====] - Packet Serialized and Sent")
-    print("Hands Have Been Shaken")
-    __packet.routingData.destination = nil
-    __packet.data = nil
-    print("Awaiting Encrypted Message")
-    ReceiveAndDecrypt()
+  event.ignore("modem_message", MainFunc)
+  print("Responding to Handshake [    ] - Storing Routing Data")
+  __packet.routingData.destination = message.routingData.from
+  print("Responding to Handshake [=   ] - Routing Data Stored, Generating Key Pair")
+  rPublic, rPrivate = d.generateKeyPair(384)
+  print("Responding to Handshake [==  ] - Key Pair Generated, Serializing rPublic and Storing to Packet Data")
+  __packet.data = rPublic.serialize()
+  print("Responding to Handshake [=== ] - rPublic Serialized and Stored to Packet Data, Serializing and Sending Packet")
+  m.send(from, port, serialization.serialize(__packet))
+  print("Responding to Handshake [====] - Packet Serialized and Sent")
+  print("Hands Have Been Shaken")
+  __packet.routingData.destination = nil
+  __packet.data = nil
+  print("Awaiting Encrypted Message")
+  ReceiveAndDecrypt()
 end
 function MainFunc(receiver, from, port, distance, message)
-    local message = serialization.unserialize(message)
-    if message.data = "prepare" then
-        RespondToHandshake(receiver, from, port, distance, message)
-    end
+  local message = serialization.unserialize(message)
+  if message.data = "prepare" then
+    RespondToHandshake(receiver, from, port, distance, message)
+  end
 end
-m.open(mainport)
-print(m.isOpen(mainport))
-router = "a88bbfe2-7e88-48a6-9c58-a67e48f07ee9" --change to router's
 print("router =", router)
 event.listen("modem_message", MainFunc)
+event.pull("interrupted")
+event.ignore("modem_message", MainFunc)
