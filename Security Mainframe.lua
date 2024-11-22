@@ -110,7 +110,6 @@ function ReceiveAndDecrypt()
   ProcessMessage(from, data)
 end
 function RespondToHandshake(receiver, from, port, distance, message)
-  event.ignore("modem_message", MainFunc)
   print("Responding to Handshake [    ] - Storing Routing Data")
   __packet.routingData.destination = message.routingData.from
   print("Responding to Handshake [=   ] - Routing Data Stored, Generating Key Pair")
