@@ -33,7 +33,6 @@ function AddDeviceToNetwork(receiver, from, port, dist, message)
     if message == line then
       m.send(from, port, "name taken")
     end
-    break
   end
   names = io.open("/home/router/names.txt", "a")
   names:write(message .. "\n")
@@ -41,7 +40,6 @@ function AddDeviceToNetwork(receiver, from, port, dist, message)
   addresses = io.open("/home/router/addresses.txt", "a")
   addresses:write(from .. "\n")
   addresses:close()
-  break
 end
 function ProcessRouterCommands(receiver, from, port, dist, message)
   event.ignore("modem_message", MainFunc)
@@ -52,13 +50,12 @@ function ProcessRouterCommands(receiver, from, port, dist, message)
   elseif message == "newtonetwork" then
     AddDeviceToNetwork(receiver, from, port, dist, message)
   end
-  break
 end
 function MainFunc(_, receiver, from, port, dist, message)
   local message = serialization.unserialize(message)
   if message.routingData.from == "router" then
     ProcessRouterCommands(receiver, from, port, dist, message)
-    break
+    return nil
   end
   local n = 1
     for line in io.lines("/home/router/names.txt") do
