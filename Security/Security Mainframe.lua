@@ -15,6 +15,7 @@ rPrivate = nil
 cards = {"123"}
 m.open(mainport)
 print(m.isOpen(mainport))
+fs = require("filesystem")
 if fs.exists("/home/data.txt") == true then
   local n = 0
   for line in io.lines("/home/data.txt") do
