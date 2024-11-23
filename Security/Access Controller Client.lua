@@ -139,12 +139,13 @@ while true do
     EncryptAndSendCardData(cardData)
     print("Authorizing")
     event.ignore("modem_message", pong)
+    ::pull::
     local _, receiver, from, port, dist, message = event.pull("modem_message")
     event.listen("modem_message", pong)
     print("Got a message from " .. from .. " on port " .. port .. ":" .. tostring(message))
     if message == "ping" then
         pong(receiver, from, port, distance, message)
-        goto 
+        goto pull 
     end
     local message = serialization.unserialize(message)
     if message.data == "authorized" then
