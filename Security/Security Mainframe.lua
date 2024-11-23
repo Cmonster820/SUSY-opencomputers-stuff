@@ -47,18 +47,18 @@ __packet =
 {
     routingData =
     {
-        destination = nil
+        destination = nil,
         from = name
-    }
+    },
     data = nil
 }
 __encryptedpacket = 
 {
     header =
     {
-        iv = nil
+        iv = nil,
         sPublic = nil
-    }
+    },
     data = nil
 }
 function InitiateHandShake(destination)
@@ -158,7 +158,7 @@ function RespondToHandshake(receiver, from, port, distance, message)
 end
 function MainFunc(receiver, from, port, distance, message)
   local message = serialization.unserialize(message)
-  if message.data = "prepare" then
+  if message.data == "prepare" then
     RespondToHandshake(receiver, from, port, distance, message)
   end
 end
