@@ -6,7 +6,6 @@ event = require("event")
 m = component.modem
 d = component.data
 mainport = 1 --Change to change port, also change top comment
-door = component.os_doorcontroller
 serialization  = require("serialization")
 name = "mainframe"
 sPublic = nil
