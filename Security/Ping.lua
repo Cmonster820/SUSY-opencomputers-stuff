@@ -65,7 +65,7 @@ function MainFunc(_, receiver, from, port, dist, message)
     if message ~= "pong" then
         AddtoPongs(receiver, from, port, dist, message)
     else
-        countervalue += 1
+        countervalue = countervalue + 1
     end
 end
 function DetectIssuesAndPing()
@@ -73,7 +73,7 @@ function DetectIssuesAndPing()
         table.insert(tempongs, line)
     end
     if countervalue < #tempongs then
-        strikes += 1
+        strikes = strikes + 1
     end
     if strikes == 5 then
         m.send(mainframe, mainport, "LOCKDOWN")
