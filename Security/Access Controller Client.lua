@@ -47,18 +47,18 @@ __packet =
 {
     routingData =
     {
-        destination = nil
+        destination = nil,
         from = name
-    }
+    },
     data = nil
 }
 __encryptedpacket = 
 {
     header =
     {
-        iv = nil
+        iv = nil,
         sPublic = nil
-    }
+    },
     data = nil
 }
 __requestpacket = 
