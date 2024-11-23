@@ -14,9 +14,9 @@ __packet =
 {
     routingData =
     {
-        destination = nil
+        destination = nil,
         from = name
-    }
+    },
     data = nil
 }
 if fs.exists("/home/data.txt") == true then
