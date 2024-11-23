@@ -162,6 +162,7 @@ function MainFunc(receiver, from, port, distance, message)
     RespondToHandshake(receiver, from, port, distance, message)
   end
 end
+end
 print("router =", router)
 event.listen("modem_message", MainFunc)
 event.pull("interrupted")
