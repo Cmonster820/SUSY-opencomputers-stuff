@@ -21,7 +21,7 @@ __packet =
 }
 if fs.exists("/home/data.txt") == true then
     local n = 0
-    for line in io.lines("/home/data.txt")
+    for line in io.lines("/home/data.txt") do
         local n = n+1
         if n == 1 then
             router = line
