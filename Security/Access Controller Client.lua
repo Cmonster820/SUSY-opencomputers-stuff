@@ -160,5 +160,3 @@ while true do
         door.close()
     end
 end
-
-
