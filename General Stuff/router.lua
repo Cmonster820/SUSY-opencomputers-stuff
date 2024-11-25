@@ -57,22 +57,27 @@ function MainFunc(_, receiver, from, port, dist, message)
   elseif message == "requestmainframe" then
     local n = 1
     for line in io.lines("/home/router/names.txt") do
-      local n += 1
       if line == "mainframe" then
         local lineinaddresses = n
       end
+      local n += 1
     end
     local n = 1
     for line in io.lines("/home/router/addresses.txt") do
-      local n += 1
       if n == lineinaddresses then
         m.send(from, port, line)
       end
+      local n += 1
     end
     local n = 1
   elseif message == "requestping" then
     for line in io.lines("/home/router/names.txt") do
+      if line == "pingserver" then
+        local lineinaddresses = n
+      end
       local n = n+1
+    end
+    local n = 1
   end
   local message = serialization.unserialize(message)
   if message.routingData.from == "router" then
@@ -81,17 +86,17 @@ function MainFunc(_, receiver, from, port, dist, message)
   end
   local n = 1
     for line in io.lines("/home/router/names.txt") do
-      local n = n+1
       if line == message.routingData.from then
         local lineinaddresses = n
       end
+      local n = n+1
     end
   local n = 1
   for line in io.lines("/home/router/addresses.txt") do
-    local n = n+1
     if n == lineinaddresses then
       local target = line
     end
+    local n = n+1
   end
   m.send(target, mainport, serialization.serialize(message))
 end
