@@ -1,4 +1,4 @@
---format: see __packet and __encryptedpacket
+--format: see __packet and __encryptedpacket (legacy format is as a string: "[destination] [from] [message]", where each part is separated by a space, using "for w in string.gmatch(message, "[^ ]+") do" to parse, I just forgot to remove all comments using the old format
 --PORT: 1
 --Router address: a88bbfe2-7e88-48a6-9c58-a67e48f07ee9 (testing world)
 component = require("component")
