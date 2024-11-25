@@ -1,7 +1,7 @@
 --only works on cases, not servers for whatever reason
 local component = require("component")
 local event = require("event")
-local Cooper = "123"
+local Cooper = "123" -- what do I care about leaking my name online anymore
 local words = {}
 local door = component.os_doorcontroller
 
