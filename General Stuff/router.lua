@@ -70,6 +70,9 @@ function MainFunc(_, receiver, from, port, dist, message)
       end
     end
     local n = 1
+  elseif message == "requestping" then
+    for line in io.lines("/home/router/names.txt") do
+      local n = n+1
   end
   local message = serialization.unserialize(message)
   if message.routingData.from == "router" then

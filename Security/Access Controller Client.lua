@@ -19,6 +19,8 @@ if fs.exists("/home/data.txt") == true then
             router = line
         elseif n == 2 then
             name = line
+        elseif n == 3 then
+            pingserver = line
         end
     end
     local n = 0
@@ -41,6 +43,9 @@ elseif fs.exists("/home/data.txt") == false then
         end
     end
     datafile:write("\n" .. tostring(name))
+    m.send(router, port, "requestping")
+    local _,receiver,from,port,dist,message = event.pull("modem_message")
+    datafile:write("\n" .. tostring(message))
     datafile:close()
 end
 __packet =
