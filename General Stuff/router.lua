@@ -51,6 +51,7 @@ function ProcessRouterCommands(receiver, from, port, dist, message)
   end
 end
 function MainFunc(_, receiver, from, port, dist, message)
+  print("Got a message from " .. from .. " on port " .. port .. ", message reads: " .. message)
   if message == "newtonetwork" then
     AddDeviceToNetwork(receiver, from, port, dist, message)
   elseif message == "requestmainframe" then
