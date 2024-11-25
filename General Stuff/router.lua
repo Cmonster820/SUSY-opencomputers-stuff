@@ -90,7 +90,6 @@ function MainFunc(_, receiver, from, port, dist, message)
       local target = line
     end
   end
-  addresses:close()
   m.send(target, mainport, serialization.serialize(message))
 end
 event.listen("modem_message", MainFunc)
