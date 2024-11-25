@@ -1,7 +1,7 @@
 local serialization  = require("serialization")
 local component      = require("component")
 
--- This table contains the data that will be sent to the receiving computer.
+-- This table contains the data that will be sent to the receiving c.
 -- Along with header information the receiver will use to decrypt the message.
 local __packet =
 {
