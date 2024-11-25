@@ -120,7 +120,7 @@ function ProcessMessage(from, data)
   end
 end
 function ReceiveAndDecrypt()
-  local receiver, from, port, distance, message = event.pull("modem_message")
+  local _, receiver, from, port, distance, message = event.pull("modem_message")
   print("Encrypted Message Received \n Decrypting Message [       ] - Unserializing Packet")
   local message = serialization.unserialize(message)
   print("Decrypting Message [=     ] - Packet Unserialized, Deserializing sPublic")
@@ -156,7 +156,7 @@ function RespondToHandshake(receiver, from, port, distance, message)
   print("Awaiting Encrypted Message")
   ReceiveAndDecrypt()
 end
-function MainFunc(receiver, from, port, distance, message)
+function MainFunc(_, receiver, from, port, distance, message)
   local message = serialization.unserialize(message)
   if message.data == "prepare" then
     RespondToHandshake(receiver, from, port, distance, message)
