@@ -41,6 +41,7 @@ elseif fs.exists("/home/data.txt") == false then
             name = "ACS" .. tostring(n)
             m.send(router, mainport, name)
         end
+        local n = nil
     end
     datafile:write("\n" .. tostring(name))
     m.send(router, port, "requestping")
