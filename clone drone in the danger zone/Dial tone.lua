@@ -47,12 +47,21 @@ m.broadcast(3, "addtonetwork")
 function ProcessMessages(receiver, from, port, dist, message)
     words = {}
     if message == "addtonetwork" then
+        m.send(from, port, "sendname " .. name)
+        return nil
     end
     for w in string.gmatch(message, "[^ ]+") do
         table.insert(words, w)
     end
     for k, v in pairs(words) do
-        if then
+        if k == 1 and v == "sendname" then
+            storenext = true
+        elseif k == 2 and storenext == true then
+            if v == name then
+                local namenum = 1
+                while v == name do
+                    name = "drone" .. namenum
+                    m.send()
         end
     end
 end
