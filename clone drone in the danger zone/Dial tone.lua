@@ -8,6 +8,7 @@ for i = 1,2,3 do
     d.setLightColor(0x000000)
     c.beep(1500, 0.25)
 end
+d.setLightColor(0x00FF00)
 function FindHome()
     waypoints = n.findwaypoints(100)
     for k, v in pairs(waypoints) do
@@ -31,4 +32,11 @@ function FindHome()
 end
 local homex, homey, homez = FindHome()
 d.setStatusText("Home Found")
-d.move(homex, homey, homez)
+d.setLightColor(0xFFA500)
+d.move(homex, homey + 1, homez)
+local homex, homey, homez = FindHome()
+while homex ~= 0 and homez ~= 0 do
+    local homex, _, homez = FindHome()
+    d.move(homex, 0, homez)
+end
+d.setLightColor(0x00FF00)
