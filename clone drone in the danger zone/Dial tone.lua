@@ -57,6 +57,8 @@ function ProcessMessages(receiver, from, port, dist, message)
                 for k, v in pairs(nameslist) do
                     if message == v then
                         m.send(from, port, "name take")
+                    end
+                end
             end
         end
     end
