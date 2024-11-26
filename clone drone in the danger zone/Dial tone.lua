@@ -48,6 +48,7 @@ m.broadcast(3, "addtonetwork")
 function ProcessMessages(receiver, from, port, dist, message)
     words = {}
     if message == "addtonetwork" then
+        ::rerequestname::
         m.send(from, port, "sendname " .. name)
         local eventname = nil
         local eventname, dat1, dat2, dat3, dat4, dat5, dat6, dat7, dat8 = c.pullSignal(0.25)
@@ -56,7 +57,8 @@ function ProcessMessages(receiver, from, port, dist, message)
                 local message = dat5
                 for k, v in pairs(nameslist) do
                     if message == v then
-                        m.send(from, port, "name take")
+                        m.send(from, port, "name taken")
+                        goto rerequestname
                     end
                 end
             end
@@ -73,7 +75,8 @@ function ProcessMessages(receiver, from, port, dist, message)
         elseif k == 2 and storenext == true then
             if v == name then
                 local namenum = 2
-                name = "drone"..tostring(2)
+                name = "drone"..tostring(namenum)
+                m.send(from,port,name)
             end
         end
     end
