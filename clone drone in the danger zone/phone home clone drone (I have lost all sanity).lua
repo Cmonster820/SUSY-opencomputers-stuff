@@ -12,7 +12,7 @@ c.beep(1500, 0.05)
 c.beep(2000, 0.05)
 setStatusText("We have an intruder!")
 os.sleep(1)
-for i = 1,3 do
+for i = 1,2,3 do
     c.beep(1500, 0.25)
     os.sleep(0.05)
 end
@@ -20,7 +20,7 @@ setStatusText("'ow did 'e get in, intruda window?")
 os.sleep(1)
 c.beep(2000, 1)
 setStatusText("buh-bye")
-for i = 1,3 do
+for i = 1,2,3 do
     c.beep(1500, 0.25)
     os.sleep(0.05)
 end
