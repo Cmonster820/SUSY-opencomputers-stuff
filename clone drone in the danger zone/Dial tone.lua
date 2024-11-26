@@ -48,6 +48,14 @@ function ProcessMessages(receiver, from, port, dist, message)
     words = {}
     if message == "addtonetwork" then
         m.send(from, port, "sendname " .. name)
+        local eventname = nil
+        local eventname, dat1, dat2, dat3, dat4, dat5, dat6, dat7, dat8 = c.pullSignal(0.25)
+        if eventname ~= nil then
+            if eventname == "modem_message" then
+                ProcessMessages(dat1, dat2, dat3, dat4, dat5)
+            end
+        end
+    end
         return nil
     end
     for w in string.gmatch(message, "[^ ]+") do
@@ -66,10 +74,10 @@ function ProcessMessages(receiver, from, port, dist, message)
     end
 end
 while true do
-    local name = nil
-    local name, dat1, dat2, dat3, dat4, dat5, dat6, dat7, dat8 = c.pullSignal(0.25)
-    if name ~= nil then
-        if name == "modem_message" then
+    local eventname = nil
+    local eventname, dat1, dat2, dat3, dat4, dat5, dat6, dat7, dat8 = c.pullSignal(0.25)
+    if eventname ~= nil then
+        if eventname == "modem_message" then
             ProcessMessages(dat1, dat2, dat3, dat4, dat5)
         end
     end
