@@ -42,6 +42,7 @@ while homex ~= 0 and homez ~= 0 do
 end
 d.setLightColor(0x00FF00)
 name = "drone1"
+nameslist = {name}
 m.open(3)
 m.broadcast(3, "addtonetwork")
 function ProcessMessages(receiver, from, port, dist, message)
@@ -52,7 +53,10 @@ function ProcessMessages(receiver, from, port, dist, message)
         local eventname, dat1, dat2, dat3, dat4, dat5, dat6, dat7, dat8 = c.pullSignal(0.25)
         if eventname ~= nil then
             if eventname == "modem_message" then
-                ProcessMessages(dat1, dat2, dat3, dat4, dat5)
+                local message = dat5
+                for k, v in pairs(nameslist) do
+                    if message == v then
+                        m.send(from, port, "name take")
             end
         end
     end
@@ -66,10 +70,9 @@ function ProcessMessages(receiver, from, port, dist, message)
             storenext = true
         elseif k == 2 and storenext == true then
             if v == name then
-                local namenum = 1
-                while v == name do
-                    name = "drone" .. namenum
-                    m.send()
+                local namenum = 2
+                name = "drone"..tostring(2)
+            end
         end
     end
 end
