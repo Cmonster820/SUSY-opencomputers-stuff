@@ -1,5 +1,5 @@
 m = component.proxy(component.list("modem"))
-drone = component.proxy(component.list("drone"))
+d = component.proxy(component.list("drone"))
 c = component.proxy(component.list("computer"))
 c.beep(20,0.05)
 c.beep(50, 0.05)
