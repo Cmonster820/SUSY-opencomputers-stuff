@@ -60,7 +60,7 @@ function MainFunc(_, receiver, from, port, dist, message)
       if line == "mainframe" then
         local lineinaddresses = n
       end
-      local n += 1
+      local n = n + 1
     end
     local n = 1
     for line in io.lines("/home/router/addresses.txt") do
