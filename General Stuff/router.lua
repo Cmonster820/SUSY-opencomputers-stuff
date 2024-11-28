@@ -78,6 +78,13 @@ function MainFunc(_, receiver, from, port, dist, message)
       local n = n+1
     end
     local n = 1
+    for line in io.lines("/home/router/addresses.txt") do
+      if n == lineinaddresses then
+        m.send(from, port, line)
+      end
+      n = n + 1
+    end
+    local n = 1
   end
   local message = serialization.unserialize(message)
   if message.routingData.from == "router" then
