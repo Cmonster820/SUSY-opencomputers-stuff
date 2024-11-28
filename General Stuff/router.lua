@@ -67,7 +67,7 @@ function MainFunc(_, receiver, from, port, dist, message)
       if n == lineinaddresses then
         m.send(from, port, line)
       end
-      local n += 1
+      local n = n + 1
     end
     local n = 1
   elseif message == "requestping" then
