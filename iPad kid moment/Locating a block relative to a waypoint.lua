@@ -1,6 +1,7 @@
 --THIS GOES IN A TABLET RUNNING OPENOS
 --USED FOR FINDING THE LOCATION OF A BLOCK RELATIVE TO A WAYPOINT, THEN SENDING THAT VIA A LINKED CARD (can be swapped out for network by checking line 5 comment)
 --THIS WILL BE USED FOR PRECISION ARTILLERY WHEN GCYW IS RELEASED
+--I DON'T KNOW WHY I'M USING ALL CAPS
 component = require("component")
 event = require("event")
 m = component.tunnel --change out "tunnel" for "modem" to use a network card instead of linked
