@@ -50,8 +50,9 @@ elseif fs.exists("/home/data.txt") == false then
     local _,receiver,from,port,dist,message = event.pull("modem_message")
     datafile:write("\n" .. tostring(message))
     datafile:close()
+    m.close(negotiationport)
+    print("Negotiation Complete")
 end
-m.close(negotiationport)
 __packet =
 {
     routingData =
