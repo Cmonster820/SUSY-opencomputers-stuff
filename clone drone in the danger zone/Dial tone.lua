@@ -45,7 +45,7 @@ name = "drone1"
 nameslist = {name}
 m.open(3)
 m.broadcast(3, "addtonetwork")
-function ProcessMessages(receiver, from, port, dist, message)
+function ProcessMessages(_, receiver, from, port, dist, message)
     words = {}
     if message == "addtonetwork" then
         ::rerequestname::
@@ -86,7 +86,7 @@ while true do
     local eventname, dat1, dat2, dat3, dat4, dat5, dat6, dat7, dat8 = c.pullSignal(0.25)
     if eventname ~= nil then
         if eventname == "modem_message" then
-            ProcessMessages(dat1, dat2, dat3, dat4, dat5)
+            ProcessMessages(dat1, dat2, dat3, dat4, dat5, dat6)
         end
     end
 end
