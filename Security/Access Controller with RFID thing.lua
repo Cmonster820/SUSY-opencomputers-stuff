@@ -8,6 +8,7 @@ serialization  = require("serialization")
 door = component.os_doorcontroller
 m.open(mainport)
 print(m.isOpen(mainport))
+negotiationport = 3
 if fs.exists("/home/data.txt") == true then
     local n = 0
     for line in io.lines("/home/data.txt") do
@@ -20,8 +21,9 @@ if fs.exists("/home/data.txt") == true then
     end
     local n = 0
 elseif fs.exists("/home/data.txt") == false then
+    m.open(negotiationport)
     datafile = io.open("/home/data.txt", "a")
-    m.broadcast(mainport, "newtonetwork")
+    m.broadcast(negotiationport, "newtonetwork")
     local _, receiver, from, port, dist, message = event.pull("modem_message")
     datafile:write(tostring(from))
     router = from
@@ -34,7 +36,7 @@ elseif fs.exists("/home/data.txt") == false then
             n = n+1
             local _, receiver, from, port, dist, message = event.pull("modem_message")
             name = "ACSRFID" .. tostring(n)
-            m.send(router, mainport, name)
+            m.send(router, port, name)
         end
     end
     --[[if message == "name taken" then --this section will, for things that can only have one of them on the network, flash an error and automatically exit the program in the event that their name is already taken
@@ -43,6 +45,8 @@ elseif fs.exists("/home/data.txt") == false then
     end]]
     datafile:write("\n" .. tostring(name))
     datafile:close()
+    m.close(negotiationport)
+    print("Negotiation Complete")
 end
 --the following is a definition of the packet structure, when clearing it after sending, DO NOT USE "__packet = nil", THAT WILL BREAK EVERYTHING, instead use "__packet.routingData.destination = nil" and "__packet.data = nil"
 __packet =
