@@ -12,6 +12,7 @@ sPublic = nil
 sPrivate = nil
 rPublic = nil
 rPrivate = nil
+negotiationport = 3
 cards = {"123"}
 m.open(mainport)
 print(m.isOpen(mainport))
@@ -28,8 +29,9 @@ if fs.exists("/home/data.txt") == true then
   end
   local n = 0
 elseif fs.exists("/home/data.txt") == false then
+  m.open(negotiationport)
   datafile = io.open("/home/data.txt", "a")
-  m.broadcast(mainport, "newtonetwork")
+  m.broadcast(negotiationport, "newtonetwork")
   local _, receiver, from, port, dist, message = event.pull("modem_message")
   datafile:write(tostring(from))
   router = from
@@ -42,6 +44,8 @@ elseif fs.exists("/home/data.txt") == false then
   end
   datafile:write("\n" .. tostring(name))
   datafile:close()
+  m.close(negotiationport)
+  print("Negotiation Complete")
 end
 __packet =
 {

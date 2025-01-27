@@ -12,7 +12,6 @@ serialization  = require("serialization")
 m.open(mainport)
 print(m.isOpen(mainport))
 negotiationport = 3
-m.open(negotiationport) -- negotiation port
 if fs.exists("/home/data.txt") == true then
     local n = 0
     for line in io.lines("/home/data.txt") do
@@ -27,6 +26,7 @@ if fs.exists("/home/data.txt") == true then
     end
     local n = 0
 elseif fs.exists("/home/data.txt") == false then
+    m.open(negotiationport)
     datafile = io.open("/home/data.txt", "a")
     m.broadcast(negotiationport, "newtonetwork")
     local _, receiver, from, port, dist, message = event.pull("modem_message")
