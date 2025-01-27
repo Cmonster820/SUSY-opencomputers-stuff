@@ -44,7 +44,7 @@ elseif fs.exists("/home/data.txt") == false then
     datafile:write("\n" .. tostring(name))
     datafile:close()
     m.close(negotiationport)
-    print
+    print("Negotiation Complete")
 end
 --the following is a definition of the packet structure, when clearing it after sending, DO NOT USE "__packet = nil", THAT WILL BREAK EVERYTHING, instead use "__packet.routingData.destination = nil" and "__packet.data = nil"
 __packet =
