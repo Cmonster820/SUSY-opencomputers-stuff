@@ -11,6 +11,8 @@ door = component.os_doorcontroller
 serialization  = require("serialization")
 m.open(mainport)
 print(m.isOpen(mainport))
+negotiationport = 3
+m.open(negotiationport) -- negotiation port
 if fs.exists("/home/data.txt") == true then
     local n = 0
     for line in io.lines("/home/data.txt") do
@@ -26,7 +28,7 @@ if fs.exists("/home/data.txt") == true then
     local n = 0
 elseif fs.exists("/home/data.txt") == false then
     datafile = io.open("/home/data.txt", "a")
-    m.broadcast(mainport, "newtonetwork")
+    m.broadcast(negotiationport, "newtonetwork")
     local _, receiver, from, port, dist, message = event.pull("modem_message")
     datafile:write(tostring(from))
     router = from
@@ -36,7 +38,7 @@ elseif fs.exists("/home/data.txt") == false then
     if message == "name taken" then
         local n = 1
         while message == "name taken" do
-            n = n+1
+            local n = n+1
             local _, receiver, from, port, dist, message = event.pull("modem_message")
             name = "ACS" .. tostring(n)
             m.send(router, mainport, name)
@@ -49,6 +51,7 @@ elseif fs.exists("/home/data.txt") == false then
     datafile:write("\n" .. tostring(message))
     datafile:close()
 end
+m.close(negotiationport)
 __packet =
 {
     routingData =
