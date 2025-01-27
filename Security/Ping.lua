@@ -10,6 +10,7 @@ print(m.isOpen(mainport))
 name = nil
 countervalue = 0
 strikes = 0
+negotiationport = 3
 __packet =
 {
     routingData =
@@ -33,8 +34,9 @@ if fs.exists("/home/data.txt") == true then
     end
     local n = 0
 elseif fs.exists("/home/data.txt") == false then
+    m.open(negotiationport)
     datafile = io.open("/home/data.txt", "a")
-    m.broadcast(mainport, "newtonetwork")
+    m.broadcast(negotiationport, "newtonetwork")
     local _, receiver, from, port, dist, message = event.pull("modem_message")
     datafile:write(tostring(from))
     router = from
@@ -51,6 +53,8 @@ elseif fs.exists("/home/data.txt") == false then
     local _,receiver,from,port,dist,message = event.pull("modem_message")
     datafile:write("\n" .. tostring(message))
     datafile:close()
+    m.close(negotiationport)
+    print("Negotiation Complete")
 end
 if fs.exists("/home/pongs.txt") == false then
     pongslist = io.open("/home/pongs.txt", "a")
