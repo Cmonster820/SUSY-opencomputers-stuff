@@ -8,6 +8,7 @@ serialization  = require("serialization")
 door = component.os_doorcontroller --replace this component with rolldoor controller name, I cant find it on the OpenSecurity Github wiki so this will remain unchanged until then
 m.open(mainport)
 print(m.isOpen(mainport))
+negotiationport = 3
 if fs.exists("/home/data.txt") == true then
     local n = 0
     for line in io.lines("/home/data.txt") do
@@ -20,21 +21,22 @@ if fs.exists("/home/data.txt") == true then
     end
     local n = 0
 elseif fs.exists("/home/data.txt") == false then
+    m.open(negotiationport)
     datafile = io.open("/home/data.txt", "a")
-    m.broadcast(mainport, "newtonetwork")
+    m.broadcast(negotiationport, "newtonetwork")
     local _, receiver, from, port, dist, message = event.pull("modem_message")
     datafile:write(tostring(from))
     router = from
     os.sleep(0.25)
-    m.send(router, port, "ACSRFID1") --replace "ACS1" with base name (or final name if only one can exist)
+    m.send(router, port, "ACSRFIDRD1") --replace "ACS1" with base name (or final name if only one can exist)
     local _, receiver, from, port, dist, message = event.pull("modem_message")
     if message == "name taken" then --this section will, for things that can have multiple of them on the network (In the case of where I took this from, access controllers), automatically increase the number in the name until the name is not taken
         local n = 1
         while message == "name taken" do
             n = n+1
             local _, receiver, from, port, dist, message = event.pull("modem_message")
-            name = "ACSRFID" .. tostring(n)
-            m.send(router, mainport, name)
+            name = "ACSRFIDRD" .. tostring(n)
+            m.send(router, port, name)
         end
     end
     --[[if message == "name taken" then --this section will, for things that can only have one of them on the network, flash an error and automatically exit the program in the event that their name is already taken
@@ -43,6 +45,8 @@ elseif fs.exists("/home/data.txt") == false then
     end]]
     datafile:write("\n" .. tostring(name))
     datafile:close()
+    m.close(negotiationport)
+    print("Negotiation Complete")
 end
 --the following is a definition of the packet structure, when clearing it after sending, DO NOT USE "__packet = nil", THAT WILL BREAK EVERYTHING, instead use "__packet.routingData.destination = nil" and "__packet.data = nil"
 __packet =
