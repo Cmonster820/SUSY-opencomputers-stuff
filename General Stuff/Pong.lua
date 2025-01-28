@@ -3,7 +3,7 @@
 --PORT: 1
 
 --to add more to network, you must get the address of the modem and add it to the ping server's list
-
+--DEPRECIATED, THIS NO LONGER IS TO BE USED
 local component = require("component")
 local event = require("event")
 local m = component.modem
