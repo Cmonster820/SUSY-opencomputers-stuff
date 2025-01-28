@@ -28,31 +28,39 @@ end
 function move(x, y, z)
     if x > 0 then
         for i, x, 1 do
+            robot.swing()
             robot.forward()
         end
     elseif x < 0 then
+        robot.turnAround()
         for i, math.abs(x), 1 do
-            robot.back()
+            robot.swing()
+            robot.forward()
         end
+        robot.turnAround()
     end
     if y > 0 then
         for i, y, 1 do
+            robot.swingUp()
             robot.up()
         end
     elseif y < 0 then
         for i, math.abs(y), 1 do
+            robot.swingDown()
             robot.down()
         end
     end
     if z > 0 then
         robot.turnRight()
         for i, z, 1 do
+            robot.swing()
             robot.forward()
         end
         robot.turnLeft()
     elseif z < 0 then
         robot.turnLeft()
         for i, math.abs(z), 1 do
+            robot.swing()
             robot.forward()
         end
         robot.turnRight()
