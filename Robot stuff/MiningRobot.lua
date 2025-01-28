@@ -25,10 +25,7 @@ for k, v in pairs(waypoint) do
         break
     end
 end
-function move(x, y, z, rel)
-    if rel == true then
-
-    end
+function move(x, y, z)
     if x > 0 then
         for i, x, 1 do
             robot.forward()
