@@ -11,6 +11,7 @@ name = nil
 countervalue = 0
 strikes = 0
 negotiationport = 3
+m.open(2)
 __packet =
 {
     routingData =
@@ -83,7 +84,7 @@ function DetectIssuesAndPing()
         m.send(mainframe, mainport, "LOCKDOWN")
     end
     for line in io.lines("/home/pongs.txt") do
-        m.send(line, mainport, "ping")
+        m.send(line, 3, "ping")
     end
 end
 timerid = event.timer(20, DetectIssuesAndPing, math.huge)

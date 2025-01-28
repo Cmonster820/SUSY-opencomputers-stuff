@@ -53,6 +53,7 @@ elseif fs.exists("/home/data.txt") == false then
     m.close(negotiationport)
     print("Negotiation Complete")
 end
+m.open(2) --ping port
 __packet =
 {
     routingData =
