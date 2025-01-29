@@ -27,12 +27,14 @@ window = {
 function window:new(o, label, barcol, x, y, w, h, wincol, text, toffsetx, toffsety, textcol)
     o = o or {}
     o.label = label
-    o.barcol = barcol -- color of the bar at the top
+    o.barcol = barcol -- color of the bar at the top of the window
     o.position.x = x
     o.position.y = y
     o.position.w = w
     o.position.h = h
     o.color = wincol
+    o.text.text = text
+    o.text.offsetx = toffsetx
     if wincol == nil then
         local oldfg, _ = gpu.getForeground()
         gpu.setForeground()
