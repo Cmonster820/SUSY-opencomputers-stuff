@@ -12,6 +12,7 @@ print(m.isOpen(mainport))
 serialization = require("serialization")
 io = require("io")
 m.open(3) -- opens port used to negotiate with new devices
+print(m.isopen(3))
 __packet =
 {
   routingData =
