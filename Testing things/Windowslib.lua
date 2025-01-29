@@ -4,6 +4,7 @@ component = require("component")
 g = component.gpu
 g.setBackground(0xFFFFFF) -- While I can't draw different color rectangles I can cut holes in a white one
 g.setForeground(0x000000)
+g.fill(1,1,g.maxResolution(),█)
 window = {
     position = {
         x = nil,
