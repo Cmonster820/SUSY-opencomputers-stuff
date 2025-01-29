@@ -30,12 +30,14 @@ function move(x, y, z)
         for i, x, 1 do
             robot.swing()
             robot.forward()
+            refx = refx+1
         end
     elseif x < 0 then
         robot.turnAround()
         for i, math.abs(x), 1 do
             robot.swing()
             robot.forward()
+            refx = refx-1
         end
         robot.turnAround()
     end
@@ -43,11 +45,13 @@ function move(x, y, z)
         for i, y, 1 do
             robot.swingUp()
             robot.up()
+            refy = refy+1
         end
     elseif y < 0 then
         for i, math.abs(y), 1 do
             robot.swingDown()
             robot.down()
+            refy = refy-1
         end
     end
     if z > 0 then
@@ -55,6 +59,7 @@ function move(x, y, z)
         for i, z, 1 do
             robot.swing()
             robot.forward()
+            refz = refz+1
         end
         robot.turnLeft()
     elseif z < 0 then
@@ -62,7 +67,11 @@ function move(x, y, z)
         for i, math.abs(z), 1 do
             robot.swing()
             robot.forward()
+            refz = refz-1
         end
         robot.turnRight()
     end
+end
+function mineArea(corn1x, corn1y, corn1z, corn2x, corn2y, corn2z)
+
 end
