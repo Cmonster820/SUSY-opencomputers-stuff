@@ -24,7 +24,7 @@ if filesystem.exists("/home/router/") == false then
   filesystem.makeDirectory("/home/router/")
   names = io.open("/home/router/names.txt", "a")
   names:close()
-  addresses = io.open("user/router/addresses.txt", "a")
+  addresses = io.open("/home/router/addresses.txt", "a")
   addresses:close()
 end
 function AddDeviceToNetwork(receiver, from, port, dist, message)
