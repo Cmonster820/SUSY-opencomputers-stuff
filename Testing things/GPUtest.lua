@@ -9,3 +9,4 @@ gpu = component.gpu
 m = component.modem
 gpu.setResolution(gpu.maxResolution)
 w, h = gpu.getResolution
+gpu.setBackground(0xFFFFFF)
