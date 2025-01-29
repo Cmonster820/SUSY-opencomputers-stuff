@@ -65,5 +65,10 @@ function window:new(o, label, barcol, x, y, w, h, wincol, text, toffsetx, toffse
     g.setBackground(0xFF0000)
     g.set(o.closebutton.x, o.closebutton.y, "X")
     g.setBackground(oldbg) --returns background to original color
+    g.setForeground(o.text.color)
+    g.setBackground(o.color)
+    g.set(o.text.offsetx-string.len(o.text.text),o.text.offsety,o.text.text)
+    g.setForeground(oldfg)
+    g.setBackground(oldbg)
     return o
 end
