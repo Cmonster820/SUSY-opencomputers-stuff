@@ -100,21 +100,49 @@ function mineArea(corn1x, corn1y, corn1z, corn2x, corn2y, corn2z)
     move(corn2x, 0, 0)
     local corn2z = corn2z-refz
     local corn2y = corn2y-refy
-    if corn1z < corn2z then
-        for i, corn2z, 2 do
-            move(-1*corn2x, 0, 1)
-            move(corn2x, 0, 1)
-            if refz == corn2z then
-                break
+    if corn1y < corn2y then
+        if corn1z < corn2z then
+            for i, corn2z, 2 do
+                move(-1*corn2x, 0, 1)
+                move(corn2x, 0, 1)
+                if refz == corn2z then
+                    break
+                end
             end
+            move(0, 1, 0)
+        elseif corn1z > corn2z then
+            for i, math.abs(corn2z), 2 do
+                move(-1*corn2x, 0, -1)
+                move(corn2x, 0, -1)
+                if refz == corn2z then
+                    break
+                end
+            end
+            move(0, 1, 0)
         end
-    elseif corn1z > corn2z then
-        for i, math.abs(corn2z), 2 do
-            move(-1*corn2x, 0, -1)
-            move(corn2x, 0, -1)
-            if refz == corn2z then
-                break
+    elseif corn1y > corn2y then
+        if corn1z < corn2z then
+            for i, corn2z, 2 do
+                move(-1*corn2x, 0, 1)
+                move(corn2x, 0, 1)
+                if refz == corn2z then
+                    break
+                end
             end
+            move(0, -1, 0)
+        elseif corn1z > corn2z then
+            for i, math.abs(corn2z), 2 do
+                move(-1*corn2x, 0, -1)
+                move(corn2x, 0, -1)
+                if refz == corn2z then
+                    break
+                end
+            end
+            move(0, -1, 0)
         end
     end
+    refx, refy, refz = findref()
+    move(refx, refy+1, refz)
+end
+while true do
 end
