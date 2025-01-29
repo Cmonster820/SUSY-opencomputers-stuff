@@ -24,5 +24,6 @@ function window:new(o, x, y, w, h)
 end
 function closewindow(win)
     g.fill(win.position.x,win.position.y,win.position.w,win.position.h,█)
-    local win = nil 
+    local win = nil
+    return win
 end
