@@ -3,9 +3,9 @@ create "windows," which can display text in them and stuff]]
 component = require("component")
 g = component.gpu
 g.setBackground(0x000000) 
---[[g.setForeground(0x000000)
-g.fill(1,1,g.maxResolution(),"█")]]
-g.fill(1,1,g.maxResolution()," ")
+g.setForeground(0xFFFFFF)
+--[[g.fill(1,1,g.maxResolution(),"█")]]
+g.fill(1,1,g.maxResolution()," ") -- refresh screen
 window = {
     label = "",
     barcol = nil, -- color of the bar at the top of the window
