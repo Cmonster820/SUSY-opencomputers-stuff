@@ -10,6 +10,7 @@ db = component.database
 invcont = component.inventory_controller
 r = require("robot")
 sides = require("sides")
+function findref()
 waypoints = n.findwaypoints(100)
 for k, v in pairs(waypoint) do
     if v.label == "miningref" then
@@ -25,6 +26,19 @@ for k, v in pairs(waypoint) do
         break
     end
 end
+return refx, refy, refz
+end
+print("Reference Waypoint X:")
+wayxs = term.read()
+print("Stored\nReference Waypoint Y:")
+wayys = term.read()
+print("Stored\nReference Waypoint Z:")
+wayzs = term.read()
+print("Stored\nConverting Values from Strings to Numbers")
+wayx = tonumber(wayxs)
+wayy = tonumber(wayys)
+wayz = tonumber(wayzs)
+print("Conversion Complete")
 function move(x, y, z)
     if x > 0 then
         for i, x, 1 do
@@ -73,5 +87,34 @@ function move(x, y, z)
     end
 end
 function mineArea(corn1x, corn1y, corn1z, corn2x, corn2y, corn2z)
-
+    refx, refy, refz = findref()
+    local corn1x = corn1x-(wayx+refx)
+    local corn1y = corn1y-(wayy+refy)
+    local corn1z = corn1z-(wayz+refz)
+    local corn2x = corn2x-(wayx+refx)
+    local corn2y = corn2y-(wayy+refy)
+    local corn2z = corn2z-(wayz+refz)
+    print("Corner Co-ordinates Converted to Relative Co-ordinates")
+    move(corn1x, corn1y, corn1z)
+    local corn2x = corn2x-refx
+    move(corn2x, 0, 0)
+    local corn2z = corn2z-refz
+    local corn2y = corn2y-refy
+    if corn1z < corn2z then
+        for i, corn2z, 2 do
+            move(-1*corn2x, 0, 1)
+            move(corn2x, 0, 1)
+            if refz == corn2z then
+                break
+            end
+        end
+    elseif corn1z > corn2z then
+        for i, math.abs(corn2z), 2 do
+            move(-1*corn2x, 0, -1)
+            move(corn2x, 0, -1)
+            if refz == corn2z then
+                break
+            end
+        end
+    end
 end
