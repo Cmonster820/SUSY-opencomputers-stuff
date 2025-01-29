@@ -8,6 +8,7 @@ g.fill(1,1,g.maxResolution(),"█")]]
 g.fill(1,1,g.maxResolution()," ")
 window = {
     label = "",
+    barcol = nil,
     position = {
         x = nil,
         y = nil,
@@ -23,15 +24,18 @@ window = {
         color = nil
     }
 }
-function window:new(o, label, x, y, w, h, wincol, text, toffsetx, toffsety, textcol)
+function window:new(o, label, barcol, x, y, w, h, wincol, text, toffsetx, toffsety, textcol)
     o = o or {}
-    o.label =
+    o.label = label
+    
     o.position.x = x
     o.position.y = y
     o.position.w = w
     o.position.h = h
     if wincol == nil then
+        local oldfg, _ = gpu.getForeground()
         gpu.setForeground()
+
     return o
 end
 function closewindow(win)
