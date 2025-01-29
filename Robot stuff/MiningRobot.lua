@@ -142,7 +142,31 @@ function mineArea(corn1x, corn1y, corn1z, corn2x, corn2y, corn2z)
         end
     end
     refx, refy, refz = findref()
-    move(refx, refy+1, refz)
+    move(refx+1, refy+1, refz)
+    move(refx, 0, 0)
+    print("Mining Complete")
+    print("Awaiting Orders")
 end
 while true do
+    ::Redo::
+    print("Corner 1 X:")
+    local corn1x = term.read()
+    print("Corner 1 Y:")
+    local corn1y = term.read()
+    print("Corner 1 Z:")
+    local corn1z = term.read()
+    print("Corner 2 X:")
+    local corn2x = term.read()
+    print("Corner 2 Y:")
+    local corn2y = term.read()
+    print("Corner 2 Z:")
+    local corn2z = term.read()
+    print("Confirm?")
+    local confirmed = term.read()
+    if confirmed == "n" then
+        goto Redo
+    elseif confirmed == "y" then
+        print("Command Confirmed.")
+        mineArea(tonumber(corn1x),tonumber(corn1y),tonumber(corn1z),tonumber(corn2x),tonumber(corn2y),tonumber(corn2z))
+    end
 end
