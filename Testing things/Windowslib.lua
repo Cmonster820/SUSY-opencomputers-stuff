@@ -13,8 +13,12 @@ window = {
         w = nil,
         h = nil
     },
-    char = "█"
-    text = {}
+    char = "█",
+    text = {
+        text = "",
+        offsetx = nil,
+        offsety = nil
+    }
 }
 function window:new(o, x, y, w, h, text, toffsetx, toffsety)
     o = o or {}
