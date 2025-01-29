@@ -10,6 +10,7 @@ db = component.database
 invcont = component.inventory_controller
 r = require("robot")
 sides = require("sides")
+term = require("term")
 function findref()
 waypoints = n.findwaypoints(100)
 for k, v in pairs(waypoint) do
@@ -147,6 +148,7 @@ function mineArea(corn1x, corn1y, corn1z, corn2x, corn2y, corn2z)
     print("Mining Complete")
     print("Awaiting Orders")
 end
+findref()
 while true do
     ::Redo::
     print("Corner 1 X:")
