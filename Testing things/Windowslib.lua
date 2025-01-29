@@ -14,3 +14,15 @@ window = {
     },
     char = " "
 }
+function window:new(o, x, y, w, h)
+    o = o or {}
+    o.position.x = x
+    o.position.y = y
+    o.position.w = w
+    o.position.h = h
+    return o
+end
+function closewindow(win)
+    g.fill(win.position.x,win.position.y,win.position.w,win.position.h,█)
+    local win = nil 
+end
