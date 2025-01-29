@@ -48,7 +48,7 @@ function window:new(o, label, barcol, x, y, w, h, wincol, text, toffsetx, toffse
     end
     o.barcol = barcol
     if textcol == nil then
-        textcol = 0xFFFFFF
+        textcol = 0x000000
     end
     o.text.color = textcol
     local oldfg, _ = g.getForeground()
