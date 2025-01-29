@@ -21,11 +21,17 @@ __packet =
   data = nil
 }
 if filesystem.exists("/home/router/") == false then
+  print("Data Files Nonexistent, Creating [     ] Creating Router Directory")
   filesystem.makeDirectory("/home/router/")
+  print("Data Files Nonexistent, Creating [=    ] Router Directory Created, Creating and Opening Names File")
   names = io.open("/home/router/names.txt", "a")
+  print("Data Files Nonexistent, Creating [==   ] Names File Created and Opened, Closing")
   names:close()
+  print("Data Files Nonexistent, Creating [===  ] Names File Closed, Creating and Opening Addresses File")
   addresses = io.open("/home/router/addresses.txt", "a")
+  print("Data Files Nonexistent, Creating [==== ] Addresses File Created and Opened, Closing")
   addresses:close()
+  print("Data Files Nonexistent, Creating [=====] Addresses File Closed, Creation of Data Files Complete")
 end
 function AddDeviceToNetwork(receiver, from, port, dist, message)
   m.send(from, port, "send name in 0.25 seconds")
