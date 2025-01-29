@@ -14,8 +14,9 @@ window = {
         h = nil
     },
     char = "█"
+    text = {}
 }
-function window:new(o, x, y, w, h)
+function window:new(o, x, y, w, h, text, toffsetx, toffsety)
     o = o or {}
     o.position.x = x
     o.position.y = y
