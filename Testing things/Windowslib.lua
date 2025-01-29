@@ -7,6 +7,7 @@ g.setBackground(0x000000)
 g.fill(1,1,g.maxResolution(),"█")]]
 g.fill(1,1,g.maxResolution()," ")
 window = {
+    label = "",
     position = {
         x = nil,
         y = nil,
@@ -22,12 +23,15 @@ window = {
         color = nil
     }
 }
-function window:new(o, x, y, w, h, text, toffsetx, toffsety)
+function window:new(o, label, x, y, w, h, wincol, text, toffsetx, toffsety, textcol)
     o = o or {}
+    o.label =
     o.position.x = x
     o.position.y = y
     o.position.w = w
     o.position.h = h
+    if wincol == nil then
+        gpu.setForeground()
     return o
 end
 function closewindow(win)
