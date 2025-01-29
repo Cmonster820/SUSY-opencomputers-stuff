@@ -24,7 +24,7 @@ window = {
         color = nil
     },
     closebutton = {
-        x = math.abs(self.position.w-self.position.x)-1
+        x = self.position.w+self.position.x,
         y = self.position.y
     }
 }
@@ -39,6 +39,8 @@ function window:new(o, label, barcol, x, y, w, h, wincol, text, toffsetx, toffse
     o.text.text = text
     o.text.offsetx = toffsetx
     o.text.offsety = toffsety
+    local width = math.abs(w-x)
+    local height = math.abs(h-y)
     if wincol == nil then
         wincol = 0xFFFFFF
     end
@@ -60,7 +62,8 @@ function window:new(o, label, barcol, x, y, w, h, wincol, text, toffsetx, toffse
     g.setForeground(0xFFFFFF)
     g.setBackground(o.barcol) -- hopefully this works
     g.set(o.position.x+1, o.position.y, o.label)
+    g.setBackground(0xFF0000)
+    g.set(o.closebutton.x, o.closebutton.y, "X")
     g.setBackground(oldbg) --returns background to original color
-
     return o
 end
