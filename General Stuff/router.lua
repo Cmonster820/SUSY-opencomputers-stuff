@@ -34,9 +34,12 @@ if filesystem.exists("/home/router/") == false then
   print("Data Files Nonexistent, Creating [=====] Addresses File Closed, Creation of Data Files Complete")
 end
 function AddDeviceToNetwork(receiver, from, port, dist, message)
+  print("Negotiating [        ] Requesting Name")
   m.send(from, port, "send name in 0.25 seconds")
+  print("Negotiating [=       ] Name Requested, Receiving Name")
   ::rereceivename::
   local _, receiver, from, port, dist, message = event.pull("modem_message")
+  print("Negotiating [==      ] Name Received, Updating File")
   for line in io.lines("/home/router/names.txt") do
     if message == line then
       m.send(from, port, "name taken")
@@ -44,11 +47,18 @@ function AddDeviceToNetwork(receiver, from, port, dist, message)
     end
   end
   names = io.open("/home/router/names.txt", "a")
+  print("Negotiating [===     ] Updating File")
   names:write(message .. "\n")
+  print("Negotiating [====    ] Updating File")
   names:close()
+  print("Negotiating [=====   ] File Updated, Updating Address File")
   addresses = io.open("/home/router/addresses.txt", "a")
+  print("Negotiating [======  ] Updating File")
   addresses:write(from .. "\n")
+  print("Negotiating [======= ] Updating File")
   addresses:close()
+  print("Negotiating [========] File Updated")
+  print("Negotiation Complete")
 end
 function ProcessRouterCommands(receiver, from, port, dist, message)
   if message == "LOCKDOWN" or message == "ALARM" then
