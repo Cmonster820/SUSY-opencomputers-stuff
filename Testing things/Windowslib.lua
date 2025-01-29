@@ -2,9 +2,10 @@
 create "windows," which can display text in them and stuff]]
 component = require("component")
 g = component.gpu
-g.setBackground(0xFFFFFF) -- While I can't draw different color rectangles I can cut holes in a white one
-g.setForeground(0x000000)
-g.fill(1,1,g.maxResolution(),█)
+g.setBackground(0x000000) 
+--[[g.setForeground(0x000000)
+g.fill(1,1,g.maxResolution(),"█")]]
+g.fill(1,1,g.maxResolution()," ")
 window = {
     position = {
         x = nil,
@@ -12,7 +13,7 @@ window = {
         w = nil,
         h = nil
     },
-    char = " "
+    char = "█"
 }
 function window:new(o, x, y, w, h)
     o = o or {}
@@ -23,7 +24,7 @@ function window:new(o, x, y, w, h)
     return o
 end
 function closewindow(win)
-    g.fill(win.position.x,win.position.y,win.position.w,win.position.h,█)
+    g.fill(win.position.x,win.position.y,win.position.w,win.position.h,"█")
     local win = nil
     return win
 end
