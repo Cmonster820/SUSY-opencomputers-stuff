@@ -118,6 +118,7 @@ function RequestManager(from, data)
     end
   end
 end
+end
 function ProcessMessage(from, data)
   if data.__requestpacket ~= nil then
     RequestManager(from, data)
