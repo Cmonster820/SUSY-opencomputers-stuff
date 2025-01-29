@@ -10,5 +10,5 @@ m = component.modem
 gpu.setResolution(gpu.maxResolution)
 w, h = gpu.getResolution
 gpu.setBackground(0xFFFFFF)
-os.sleep(5)
+os.sleep(0.5)
 gpu.setBackground(0x000000)
