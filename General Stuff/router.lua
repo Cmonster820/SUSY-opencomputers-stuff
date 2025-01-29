@@ -10,6 +10,7 @@ mainport = 1 --Change to change port, also change top comment
 m.open(mainport)
 print(m.isOpen(mainport))
 serialization = require("serialization")
+io = require("io")
 m.open(3) -- opens port used to negotiate with new devices
 __packet =
 {
