@@ -13,11 +13,13 @@ window = {
         w = nil,
         h = nil
     },
+    color = nil,
     char = "█",
     text = {
         text = "",
         offsetx = nil,
-        offsety = nil
+        offsety = nil,
+        color = nil
     }
 }
 function window:new(o, x, y, w, h, text, toffsetx, toffsety)
