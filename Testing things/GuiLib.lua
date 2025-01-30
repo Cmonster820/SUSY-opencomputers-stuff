@@ -1,11 +1,12 @@
 --[[ This library is intended for use by myself to be able to 
-create guis which can display text in them and stuff]]
+create guis which can display text in them and stuff
+■]]
 component = require("component")
 event = require("event")
 g = component.gpu
 g.setBackground(0x000000) 
 g.setForeground(0xFFFFFF)
---[[g.fill(1,1,g.maxResolution(),"█")]]
+--[[g.fill(1,1,g.maxResolution(),"■")]]
 g.fill(1,1,g.maxResolution()," ") -- refresh screen
 g.setDepth(g.maxDepth())
 --[[labeldat = {
@@ -22,7 +23,7 @@ button = {
         h = nil
     },
     color = nil,
-    char = "█",
+    char = "■",
     text = {
         color = nil,
         text = nil,
@@ -41,7 +42,7 @@ gauge = {               --gauge object
     fillcolor = nil, --color the filled in part is
     emptycolor = nil, --color the empty part is
     fillLevel = nil, --fill level out of 100
-    char = "█",
+    char = "■",
     label = {
         enabled = false,
         text = "",
@@ -74,7 +75,7 @@ border = {
         h = nil
     },
     color = nil,
-    char = "█",
+    char = "■",
     label = "",
     thickness = nil,
     labelColor = nil
