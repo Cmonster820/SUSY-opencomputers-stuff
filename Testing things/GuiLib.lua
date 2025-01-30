@@ -31,7 +31,7 @@ button = {
         y = math.abs(self.position.y+(self.position.h/2))
     }
 }
-gauge = {               --gauge object
+gauge = {             --gauge object
     vertical = false, --whether or not the gauge is vertical
     position = {
         x = nil,
@@ -39,9 +39,9 @@ gauge = {               --gauge object
         w = nil,
         h = nil
     },
-    fillcolor = nil, --color the filled in part is
+    fillcolor = nil,  --color the filled in part is
     emptycolor = nil, --color the empty part is
-    fillLevel = nil, --fill level out of 100
+    fillLevel = nil,  --fill level out of 100
     char = "■",
     label = {
         enabled = false,
@@ -51,9 +51,9 @@ gauge = {               --gauge object
         color = nil
     },
     readout = "",
-    optimal = {
+    optimal = {       --I should've probably called this "limit," but this chunk defines the little red (by default) line that indicates standard operating levels for the gauge 
         enabled = false,
-        level = nil,
+        level = nil,  --level of optimal position out of 100
         color = nil,
         x = if self.vertical == false then
                 self.optimal.x = ((self.optimal.level*self.position.w)/100)+self.position.x
@@ -131,6 +131,9 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
     end
     if optenabled == true then
         o.optimal.enabled = optenabled
+        if optcol == nil then
+            optcol = 0xFF0000
+        end
         o.optimal.color = optcol
         o.optimal.level = optlvl
     elseif optenabled == false then
