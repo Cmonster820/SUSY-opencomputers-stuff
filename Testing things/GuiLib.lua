@@ -123,40 +123,88 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
     end
     local oldfg, _ = g.getForeground()
     local oldbg, _ = g.getBackground()
-    g.setForeground(ecol)
+    g.setForeground(o.emptycolor)
     g.fill(o.position.x,o.position.y,o.position.w,o.position.h, o.char)
     if o.vertical == false then
-        g.setForeground(fcol)
+        g.setForeground(o.fillcolor)
         g.fill(o.position.x,o.position.y, (((o.fillLevel*o.position.w)/100)+o.position.x),o.position.h,o.char)
         local rposx = o.position.x+(o.fillLevel/2)
         g.setForeground(0xFFFFFF)
-        g.setBackground(fcol)
+        g.setBackground(o.fillcolor)
         g.set(rposx, (o.position.y+(o.position.h)/2), readout)
-        if optenabled == true then
-            g.setForeground(optcol)
-            if flvl >= optlvl then
-                g.setBackground(fcol)
+        if o.optimal.enabled == true then
+            g.setForeground(o.optimal.color)
+            if flvl >= o.optimal.level then
+                g.setBackground(o.fillcolor)
             else
-                g.setBackground(ecol)
+                g.setBackground(o.emptycolor)
             end
             for i=o.position.y, o.position.h+o.position.y, 1 do
                 g.set(o.optimal.x, i, "|")
             end
         end
     elseif o.vertical == true then
-        g.setForeground(fcol)
+        g.setForeground(o.fillcolor)
         g.fill(o.position.x,o.position.y, o.position.w, (((o.fillLevel*o.position.h)/100)-(o.position.h+o.position.y)), o.char)
         local rposx = o.position.x+(o.position.w/2)
         local rposy = o.position.y-((100-o.fillLevel)/2)
         g.setForeground(0xFFFFFF)
-        g.setBackground(fcol)
+        g.setBackground(o.fillcolor)
         g.set(rposx,rposy,readout)
-        if optenabled == true then
-            g.setForeground(optcol)
-            if flvl >= optlvl then
-                g.setBackground(fcol)
+        if o.optimal.enabled == true then
+            g.setForeground(o.optimal.color)
+            if flvl >= o.optimal.level then
+                g.setBackground(o.fillcolor)
             else
-                g.setBackground(ecol)
+                g.setBackground(o.emptycolor)
+            end
+            for i = o.position.x, o.position.w+o.position.x, 1 do
+                g.set(i, o.optimal.y, "_")
+            end
+        end
+    end
+    g.setForeground(oldfg)
+    g.setBackground(oldbg)
+end
+function gauge:refresh(o, flvl, readout)
+    o.fillLevel = flvl
+    o.readout = readout
+    local oldfg, _ = g.getForeground()
+    local oldbg, _ = g.getBackground()
+    g.setForeground(o.emptycolor)
+    g.fill(o.position.x,o.position.y,o.position.w,o.position.h, o.char)
+    if o.vertical == false then
+        g.setForeground(o.fillcolor)
+        g.fill(o.position.x,o.position.y, (((o.fillLevel*o.position.w)/100)+o.position.x),o.position.h,o.char)
+        local rposx = o.position.x+(o.fillLevel/2)
+        g.setForeground(0xFFFFFF)
+        g.setBackground(o.fillcolor)
+        g.set(rposx, (o.position.y+(o.position.h)/2), readout)
+        if o.optimal.enabled == true then
+            g.setForeground(o.optimal.color)
+            if flvl >= o.optimal.level then
+                g.setBackground(o.fillcolor)
+            else
+                g.setBackground(o.emptycolor)
+            end
+            for i=o.position.y, o.position.h+o.position.y, 1 do
+                g.set(o.optimal.x, i, "|")
+            end
+        end
+    elseif o.vertical == true then
+        g.setForeground(o.fillcolor)
+        g.fill(o.position.x,o.position.y, o.position.w, (((o.fillLevel*o.position.h)/100)-(o.position.h+o.position.y)), o.char)
+        local rposx = o.position.x+(o.position.w/2)
+        local rposy = o.position.y-((100-o.fillLevel)/2)
+        g.setForeground(0xFFFFFF)
+        g.setBackground(o.fillcolor)
+        g.set(rposx,rposy,readout)
+        if o.optimal.enabled == true then
+            g.setForeground(o.optimal.color)
+            if flvl >= o.optimal.level then
+                g.setBackground(o.fillcolor)
+            else
+                g.setBackground(o.emptycolor)
             end
             for i = o.position.x, o.position.w+o.position.x, 1 do
                 g.set(i, o.optimal.y, "_")
