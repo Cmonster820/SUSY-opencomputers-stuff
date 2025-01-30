@@ -1,6 +1,7 @@
 --format: see __packet
 --PORT: 1
 --Router address:  (testing world)
+--this was originally supposed to be rack or case, but due to recent (8:37pm est, 1/29/2025) discoveries, this will only work on cases
 component = require("component")
 event = require("event")
 m = component.modem
