@@ -127,11 +127,18 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
     g.fill(o.position.x,o.position.y,o.position.w,o.position.h, o.char)
     if o.vertical == false then
         g.setForeground(fcol)
-        g.fill(o.position.x,o.position.y, ((o.fillLevel*o.position.w)+o.position.x),o.position.h,o.char)
+        g.fill(o.position.x,o.position.y, (((o.fillLevel*o.position.w)/100)+o.position.x),o.position.h,o.char)
         local rposx = o.position.x+(o.fillLevel/2)
         g.setForeground(0xFFFFFF)
         g.setBackground(fcol)
         g.set(rposx, (o.position.y+(o.position.h)/2), readout)
     elseif o.vertical == true then
+        g.setForeground(fcol)
+        g.fill(o.position.x,o.position.y, o.position.w, (((o.fillLevel*o.position.h)/100)-(o.position.h+o.position.y)), o.char)
+        local rposx = o.position.x+(o.position.w/2)
+        local rposy = o.position.y-((100-o.fillLevel)/2)
+        g.setForeground(0xFFFFFF)
+        g.setBackground(fcol)
+        g.set(rposx,rposy,readout)
     end
 end
