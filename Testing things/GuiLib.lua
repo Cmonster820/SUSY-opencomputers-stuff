@@ -29,3 +29,19 @@ button = {
         y = math.abs(self.position.y-self.position.h)
     }
 }
+function button:new(o, x, y, w, h, col, text, textcol)
+    o = o or {}
+    o.position.x = x
+    o.position.y = y
+    o.position.w = w
+    o.position.h = h
+    if col == nil then
+        col = 0x000000
+    end
+    o.color = col
+    o.text.text = text
+    if textcol == nil then
+        textcol = 0xFFFFFF
+    end
+    o.text.color = textcol
+end
