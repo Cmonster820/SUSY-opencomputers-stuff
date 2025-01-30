@@ -66,6 +66,19 @@ gauge = {               --gauge object
             end
     }
 }
+border = {
+    position = {
+        x = nil,
+        y = nil,
+        w = nil,
+        h = nil
+    },
+    color = nil,
+    char = "█",
+    label = "",
+    thickness = nil,
+    labelColor = nil
+}
 function button:new(o, x, y, w, h, col, text, textcol)
     o = o or {}
     o.position.x = x
@@ -164,6 +177,37 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
             end
         end
     end
+    g.setForeground(oldfg)
+    g.setBackground(oldbg)
+end
+function border:new(o, x, y, w, h, col, label, lcol, thickness)
+    o = o or {}
+    o.position.x = x
+    o.position.y = y
+    o.position.w = w
+    o.position.h = h
+    if col == nil then
+        col = 0x000000
+    end
+    o.color = col
+    if lcol == nil then
+        lcol = 0x000000
+    end
+    o.labelColor = lcol
+    if thickness == 0 or thickness == nil then
+        thickness = 1
+    end
+    o.thickness = thickness
+    local oldfg, _ = g.getForeground()
+    local oldbg, _ = g.getBackground()
+    g.setForeground(col)
+    g.setBackground(col)
+    g.fill(o.position.x, o.position.y, o.position.w, o.thickness, o.char)--create top border ‾
+    g.fill(o.position.x, o.position.y, o.thickness, o.position.h, o.char)--create left border |‾
+    g.fill(o.position.x+o.position.w, o.position.y, o.thickness, o.position.h, o.char)--create right border |‾|
+    g.fill(o.position.x, o.position.y+o.position.h, o.position.w, o.thickness, o.char)--create bottom border ☐
+    g.setForeground(o.labelColor)
+    g.set((o.position.x+(o.position.w/2)-string.len(o.label)), o.position.y+1, o.label)
     g.setForeground(oldfg)
     g.setBackground(oldbg)
 end
