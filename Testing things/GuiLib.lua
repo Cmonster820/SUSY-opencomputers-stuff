@@ -158,7 +158,7 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
             else
                 g.setBackground(ecol)
             end
-            for i=o.position.x, o.position.w+o.position.x, 1 do
+            for i = o.position.x, o.position.w+o.position.x, 1 do
                 g.set(i, o.optimal.y, "_")
             end
         end
