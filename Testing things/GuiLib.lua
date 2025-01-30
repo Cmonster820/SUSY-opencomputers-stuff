@@ -7,6 +7,7 @@ g.setBackground(0x000000)
 g.setForeground(0xFFFFFF)
 --[[g.fill(1,1,g.maxResolution(),"█")]]
 g.fill(1,1,g.maxResolution()," ") -- refresh screen
+g.setDepth(g.maxDepth())
 --[[labeldat = {
         text = "",
         col = nil,
