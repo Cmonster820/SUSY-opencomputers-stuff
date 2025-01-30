@@ -29,17 +29,17 @@ button = {
         y = math.abs(self.position.y+(self.position.h/2))
     }
 }
-gauge = {
-    vertical = false,
+gauge = {               --gauge object
+    vertical = false, --whether or not the gauge is vertical
     position = {
         x = nil,
         y = nil,
         w = nil,
         h = nil
     },
-    fillcolor = nil,
-    emptycolor = nil,
-    fillLevel = nil,
+    fillcolor = nil, --color the filled in part is
+    emptycolor = nil, --color the empty part is
+    fillLevel = nil, --fill level out of 100
     char = "█",
     label = {
         enabled = false,
