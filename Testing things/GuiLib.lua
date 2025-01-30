@@ -14,6 +14,12 @@ button = {
         w = nil,
         h = nil
     },
+    labeldat = {
+        text = "",
+        col = nil,
+        x = math.abs(self.position.x-self.position.w)-string.len(self.text.text)/2,
+        y = self.position.y-1
+    },
     color = nil,
     char = "█",
     text = {
