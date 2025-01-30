@@ -48,6 +48,7 @@ gauge = {
         y = self.position.y-1,
         color = nil
     },
+    readout = "",
     optimal = {
         enabled = false,
         level = nil,
@@ -89,6 +90,42 @@ function button:new(o, x, y, w, h, col, text, textcol)
     g.setForeground(oldfg)
     g.setBackground(oldbg)
 end
-function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, optenabled, optcol, optlvl)
-
+function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, optenabled, optcol, optlvl, readout)
+    o = o or {}
+    o.vertical = vert
+    o.position.x = x
+    o.position.y = y
+    o.position.w = w
+    o.position.h = h
+    o.readout = readout
+    if fcol == nil then
+        fcol = 0x09E335
+    end
+    o.fillcolor = fcol
+    if ecol == nil then
+        ecol = 0x474749
+    end
+    o.emptycolor = ecol
+    o.fillLevel = flvl
+    if lenabled == true then
+        o.label.enabled = lenabled
+        o.label.text = ltxt
+        o.label.color = lcol
+    elseif lenabled == false then
+        o.label.enabled = lenabled
+    end
+    if optenabled == true then
+        o.optimal.enabled = optenabled
+        o.optimal.color = optcol
+        o.optimal.level = optlvl
+    elseif optenabled == false then
+        o.optimal.enabled = optenabled
+    end
+    local oldfg, _ = g.getForeground()
+    local oldbg, _ = g.getBackground()
+    g.setForeground(ecol)
+    g.fill(o.position.x,o.position.y,o.position.w,o.position.h, o.char)
+    if o.vertical == false then
+    elseif o.vertical == true then
+    end
 end
