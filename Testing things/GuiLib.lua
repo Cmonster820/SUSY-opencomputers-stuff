@@ -140,7 +140,7 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
                 g.setBackground(ecol)
             end
             for i=o.position.y, o.position.h+o.position.y, 1 do
-                g.set(o.optimal.x, o.optimal.y, "|")
+                g.set(o.optimal.x, i, "|")
             end
         end
     elseif o.vertical == true then
@@ -151,6 +151,17 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
         g.setForeground(0xFFFFFF)
         g.setBackground(fcol)
         g.set(rposx,rposy,readout)
+        if optenabled == true then
+            g.setForeground(optcol)
+            if flvl >= optlvl then
+                g.setBackground(fcol)
+            else
+                g.setBackground(ecol)
+            end
+            for i=o.position.x, o.position.w+o.position.x, 1 do
+                g.set(i, o.optimal.y, "_")
+            end
+        end
     end
     g.setForeground(oldfg)
     g.setBackground(oldbg)
