@@ -20,6 +20,6 @@ button = {
         color = nil,
         text = nil,
         x = math.abs(self.position.x-self.position.w)-string.len(self.text.text)/2,
-        y = math.abs(self.position.y-self.position.h),
+        y = math.abs(self.position.y-self.position.h)
     }
 }
