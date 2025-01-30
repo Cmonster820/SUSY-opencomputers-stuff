@@ -1,6 +1,6 @@
 --[[ This library is intended for use by myself to be able to 
 create guis which can display text in them and stuff
-■]]
+■█]]
 component = require("component")
 event = require("event")
 g = component.gpu
