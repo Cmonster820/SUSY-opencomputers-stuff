@@ -7,18 +7,18 @@ g.setBackground(0x000000)
 g.setForeground(0xFFFFFF)
 --[[g.fill(1,1,g.maxResolution(),"█")]]
 g.fill(1,1,g.maxResolution()," ") -- refresh screen
+--[[labeldat = {
+        text = "",
+        col = nil,
+        x = math.abs(self.position.x-self.position.w)-string.len(self.text.text)/2,
+        y = self.position.y-1
+    },]]
 button = {
     position = {
         x = nil,
         y = nil,
         w = nil,
         h = nil
-    },
-    labeldat = {
-        text = "",
-        col = nil,
-        x = math.abs(self.position.x-self.position.w)-string.len(self.text.text)/2,
-        y = self.position.y-1
     },
     color = nil,
     char = "█",
