@@ -96,9 +96,8 @@ function EncryptAndSendMessage(destination,data)
   sPublic = nil
   sPrivate = nil
 end
-function RequestManager(from, data)
-  if data.__requestpacket.type == "open" then
-    local amtofnot = 0
+function DoorManager(from, data)
+  local amtofnot = 0
     for k, v in pairs(cards) do
       if data.__requestpacket.data == v then
         __packet.routingData.destination = from
@@ -117,6 +116,10 @@ function RequestManager(from, data)
         __packet.routingData.destination = nil
       end
     end
+end
+function RequestManager(from, data)
+  if data.__requestpacket.type == "open" then
+    DoorManager(from, data)
   end
 end
 function ProcessMessage(from, data)
