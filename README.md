@@ -6,7 +6,7 @@ To use this for your own bases, you should only have to paste the program into a
 
 If you, for some reason, want to add to my internet of spaghetti code, the template for automatic router negotiation is the file titled "Ahh yes, the negotiator," with the 2 types of name settings commented out, this is a copy of the access controller node script, so if I forgot to remove some ACS stuff please open an issue
 
-DEPLOYMENT ORDER FOR SECURITY STUFF
+DEPLOYMENT ORDER FOR SECURITY STUFF:
 
     1. Router, this is required to route information between the different computers, even if you aren't using the security stuff, this is still required first.
     2. Mainframe, this processes all information from the security nodes, note that this requires a tier 3 data card, I typically put this in a rack
