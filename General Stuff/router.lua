@@ -43,7 +43,7 @@ function AddDeviceToNetwork(receiver, from, port, dist, message)
   ::rereceivename::
   local _, receiver, from, port, dist, message = event.pull("modem_message")
   if port ~= 3 then
-    return nil
+    goto rereceivename
   end
   print("Negotiating [==      ] Name Received, Updating File")
   for line in io.lines("/home/router/names.txt") do
