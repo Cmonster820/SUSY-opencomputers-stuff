@@ -13,7 +13,7 @@ sPrivate = nil
 rPublic = nil
 rPrivate = nil
 negotiationport = 3
-cards = {"123"}
+cards = {}
 m.open(mainport)
 print(m.isOpen(mainport))
 fs = require("filesystem")
@@ -46,6 +46,10 @@ elseif fs.exists("/home/data.txt") == false then
   datafile:close()
   m.close(negotiationport)
   print("Negotiation Complete")
+end
+if fs.exists("/home/cards.txt") == false then
+  cardfile = io.open("/home/cards.txt", "a")
+  cardfile:close()
 end
 __packet =
 {
@@ -96,8 +100,18 @@ function EncryptAndSendMessage(destination,data)
   sPublic = nil
   sPrivate = nil
 end
+function addCard(from, data)
+  cardfile = io.open("/home/cards.txt", "a")
+  cardfile:write(data .. "\n")
+  cardfile:close
+  print("Card Added")
+end
 function DoorManager(from, data)
   local amtofnot = 0
+  cards = {}
+  for line in io.lines("/home/cards.txt") do
+    table.insert(cards, line)
+  end
   for k, v in pairs(cards) do
     if data.__requestpacket.data == v then
       __packet.routingData.destination = from
@@ -116,10 +130,13 @@ function DoorManager(from, data)
       __packet.routingData.destination = nil
     end
   end
+  cards = {}
 end
 function RequestManager(from, data)
   if data.__requestpacket.type == "open" then
     DoorManager(from, data)
+  elseif data.__requestpacket.type == "addCard" then
+    addCard(from,data)
   end
 end
 function ProcessMessage(from, data)
