@@ -51,7 +51,7 @@ elseif fs.exists("/home/data.txt") == false then
     local _,receiver,from,port,dist,message = event.pull("modem_message")
     datafile:write("\n" .. tostring(message))
     datafile:close()
-    m.send(message, mainport, "pong")
+    m.send(message, mainport, "add to pongslist")
     print("Negotiation Complete")
 end
 m.open(2) --ping port
