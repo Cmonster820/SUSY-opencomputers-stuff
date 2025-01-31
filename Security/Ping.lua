@@ -50,7 +50,7 @@ elseif fs.exists("/home/data.txt") == false then
         os.exit()
     end
     datafile:write("\n" .. tostring(name))
-    m.send(router, port, "requestmainframe")
+    m.send(router, mainport, "requestmainframe")
     local _,receiver,from,port,dist,message = event.pull("modem_message")
     datafile:write("\n" .. tostring(message))
     datafile:close()
