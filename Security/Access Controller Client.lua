@@ -96,7 +96,11 @@ function Handshake()
     local packet = serialization.serialize(__packet)
     m.send(router, mainport, packet)
     print("Handshake [==   ] - Packet Sent, Awaiting rPublic")
+    ::rereceiverPublic::
     local _, receiver, from, port, dist, message = event.pull("modem_message")
+    if port ~= 1 then
+        goto rereceiverPublic
+    end
     print("Handshake [===  ] - Packet Received, Deserializing")
     local message = serialization.unserialize(message)
     print("Handshake [==== ] - Packet Deserialized, Reconstructing Key Object")
