@@ -147,7 +147,7 @@ function EncryptAndSendCardData(cardData)
     __encryptedpacket.data = nil
     __requestpacket.type = nil
     __requestpacket.data = nil
-    print("Packets Reset, Resuming Operation")
+    print("Packets Reset, Resuming Standard Operation")
     event.listen("modem_message", pong)
 end
 while true do
