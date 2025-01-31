@@ -102,7 +102,7 @@ function EncryptAndSendMessage(destination,data)
 end
 function addCard(from, data)
   cardfile = io.open("/home/cards.txt", "a")
-  cardfile:write(data .. "\n")
+  cardfile:write(data.__requestpacket.data .. "\n")
   cardfile:close
   print("Card Added")
 end
