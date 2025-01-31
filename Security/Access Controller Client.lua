@@ -46,7 +46,7 @@ elseif fs.exists("/home/data.txt") == false then
         local n = nil
     end
     datafile:write("\n" .. tostring(name))
-    m.send(router, port, "requestping")
+    m.send(router, mainport, "requestping")
     local _,receiver,from,port,dist,message = event.pull("modem_message")
     datafile:write("\n" .. tostring(message))
     datafile:close()
