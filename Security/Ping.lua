@@ -50,11 +50,11 @@ elseif fs.exists("/home/data.txt") == false then
         os.exit()
     end
     datafile:write("\n" .. tostring(name))
+    m.close(negotiationport)
     m.send(router, mainport, "requestmainframe")
     local _,receiver,from,port,dist,message = event.pull("modem_message")
     datafile:write("\n" .. tostring(message))
     datafile:close()
-    m.close(negotiationport)
     print("Negotiation Complete")
 end
 if fs.exists("/home/pongs.txt") == false then

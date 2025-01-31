@@ -46,11 +46,11 @@ elseif fs.exists("/home/data.txt") == false then
         local n = nil
     end
     datafile:write("\n" .. tostring(name))
+    m.close(negotiationport)
     m.send(router, mainport, "requestping")
     local _,receiver,from,port,dist,message = event.pull("modem_message")
     datafile:write("\n" .. tostring(message))
     datafile:close()
-    m.close(negotiationport)
     print("Negotiation Complete")
 end
 m.open(2) --ping port
