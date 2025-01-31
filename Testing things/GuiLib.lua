@@ -263,7 +263,7 @@ function gauge:refresh(o, flvl, readout)
     g.setForeground(oldfg)
     g.setBackground(oldbg)
 end
-function closeall() -- called at the end of the program, resets screen to default black/white
+function closeall() -- to be called at the end of the program, resets screen to default black/white
     g.setForeground(0xFFFFFF)
     g.setBackground(0x000000)
     g.fill(1,1,g.maxResolution(), " ") -- clears screen
