@@ -68,7 +68,7 @@ function AddDeviceToNetwork(receiver, from, port, dist, message)
 end
 function ProcessRouterCommands(receiver, from, port, dist, message)
   if message == "LOCKDOWN" or message == "ALARM" then
-    for line in io.lines("/home/router/addresses.txt") do
+    for line in io.lines("/home/router/addresses.txt") do -- I don't really know why I'm not just using broadcast here
       m.send(line, mainport, "ALARM")
     end
   end
