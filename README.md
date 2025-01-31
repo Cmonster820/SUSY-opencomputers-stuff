@@ -1,6 +1,6 @@
 # SUSY-opencomputers-stuff
 
-This is all my stuff that I programmed for my SUSY bases
+This is all the stuff that I programmed for my SUSY bases
 
 To use this for your own bases, you should only have to paste the program into a computer (insert or middle click while a .lua file is open) and run the file. Do note that you have to reprogram the mainframe a little bit in order to have a blacklist instead of a whitelist, but I don't really know why you would want that.
 
