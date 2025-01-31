@@ -98,24 +98,24 @@ function EncryptAndSendMessage(destination,data)
 end
 function DoorManager(from, data)
   local amtofnot = 0
-    for k, v in pairs(cards) do
-      if data.__requestpacket.data == v then
-        __packet.routingData.destination = from
-        __packet.data = "authorized"
-        m.send(router, mainport, serialization.serialize(__packet))
-        __packet.routingData.destination = nil
-        __packet.data = nil
-        break
-      elseif data.__requestpacket.data ~= v then
-        local amtofnot = amtofnot + 1
-      elseif amtofnot == #cards then
-        __packet.routingData.destination = from
-        __packet.data = "denied"
-        m.send(router, mainport, serialization.serialize(__packet))
-        __packet.data = nil
-        __packet.routingData.destination = nil
-      end
+  for k, v in pairs(cards) do
+    if data.__requestpacket.data == v then
+      __packet.routingData.destination = from
+      __packet.data = "authorized"
+      m.send(router, mainport, serialization.serialize(__packet))
+      __packet.routingData.destination = nil
+      __packet.data = nil
+      break
+    elseif data.__requestpacket.data ~= v then
+      local amtofnot = amtofnot + 1
+    elseif amtofnot == #cards then
+      __packet.routingData.destination = from
+      __packet.data = "denied"
+      m.send(router, mainport, serialization.serialize(__packet))
+      __packet.data = nil
+      __packet.routingData.destination = nil
     end
+  end
 end
 function RequestManager(from, data)
   if data.__requestpacket.type == "open" then
