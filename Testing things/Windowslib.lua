@@ -1,4 +1,4 @@
---[[ This library is intended for use by myself to be able to 
+--[[This library is intended for use by myself to be able to 
 create "windows," which can display text in them and stuff]]
 component = require("component")
 g = component.gpu
