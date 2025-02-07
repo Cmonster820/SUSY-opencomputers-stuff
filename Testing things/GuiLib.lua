@@ -118,7 +118,7 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
     end
     o.fillcolor = fcol
     if ecol == nil then
-        ecol = 0x474749
+        ecol = 0x474747
     end
     o.emptycolor = ecol
     o.fillLevel = flvl
