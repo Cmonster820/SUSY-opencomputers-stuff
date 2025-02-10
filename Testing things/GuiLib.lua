@@ -97,8 +97,8 @@ function button:new(o, x, y, w, h, col, text, textcol)
     o.text.color = textcol
     local oldfg, _ = g.getForeground()
     local oldbg, _ = g.getBackground()
-    g.setForeground(o.color) --makes next operation the right color
-    g.fill(o.position.x, o.position.y, o.position.w, o.position.h, o.char) --makes Button box
+    g.setBackground(o.color) --makes next operation the right color
+    g.fill(o.position.x, o.position.y, o.position.w, o.position.h, " ") --makes Button box
     g.setForeground(o.text.color)
     g.setBackground(o.color)
     g.set(o.text.x, o.text.y, o.text.text)
@@ -141,14 +141,13 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
     end
     local oldfg, _ = g.getForeground()
     local oldbg, _ = g.getBackground()
-    g.setForeground(o.emptycolor)
-    g.fill(o.position.x,o.position.y,o.position.w,o.position.h, o.char)
+    g.setBackground(o.emptycolor)
+    g.fill(o.position.x,o.position.y,o.position.w,o.position.h, " ")
     if o.vertical == false then
-        g.setForeground(o.fillcolor)
-        g.fill(o.position.x,o.position.y, (((o.fillLevel*o.position.w)/100)+o.position.x),o.position.h,o.char)
+        g.setBackground(o.fillcolor)
+        g.fill(o.position.x,o.position.y, (((o.fillLevel*o.position.w)/100)+o.position.x),o.position.h," ")
         local rposx = o.position.x+(o.fillLevel/2)
         g.setForeground(0xFFFFFF)
-        g.setBackground(o.fillcolor)
         g.set(rposx, (o.position.y+(o.position.h)/2), readout)
         if o.optimal.enabled == true then
             g.setForeground(o.optimal.color)
@@ -162,12 +161,11 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
             end
         end
     elseif o.vertical == true then
-        g.setForeground(o.fillcolor)
-        g.fill(o.position.x,o.position.y, o.position.w, (((o.fillLevel*o.position.h)/100)-(o.position.h+o.position.y)), o.char)
+        g.setBackground(o.fillcolor)
+        g.fill(o.position.x,o.position.y, o.position.w, (((o.fillLevel*o.position.h)/100)-(o.position.h+o.position.y)), " ")
         local rposx = o.position.x+(o.position.w/2)
         local rposy = o.position.y-((100-o.fillLevel)/2)
         g.setForeground(0xFFFFFF)
-        g.setBackground(o.fillcolor)
         g.set(rposx,rposy,readout)
         if o.optimal.enabled == true then
             g.setForeground(o.optimal.color)
@@ -220,14 +218,13 @@ function gauge:refresh(o, flvl, readout)
     o.readout = readout
     local oldfg, _ = g.getForeground()
     local oldbg, _ = g.getBackground()
-    g.setForeground(o.emptycolor)
-    g.fill(o.position.x,o.position.y,o.position.w,o.position.h, o.char)
+    g.setBackground(o.emptycolor)
+    g.fill(o.position.x,o.position.y,o.position.w,o.position.h, " ")
     if o.vertical == false then
-        g.setForeground(o.fillcolor)
-        g.fill(o.position.x,o.position.y, (((o.fillLevel*o.position.w)/100)+o.position.x),o.position.h,o.char)
+        g.setBackground(o.fillcolor)
+        g.fill(o.position.x,o.position.y, (((o.fillLevel*o.position.w)/100)+o.position.x),o.position.h," ")
         local rposx = o.position.x+(o.fillLevel/2)
         g.setForeground(0xFFFFFF)
-        g.setBackground(o.fillcolor)
         g.set(rposx, (o.position.y+(o.position.h)/2), readout)
         if o.optimal.enabled == true then
             g.setForeground(o.optimal.color)
@@ -241,12 +238,11 @@ function gauge:refresh(o, flvl, readout)
             end
         end
     elseif o.vertical == true then
-        g.setForeground(o.fillcolor)
-        g.fill(o.position.x,o.position.y, o.position.w, (((o.fillLevel*o.position.h)/100)-(o.position.h+o.position.y)), o.char)
+        g.setBackground(o.fillcolor)
+        g.fill(o.position.x,o.position.y, o.position.w, (((o.fillLevel*o.position.h)/100)-(o.position.h+o.position.y)), " ")
         local rposx = o.position.x+(o.position.w/2)
         local rposy = o.position.y-((100-o.fillLevel)/2)
         g.setForeground(0xFFFFFF)
-        g.setBackground(o.fillcolor)
         g.set(rposx,rposy,readout)
         if o.optimal.enabled == true then
             g.setForeground(o.optimal.color)
