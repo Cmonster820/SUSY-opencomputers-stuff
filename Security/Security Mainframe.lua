@@ -85,7 +85,7 @@ function EncryptAndSendMessage(destination,data)
   rPublic = d.deserializeKey(rPublic,"ec-public")
   sPublic, sPrivate = d.generateKeyPair(384)
   local encryptionKey = d.md5(d.ecdh(sPrivate, rPublic))
-  __packet.__encryptedpacket.header.iv = component.data.random(16)
+  __packet.__encryptedpacket.header.iv = d.random(16)
   __packet.__encryptedpacket.header.sPublic = sPublic.serialize()
   __packet.__encryptedpacket.data = data
   __packet.data = d.encrypt(serialization.serialize(__packet.data), encryptionKey, __packet.header.iv)
