@@ -39,7 +39,7 @@ gauge = {             --gauge object
         w = nil,
         h = nil
     },
-    fillcolor = nil,  --color the filled in part is
+    fillcolor = nil,  --color the filled-in part is
     emptycolor = nil, --color the empty part is
     fillLevel = nil,  --fill level out of 100
     char = "■",
