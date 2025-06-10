@@ -108,7 +108,7 @@ function EncryptAndSendCardData(cardData)
     print("Encrypting [===   ] - Initiation Vector Generated, Storing sPublic to Packet Header")
     __encryptedpacket.header.sPublic = sPublic.serialize()
     print("Encrypting [====  ] - sPublic Stored to Packet Header, Storing cardData to Packet Data")
-    __requestpacket.type = "open"
+    __requestpacket.type = "addCard"
     __requestpacket.data = tostring(cardData)
     __encryptedpacket.data = __requestpacket
     print("Encrypting [===== ] - cardData Stored to Packet Data, Serializing and Encrypting Packet Data")
