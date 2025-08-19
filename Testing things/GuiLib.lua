@@ -114,11 +114,11 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
     o.position.h = h
     o.readout = readout
     if fcol == nil then
-        fcol = 0x09E335
+        fcol = 0x09E335 -- #09E335
     end
     o.fillcolor = fcol
     if ecol == nil then
-        ecol = 0x474747
+        ecol = 0x474747 -- #474747
     end
     o.emptycolor = ecol
     o.fillLevel = flvl
@@ -132,7 +132,7 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
     if optenabled == true then
         o.optimal.enabled = optenabled
         if optcol == nil then
-            optcol = 0xFF0000
+            optcol = 0xFF0000 -- #FF0000 
         end
         o.optimal.color = optcol
         o.optimal.level = optlvl
