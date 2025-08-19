@@ -9,7 +9,7 @@ g.setForeground(0xFFFFFF)
 --[[g.fill(1,1,g.maxResolution(),"■")]]
 g.fill(1,1,g.maxResolution()," ") -- refresh screen
 g.setDepth(g.maxDepth())
---[[labeldat = {
+--[[labeldat = {  --I have no idea why this is commented out 
         text = "",
         col = nil,
         x = math.abs(self.position.x-self.position.w)-string.len(self.text.text)/2,
