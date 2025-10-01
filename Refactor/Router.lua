@@ -12,7 +12,7 @@ mainport = 1
 m.open(mainport)
 newdeviceport = 2
 m.open(newdeviceport)
-negotiationport = 9
+negotiationport = 3
 m.open(negotiationport)
 g = component.gpu
 if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true then
@@ -89,10 +89,17 @@ function verifyMessage(message, sender)
 end
 function routing(receiveraddr, sender, port, distance, message)
     message = serialization.deserialize(message)
+    if port == newdeviceport then
+        beginnegotiation(sender, port, message)
+        return nil
+    elseif port == negotiationport then
+        finishnegotiation(sender, port, message)
+        return nil
+    end
     print("received message\nmessage reads:\n"+message)
     if verifyMessage(message, sender) then
         print(relayMessage(message))
-    else print("Message invalid") end
+    else print("Message invalid") return nil end
 end
 event.listen("modem_message", routing)
 event.pull("interrupted")
