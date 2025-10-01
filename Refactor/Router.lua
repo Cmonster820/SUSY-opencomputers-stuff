@@ -28,3 +28,10 @@ packet =
     },
     data = nil
 }
+if filesystem.exists("/home/router") == false then
+    filesystem.makeDirectory("/home/router/")
+    names = io.open("/home/router/names.txt")
+    names:close
+    addresses = io.open("/home/router/addresses.txt")
+    addresses:close
+end
