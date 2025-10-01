@@ -59,6 +59,7 @@ function relayMessage(message)
     end
     log = io.open("/home/router/log.txt", "a")
     log:write(serialization.serialize(message)+"\n\n\n")
+    log:close()
     m.send(temptable[message.from], mainport)
     return "Message relayed successfully"
 end
