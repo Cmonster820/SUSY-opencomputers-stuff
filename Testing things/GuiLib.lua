@@ -220,6 +220,7 @@ function border:new(o, x, y, w, h, col, label, lcol, thickness)
     return o
 end
 function gauge:refresh(o, flvl, readout)
+    o = self
     o.fillLevel = flvl
     o.readout = readout
     local oldfg, _ = g.getForeground()

@@ -36,7 +36,7 @@ originalBg = g.getBackground()
 screenw, screenh = g.getResolution()
 if filesystem.exists("/home/router") == false then
     g.setBackground(0XFFFFFF)
-    loadingBar = gui.gauge:new(_, false, (screenw/2)-(screenw/4), (screenh/2)-1, screenw/2)
+    loadingBar = gui.gauge:new(_, false, (screenw/2)-(screenw/4), (screenh/2)-1, screenw/2, 3, _, _, 0, true, "Creating Data Files-")
     filesystem.makeDirectory("/home/router/")
     names = io.open("/home/router/names.txt")
     names:close
