@@ -1,5 +1,6 @@
 --This file is a rewrite of the original router code because it kind of sucked
 --this will have an option to store all packets to a file, to change the location, edit the code
+--this file requires the guilib library I made in "testing things"
 component = require("component")
 event = require("event")
 m = component.modem
@@ -11,10 +12,10 @@ mainport = 1
 m.open(mainport)
 newdeviceport = 2
 m.open(newdeviceport)
-negotiationport = 3
+negotiationport = 9
 m.open(negotiationport)
 g = component.gpu
-if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))==true then
+if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true then
     print("All ports opened successfully, proceeding with bootup")
 else
     print("Error detected, halting operation")
@@ -40,10 +41,10 @@ if filesystem.exists("/home/router") == false then
     g.fill(1,1,g.maxResolution()," ")
     g.fill(screenw/4, (screenh/2)-1, ((3*screenw)/4), 2, "■")
     g.setForeground(0x00FF00) -- #00FF00
-    
+
     filesystem.makeDirectory("/home/router/")
     names = io.open("/home/router/names.txt")
     names:close
-    addresses = io.open("/home/router/addresses.txt")
+    addresses = io.open("/home/router/addressestxt")
     addresses:close
 end
