@@ -15,7 +15,6 @@ m.open(newdeviceport)
 negotiationport = 9
 m.open(negotiationport)
 g = component.gpu
-gui = require("GuiLib")
 if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true then
     print("All ports opened successfully, proceeding with bootup")
 else
@@ -27,19 +26,71 @@ packet =
     routingData = 
     {
         destination = nil,
-        from = nil
+        from = nil,
+        fromaddr = nil
     },
     data = nil
 }
-originalFg = g.getForeground()
-originalBg = g.getBackground()
-screenw, screenh = g.getResolution()
 if filesystem.exists("/home/router") == false then
-    g.setBackground(0XFFFFFF)
-    loadingBar = gui.gauge:new(_, false, (screenw/2)-(screenw/4), (screenh/2)-1, screenw/2, 3, _, _, 0, true, "Creating Data Files-")
     filesystem.makeDirectory("/home/router/")
-    names = io.open("/home/router/names.txt")
+    names = io.open("/home/router/names.txt", "a")
     names:close
-    addresses = io.open("/home/router/addressestxt")
+    addresses = io.open("/home/router/addressestxt", "a")
     addresses:close
 end
+function relayMessage(message)
+    local temptable = {}
+    io.open("/home/router/addresses.txt")
+    currentLine = 0
+    for line in io.lines("/home/router/names.txt") do
+        currentLine += 1
+        line = line:gsub("\n","")
+        othercurline = 0
+        for otherline in io.lines("/home/router/addresses.txt") do
+            otherline = otherline:gsub("\n","")
+            othercurline += 1
+            if othercurline == currentLine then
+                break
+            end
+        end
+        othercurline = nil
+        temptable[line] = otherline
+    end
+    m.send(temptable[message.from], mainport)
+    return "Message relayed successfully"
+end
+function verifyMessage(message, sender)
+    local temptable = {}
+    io.open("/home/router/addresses.txt")
+    currentLine = 0
+    for line in io.lines("/home/router/names.txt") do
+        currentLine += 1
+        line = line:gsub("\n","")
+        othercurline = 0
+        for otherline in io.lines("/home/router/addresses.txt") do
+            otherline = otherline:gsub("\n","")
+            othercurline += 1
+            if othercurline == currentLine then
+                break
+            end
+        end
+        othercurline = nil
+        temptable[line] = otherline 
+    end
+    if temptable[message.from] == message.fromaddr then
+        return true
+    else
+        return false
+    end
+    currentLine = nil
+end
+function routing(receiveraddr, sender, port, distance, message)
+    message = serialization.deserialize(message)
+    print("received message\nmessage reads:\n"+message)
+    if verifyMessage(message, sender) then
+        print(relayMessage(message))
+    else print("Message invalid") end
+end
+event.listen("modem_message", routing)
+event.pull("interrupted")
+event.ignore("modem_message", routing)
