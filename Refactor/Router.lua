@@ -37,10 +37,11 @@ if filesystem.exists("/home/router") == false then
     names:close
     addresses = io.open("/home/router/addressestxt", "a")
     addresses:close
+    log = io.open("/home/router/log.txt", "a")
+    log:close
 end
 function relayMessage(message)
     local temptable = {}
-    io.open("/home/router/addresses.txt")
     currentLine = 0
     for line in io.lines("/home/router/names.txt") do
         currentLine += 1
@@ -56,12 +57,13 @@ function relayMessage(message)
         othercurline = nil
         temptable[line] = otherline
     end
+    log = io.open("/home/router/log.txt", "a")
+    log:write(message+"\n\n\n")
     m.send(temptable[message.from], mainport)
     return "Message relayed successfully"
 end
 function verifyMessage(message, sender)
     local temptable = {}
-    io.open("/home/router/addresses.txt")
     currentLine = 0
     for line in io.lines("/home/router/names.txt") do
         currentLine += 1
