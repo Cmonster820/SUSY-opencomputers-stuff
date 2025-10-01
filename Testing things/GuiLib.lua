@@ -82,6 +82,7 @@ border = {
 }
 function button:new(o, x, y, w, h, col, text, textcol)
     o = o or {}
+    setmetatable(o, self)
     o.position.x = x
     o.position.y = y
     o.position.w = w
@@ -104,9 +105,11 @@ function button:new(o, x, y, w, h, col, text, textcol)
     g.set(o.text.x, o.text.y, o.text.text)
     g.setForeground(oldfg)
     g.setBackground(oldbg)
+    return o
 end
 function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, optenabled, optcol, optlvl, readout)
     o = o or {}
+    setmetatable(o, self)
     o.vertical = vert
     o.position.x = x
     o.position.y = y
@@ -181,9 +184,11 @@ function gauge:new(o, vert, x, y, w, h, fcol, ecol, flvl, lenabled, ltxt, lcol, 
     end
     g.setForeground(oldfg)
     g.setBackground(oldbg)
+    return o
 end
 function border:new(o, x, y, w, h, col, label, lcol, thickness)
     o = o or {}
+    setmetatable(o, self)
     o.position.x = x
     o.position.y = y
     o.position.w = w
@@ -212,6 +217,7 @@ function border:new(o, x, y, w, h, col, label, lcol, thickness)
     g.set((o.position.x+(o.position.w/2)-string.len(o.label)), o.position.y+1, o.label)
     g.setForeground(oldfg)
     g.setBackground(oldbg)
+    return o
 end
 function gauge:refresh(o, flvl, readout)
     o.fillLevel = flvl
@@ -258,6 +264,7 @@ function gauge:refresh(o, flvl, readout)
     end
     g.setForeground(oldfg)
     g.setBackground(oldbg)
+    return o
 end
 function closeall() -- to be called at the end of the program, resets screen to default black/white
     g.setForeground(0xFFFFFF)

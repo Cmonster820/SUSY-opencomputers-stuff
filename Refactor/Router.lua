@@ -15,6 +15,7 @@ m.open(newdeviceport)
 negotiationport = 9
 m.open(negotiationport)
 g = component.gpu
+gui = require("GuiLib")
 if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true then
     print("All ports opened successfully, proceeding with bootup")
 else
@@ -30,18 +31,12 @@ packet =
     },
     data = nil
 }
-originalFg = g.getForeground
-originalBg = g.getBackground
+originalFg = g.getForeground()
+originalBg = g.getBackground()
 screenw, screenh = g.getResolution()
 if filesystem.exists("/home/router") == false then
-    oldFg = g.getForeground
-    oldBg = g.getBackground
-    g.setBackground(0xFFFFFF) -- #FFFFFF
-    g.setForeground(0xFF0000) -- #FF0000 
-    g.fill(1,1,g.maxResolution()," ")
-    g.fill(screenw/4, (screenh/2)-1, ((3*screenw)/4), 2, "■")
-    g.setForeground(0x00FF00) -- #00FF00
-
+    g.setBackground(0XFFFFFF)
+    loadingBar = gui.gauge:new(_, false, (screenw/2)-(screenw/4), (screenh/2)-1, screenw/2)
     filesystem.makeDirectory("/home/router/")
     names = io.open("/home/router/names.txt")
     names:close
