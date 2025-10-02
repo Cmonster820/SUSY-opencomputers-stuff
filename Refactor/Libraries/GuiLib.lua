@@ -99,15 +99,21 @@ function gauge:new(x, y, h, w, label, labelCol, readOut, readOutCol, fillLvl, fi
     --rendering time
     oldbg = g.getBackground()
     oldfg = g.getForeground()
+    --draw filled in part
     g.setBackground(self.fillCol)
     g.fill(self.rendererdata.fillbar.x, self.rendererdata.fillbar.y, self.rendererdata.fillbar.w, self.rendererdata.fillbar.h, " ")
+    --draw empty part
     g.setBackground(self.emptyCol)
     g.fill(self.rendererdata.emptybar.x, self.rendererdata.emptybar.y, self.rendererdata.emptybar.w, self.rendererdata.emptybar.h, " ")
+    --draw label
     g.setBackground(oldbg)
     g.setForeground(self.textCol)
     g.set(self.rendererdata.labelData.x, self.rendererdata.labelData.y, self.label)
+    --draw readout
     g.setBackground(self.fillCol)
     g.setForeground(self.readOutCol)
+    --draw part in filled in bit
     g.set(self.rendererdata.readOutData.x, self.rendererdata.readOutData.y, string.sub(self.readOut, 1,self.rendererdata.readOutData.fillLen))
+    --draw part in empty bit
     g.set(self.rendererdata.readOutData.x+self.rendererdata.readOutData.fillLen, self.rendererdata.readOutData.y, string.sub(self.readOut, self.rendererdata.readOutData.fillLen, -1))
 end
