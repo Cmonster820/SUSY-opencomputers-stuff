@@ -53,14 +53,9 @@ gauge =
         },
         readOutData =
         {
-            x = (self.position.x+(self.position.w/2)-(string.len(self.readOut)/2)),
-            y = self.position.y+self.position.h/2
-            outLeftLen = if self.rendererdata.readOutData.x<self.position.x then 
-                            self.position.w-string.len(self.readOut)/2
-                        else
-                            nil
-                        end
-            
+            x = (self.position.x+(self.position.w/2)-math.floor((string.len(self.readOut)/2))),
+            y = self.position.y+self.position.h/2,
+            fillLen = self.rendererdata.fillbar.w-(self.position.x+(self.position.w/2)-math.floor((string.len(self.readOut)/2)))
         },
         OptimalData =
         {
@@ -104,12 +99,15 @@ function gauge:new(x, y, h, w, label, labelCol, readOut, readOutCol, fillLvl, fi
     --rendering time
     oldbg = g.getBackground()
     oldfg = g.getForeground()
-    g.setBackground(fillCol)
+    g.setBackground(self.fillCol)
     g.fill(self.rendererdata.fillbar.x, self.rendererdata.fillbar.y, self.rendererdata.fillbar.w, self.rendererdata.fillbar.h, " ")
-    g.setBackground(emptyCol)
+    g.setBackground(self.emptyCol)
     g.fill(self.rendererdata.emptybar.x, self.rendererdata.emptybar.y, self.rendererdata.emptybar.w, self.rendererdata.emptybar.h, " ")
     g.setBackground(oldbg)
     g.setForeground(self.textCol)
     g.set(self.rendererdata.labelData.x, self.rendererdata.labelData.y, self.label)
-
+    g.setBackground(self.fillCol)
+    g.setForeground(self.readOutCol)
+    g.set(self.rendererdata.readOutData.x, self.rendererdata.readOutData.y, string.sub(self.readOut, 1,self.rendererdata.readOutData.fillLen))
+    g.set(self.rendererdata.readOutData.x+self.rendererdata.readOutData.fillLen, self.rendererdata.readOutData.y, string.sub(self.readOut, self.rendererdata.readOutData.fillLen, -1))
 end
