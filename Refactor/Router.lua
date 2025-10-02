@@ -43,6 +43,9 @@ end
 function negotiation(sender, port, message)
     name = message.routingData.from+"\n"
     address = message.routingData.fromaddr+"\n"
+    log = io.open("/home/router/log.txt", "a")
+    log:write(serialization.serialize(message)+"\n\n\n")
+    log:close()
     for line in io.lines("/home/router/names.txt") do
         if line == name then
             m.send(address.gsub("\n", ""),port,"Name Taken")
@@ -51,7 +54,6 @@ function negotiation(sender, port, message)
     end
     names = io.open("/home/router/names.txt","a")
     addresses = io.open("/home/router/addresses.txt", "a")
-    log = io.open("/home/router/log.txt", "a")
     names:write(name)
     addresses:write(address)
     names:close()
@@ -62,7 +64,7 @@ function negotiation(sender, port, message)
 end
 function processNewName(from ,port, message)
     log = io.open("/home/router/log.txt", "a")
-    log:write(message)
+    log:write(serialization.serialize(message)+"\n\n\n")
     for line in io.lines("/home/router/names.txt") do
         if message.routingData.from+"\n" == line then
             m.send(message.routingData.fromaddr, port, "Name Taken")
@@ -81,6 +83,8 @@ function processNewName(from ,port, message)
     log:close()
     name = nil
     address = nil
+end
+function processRouterCommands(message)
 end
 function relayMessage(message)
     local temptable = {}
@@ -102,7 +106,7 @@ function relayMessage(message)
     log = io.open("/home/router/log.txt", "a")
     log:write(serialization.serialize(message)+"\n\n\n")
     log:close()
-    m.send(temptable[message.routingData.from], mainport, message)
+    m.send(temptable[message.routingData.destination], mainport, message)
     return "Message relayed successfully"
 end
 function verifyMessage(message, sender)
@@ -140,7 +144,9 @@ function routing(receiveraddr, sender, port, distance, message)
     end
     print("received message\nmessage reads:\n"+message)
     if verifyMessage(message, sender) then
-        print(relayMessage(message))
+        if message.routingData.destination~="router" then
+           print(relayMessage(message))
+        end
     else print("Message invalid") return nil end
 end
 event.listen("modem_message", routing)
