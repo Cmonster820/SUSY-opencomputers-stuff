@@ -91,6 +91,23 @@ function processNewName(from ,port, message)
     address = nil
 end
 function processRouterCommands(message)
+    if message.Data == "RequestPing" then
+        for line in io.lines("/home/router/names.txt") do
+        currentLine += 1
+        line = line:gsub("\n","")
+        othercurline = 0
+        for otherline in io.lines("/home/router/addresses.txt") do
+            otherline = otherline:gsub("\n","")
+            othercurline += 1
+            if othercurline == currentLine then
+                break
+            end
+        end
+        othercurline = nil
+        temptable[line] = otherline
+        m.send(message.routingData.fromaddr, mainport, temptable[ping])
+        temptable = nil
+    end
 end
 function relayMessage(message)
     local temptable = {}
