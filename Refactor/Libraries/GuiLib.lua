@@ -22,6 +22,7 @@ gauge =
     },
     label = "",
     readOut = "",
+    readOutCol = 0,
     fillLvl = 0,
     fillCol = 0,
     emptyCol = 0,
@@ -33,18 +34,32 @@ gauge =
     {
         fillbar =
         {
-            x = self.position.x
-            y = self.position.y
-            w = math.floor(self.position.w/fillLvl)
+            x = self.position.x,
+            y = self.position.y,
+            w = math.floor((self.position.w/(self.fillLvl/100))+0.5),
             h = self.position.h
         },
         labelData =
         {
             x = (self.position.x+((1/2)*self.position.w)-((1/2)*string.len(self.label))),
-            y = self.position.y+(self.position.h/2),
-            filledpart = string.sub( self.label, 1, )
+            y = self.position.y+self.position.h+1
+        },
+        readOutData =
+        {
+            x = (self.position.x+(self.position.w/2)-(string.len(self.readOut)/2)),
+            y = self.position.y+self.position.h/2
+        },
+        OptimalData =
+        {
+            x = math.floor((self.position.w/(self.optimalLvl/100))+0.5),
+            y = self.position.y,
+            optimalstring = string.rep("|", self.position.h)
         }
     }
+}
+verticalGauge =
+{
+
 }
 button = 
 {
