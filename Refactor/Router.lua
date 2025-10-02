@@ -18,7 +18,7 @@ g = component.gpu
 if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true then
     print("All ports opened successfully, proceeding with bootup")
 else
-    print("Error detected, halting operation")
+    io.stderr:write("Error detected, halting operation")
     os.exit()
 end
 packet = 
@@ -45,10 +45,11 @@ function negotiation(sender, port, message)
     address = message.routingData.fromaddr+"\n"
     log = io.open("/home/router/log.txt", "a")
     log:write(serialization.serialize(message)+"\n\n\n")
-    log:close()
     for line in io.lines("/home/router/names.txt") do
         if line == name then
             m.send(address.gsub("\n", ""),port,"Name Taken")
+            log:write("Message sent to "+message.routingData.fromaddr+"\n, \"Name Taken\"\n\n\n")
+            log:close()
             return nil
         end
     end
@@ -59,6 +60,8 @@ function negotiation(sender, port, message)
     names:close()
     addresses:close()
     m.send(address.gsub("\n", ""), port, "Negotiation Successful")
+    log:write("Message sent to "+message.routingData.fromaddr+"\n, \"Negotiation Successful\"\n\n\n")
+    log:close()
     name = nil
     address = nil
 end
@@ -68,6 +71,8 @@ function processNewName(from ,port, message)
     for line in io.lines("/home/router/names.txt") do
         if message.routingData.from+"\n" == line then
             m.send(message.routingData.fromaddr, port, "Name Taken")
+            log:write("Message sent to "+message.routingData.fromaddr+"\n, \"Name Taken\"\n\n\n")
+            log:close()
             return nil
         end
     end
@@ -78,6 +83,7 @@ function processNewName(from ,port, message)
     names:write(name)
     addresses:write(address)
     m.send(message.routingData.fromaddr, port, "Negotiation Successful")
+    log:write("Message sent to "+message.routingData.fromaddr+"\n, \"Negotiation Successful\"\n\n\n")
     names:close()
     addresses:close()
     log:close()
@@ -135,6 +141,7 @@ function verifyMessage(message, sender)
 end
 function routing(receiveraddr, sender, port, distance, message)
     message = serialization.deserialize(message)
+    print("received message\nmessage reads:\n"+message)
     if port == newdeviceport then
         negotiation(sender, port, message)
         return nil
@@ -142,10 +149,13 @@ function routing(receiveraddr, sender, port, distance, message)
         processNewName(sender, port, message)
         return nil
     end
-    print("received message\nmessage reads:\n"+message)
     if verifyMessage(message, sender) then
         if message.routingData.destination~="router" then
            print(relayMessage(message))
+           return nil
+        else
+            processRouterCommands(message)
+            return nil
         end
     else print("Message invalid") return nil end
 end
