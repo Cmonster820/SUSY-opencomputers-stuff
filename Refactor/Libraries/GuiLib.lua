@@ -39,6 +39,13 @@ gauge =
             w = math.floor((self.position.w/(self.fillLvl/100))+0.5),
             h = self.position.h
         },
+        emptybar =
+        {
+            x = self.position.x+math.floor((self.position.w/(self.fillLvl/100))+0.5),
+            y = self.position.y,
+            w = self.position.w-math.floor((self.position.w/(self.fillLvl/100))+0.5),
+            h = self.position.h
+        }
         labelData =
         {
             x = (self.position.x+((1/2)*self.position.w)-((1/2)*string.len(self.label))),
@@ -69,3 +76,27 @@ border =
 {
 
 }
+
+function gauge:new(x, y, h, w, label, labelCol, readOut, readOutCol, fillLvl, fillCol, emptyCol, optimalEnabled, optimalLvl, optimalCol)
+    o = {}
+    setmetatable(o, self)
+    self.__index = self
+    self.position.x = x
+    self.position.y = y
+    self.position.h = h
+    self.position.w = w
+    self.label = label or ""
+    self.textCol = labelCol or 0xFFFFFF -- #FFFFFF
+    self.readOut = readOut or ""
+    self.readOutCol = readOutCol or 0xFFFFFF -- #FFFFFF
+    self.fillLvl = fillLvl
+    self.fillCol = fillCol or 0x55FF55 -- #55FF55
+    self.emptyCol = emptyCol or 0xFF0000 -- #FF0000
+    self.optimalEnabled = optimalEnabled or false
+    self.optimalLvl = optimalLvl or nil
+    self.optimalCol = optimalCol or nil
+    --rendering time
+    oldbg = g.getBackground()
+    oldfg = g.getForeground()
+    g.fill
+end
