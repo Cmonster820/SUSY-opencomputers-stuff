@@ -11,7 +11,7 @@ g.setForeground(0xFFFFFF)
 --[[g.fill(1,1,g.maxResolution(),"■")]]
 g.fill(1,1,g.maxResolution()," ") -- refresh screen
 g.setDepth(g.maxDepth())
-gauge =
+gauge = --define horizontal gauge object
 {
     position =
     {
@@ -82,6 +82,7 @@ function gauge:new(x, y, h, w, label, labelCol, readOut, readOutCol, fillLvl, fi
     o = {}
     setmetatable(o, self)
     self.__index = self
+    --store all params to object
     self.position.x = x
     self.position.y = y
     self.position.h = h
