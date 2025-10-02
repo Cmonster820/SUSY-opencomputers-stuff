@@ -40,8 +40,9 @@ gauge =
         },
         labelData =
         {
-            x = (self.position.x+((1/2)*self.position.w)-((1/2)*string.len(self.label)))
-            
+            x = (self.position.x+((1/2)*self.position.w)-((1/2)*string.len(self.label))),
+            y = self.position.y+(self.position.h/2),
+            filledpart = string.sub( self.label, 1, )
         }
     }
 }
