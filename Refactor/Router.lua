@@ -61,14 +61,26 @@ function negotiation(sender, port, message)
     address = nil
 end
 function processNewName(from ,port, message)
+    log = io.open("/home/router/log.txt", "a")
+    log:write(message)
     for line in io.lines("/home/router/names.txt") do
-        if message+"\n" == line then
-            m.send(from, port, "Name Taken")
+        if message.routingData.from+"\n" == line then
+            m.send(message.routingData.fromaddr, port, "Name Taken")
+            return nil
         end
     end
+    name = message.routingData.from+"\n"
+    address = message.routingData.fromaddr+"\n"
     names = io.open("/home/router/names.txt","a")
     addresses = io.open("/home/router/addresses.txt", "a")
-    log = io.open("/home/router/log.txt", "a")
+    names:write(name)
+    addresses:write(address)
+    m.send(message.routingData.fromaddr, port, "Negotiation Successful")
+    names:close()
+    addresses:close()
+    log:close()
+    name = nil
+    address = nil
 end
 function relayMessage(message)
     local temptable = {}
