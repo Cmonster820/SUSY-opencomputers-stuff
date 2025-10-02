@@ -40,7 +40,7 @@ if filesystem.exists("/home/router") == false then
     log = io.open("/home/router/log.txt", "a")
     log:close
 end
-function beginnegotiation(sender, port, message)
+function negotiation(sender, port, message)
     names = io.open("/home/router/names.txt","a")
     addresses = io.open("/home/router/addresses.txt", "a")
     log = io.open("/home/router/log.txt", "a")
@@ -50,6 +50,7 @@ function beginnegotiation(sender, port, message)
     addresses:write(address)
     names:close()
     addresses:close()
+    m.send(address.gsub("\n", ""), port, "Negotiation Successful")
 end
 function relayMessage(message)
     local temptable = {}
@@ -101,7 +102,7 @@ end
 function routing(receiveraddr, sender, port, distance, message)
     message = serialization.deserialize(message)
     if port == negotiationport then
-        beginnegotiation(sender, port, message)
+        negotiation(sender, port, message)
         return nil
     end
     print("received message\nmessage reads:\n"+message)
