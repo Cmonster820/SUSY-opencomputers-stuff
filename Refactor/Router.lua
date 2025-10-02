@@ -41,16 +41,34 @@ if filesystem.exists("/home/router") == false then
     log:close
 end
 function negotiation(sender, port, message)
+    name = message.routingData.from+"\n"
+    address = message.routingData.fromaddr+"\n"
+    for line in io.lines("/home/router/names.txt") do
+        if line == name then
+            m.send(address.gsub("\n", ""),port,"Name Taken")
+            return nil
+        end
+    end
     names = io.open("/home/router/names.txt","a")
     addresses = io.open("/home/router/addresses.txt", "a")
     log = io.open("/home/router/log.txt", "a")
-    name = message.routingData.from+"\n"
-    address = message.routingData.fromaddr+"\n"
     names:write(name)
     addresses:write(address)
     names:close()
     addresses:close()
     m.send(address.gsub("\n", ""), port, "Negotiation Successful")
+    name = nil
+    address = nil
+end
+function processNewName(from ,port, message)
+    for line in io.lines("/home/router/names.txt") do
+        if message+"\n" == line then
+            m.send(from, port, "Name Taken")
+        end
+    end
+    names = io.open("/home/router/names.txt","a")
+    addresses = io.open("/home/router/addresses.txt", "a")
+    log = io.open("/home/router/log.txt", "a")
 end
 function relayMessage(message)
     local temptable = {}
@@ -101,8 +119,11 @@ function verifyMessage(message, sender)
 end
 function routing(receiveraddr, sender, port, distance, message)
     message = serialization.deserialize(message)
-    if port == negotiationport then
+    if port == newdeviceport then
         negotiation(sender, port, message)
+        return nil
+    else if port == negotiationport then
+        processNewName(sender, port, message)
         return nil
     end
     print("received message\nmessage reads:\n"+message)
