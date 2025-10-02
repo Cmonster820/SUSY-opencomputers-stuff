@@ -96,7 +96,7 @@ function gauge:new(x, y, h, w, label, labelCol, readOut, readOutCol, fillLvl, fi
     self.emptyCol = emptyCol or 0xFF0000 -- #FF0000
     self.optimalEnabled = optimalEnabled or false
     self.optimalLvl = optimalLvl or nil
-    self.optimalCol = optimalCol or nil
+    self.optimalCol = optimalCol or if optimalEnabled then 0xFFA600 else nil --if enabled be #FFA600 else nil 
     --rendering time
     oldbg = g.getBackground()
     oldfg = g.getForeground()
@@ -117,4 +117,5 @@ function gauge:new(x, y, h, w, label, labelCol, readOut, readOutCol, fillLvl, fi
     g.set(self.rendererdata.readOutData.x, self.rendererdata.readOutData.y, string.sub(self.readOut, 1,self.rendererdata.readOutData.fillLen))
     --draw part in empty bit
     g.set(self.rendererdata.readOutData.x+self.rendererdata.readOutData.fillLen, self.rendererdata.readOutData.y, string.sub(self.readOut, self.rendererdata.readOutData.fillLen, -1))
+    --draw optimal line
 end
