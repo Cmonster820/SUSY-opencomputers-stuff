@@ -35,10 +35,21 @@ if filesystem.exists("/home/router") == false then
     filesystem.makeDirectory("/home/router/")
     names = io.open("/home/router/names.txt", "a")
     names:close
-    addresses = io.open("/home/router/addressestxt", "a")
+    addresses = io.open("/home/router/addresses.txt", "a")
     addresses:close
     log = io.open("/home/router/log.txt", "a")
     log:close
+end
+function beginnegotiation(sender, port, message)
+    names = io.open("/home/router/names.txt","a")
+    addresses = io.open("/home/router/addresses.txt", "a")
+    log = io.open("/home/router/log.txt", "a")
+    name = message.routingData.from+"\n"
+    address = message.routingData.fromaddr+"\n"
+    names:write(name)
+    addresses:write(address)
+    names:close()
+    addresses:close()
 end
 function relayMessage(message)
     local temptable = {}
@@ -60,7 +71,7 @@ function relayMessage(message)
     log = io.open("/home/router/log.txt", "a")
     log:write(serialization.serialize(message)+"\n\n\n")
     log:close()
-    m.send(temptable[message.from], mainport)
+    m.send(temptable[message.routingData.from], mainport, message)
     return "Message relayed successfully"
 end
 function verifyMessage(message, sender)
@@ -80,7 +91,7 @@ function verifyMessage(message, sender)
         othercurline = nil
         temptable[line] = otherline 
     end
-    if temptable[message.from] == message.fromaddr then
+    if temptable[message.routingData.from] == message.routingData.fromaddr then
         return true
     else
         return false
@@ -89,11 +100,8 @@ function verifyMessage(message, sender)
 end
 function routing(receiveraddr, sender, port, distance, message)
     message = serialization.deserialize(message)
-    if port == newdeviceport then
+    if port == negotiationport then
         beginnegotiation(sender, port, message)
-        return nil
-    elseif port == negotiationport then
-        finishnegotiation(sender, port, message)
         return nil
     end
     print("received message\nmessage reads:\n"+message)
