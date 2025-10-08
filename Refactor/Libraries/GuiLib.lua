@@ -124,5 +124,35 @@ function gauge:new(x, y, h, w, label, labelCol, readOut, readOutCol, fillLvl, fi
     end
     g.setForeground(oldfg)
     g.setBackground(oldbg)
+    oldbg = nil
+    oldfg = nil
     return o
+end
+function gauge:refresh(fillLvl, readOut, fillCol, readOutCol)
+    self.fillLvl = fillLvl
+    self.readOut = readOut
+    self.fillCol = fillCol or self.fillCol
+    self.readOutCol = readOutCol or self.readOutCol
+    oldbg = g.getBackground()
+    oldfg = g.getForeground()
+    g.setBackground(self.fillCol)
+    g.fill(self.rendererdata.fillbar.x, self.rendererdata.fillbar.y, self.rendererdata.fillbar.w, self.rendererdata.fillbar.h, " ")
+    g.setBackground(self.emptyCol)
+    g.fill(self.rendererdata.emptybar.x, self.rendererdata.emptybar.y, self.rendererdata.emptybar.w, self.rendererdata.emptybar.h, " ")
+    --get ready to draw readout
+    g.setBackground(self.fillCol)
+    g.setForeground(self.readOutCol)
+    --draw part in filled in bit
+    g.set(self.rendererdata.readOutData.x, self.rendererdata.readOutData.y, string.sub(self.readOut, 1,self.rendererdata.readOutData.fillLen))
+    --draw part in empty bit
+    g.set(self.rendererdata.readOutData.x+self.rendererdata.readOutData.fillLen, self.rendererdata.readOutData.y, string.sub(self.readOut, self.rendererdata.readOutData.fillLen, -1))
+    --draw optimal bar if enabled
+    if self.optimalEnabled then
+        g.setForeground(self.optimalCol)
+        g.set(self.rendererdata.OptimalData.x, self.rendererdata.OptimalData.y, self.rendererdata.OptimalData.optimalstring, true)
+    end
+    g.setForeground(oldfg)
+    g.setBackground(oldbg)
+    oldbg = nil
+    oldfg = nil
 end
