@@ -118,4 +118,8 @@ function gauge:new(x, y, h, w, label, labelCol, readOut, readOutCol, fillLvl, fi
     --draw part in empty bit
     g.set(self.rendererdata.readOutData.x+self.rendererdata.readOutData.fillLen, self.rendererdata.readOutData.y, string.sub(self.readOut, self.rendererdata.readOutData.fillLen, -1))
     --draw optimal line
+    if self.optimalEnabled then
+        g.setForeground
+        g.set(self.rendererdata.OptimalData.x, self.rendererdata.OptimalData.y, self.rendererdata.OptimalData.optimalstring, true)
+    end
 end
