@@ -15,6 +15,7 @@ m.open(newdeviceport)
 negotiationport = 3
 m.open(negotiationport)
 g = component.gpu
+gui = require("GuiLib")
 if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true then
     print("All ports opened successfully, proceeding with bootup")
 else
