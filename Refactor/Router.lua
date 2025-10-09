@@ -40,7 +40,7 @@ if filesystem.exists("/home/router") == false then
     loadingScreen:refresh(33, "Names File Created, Creating Addresses File", _, _)
     names:close
     addresses = io.open("/home/router/addresses.txt", "a")
-    loadingScreen:refresh(67, "Names File Created, Creating Addresses File", _, _)
+    loadingScreen:refresh(67, "Addresses File Created, Creating Log File", _, _)
     addresses:close
     log = io.open("/home/router/log.txt", "a")
     loadingScreen:refresh(100, "Log File Created, Setup Complete", _, _)

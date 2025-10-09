@@ -32,14 +32,14 @@ packet =
 resX, resY = g.getResolution
 loadingScreen = gui.gauge:new(resX//4, (resY//2)-1, (3*resX)//4, 3, "Setup", _, "Creating Data Files-Names", _, 0, _, _, _, _, _)
 if filesystem.exists("/home/data") == false then
-    filesystem.makeDirectory("/home/router/")
-    names = io.open("/home/router/names.txt", "a")
+    filesystem.makeDirectory("/home/data/")
+    names = io.open("/home/data/names.txt", "a")
     loadingScreen:refresh(33, "Names File Created, Creating Addresses File", _, _)
     names:close
-    addresses = io.open("/home/router/addresses.txt", "a")
-    loadingScreen:refresh(67, "Names File Created, Creating Addresses File", _, _)
+    addresses = io.open("/home/data/addresses.txt", "a")
+    loadingScreen:refresh(67, "Addresses File Created, Creating Log File", _, _)
     addresses:close
-    log = io.open("/home/router/log.txt", "a")
+    log = io.open("/home/data/log.txt", "a")
     loadingScreen:refresh(100, "Log File Created, Setup Complete", _, _)
     log:close
     g.fill(0, 0, g.getResolution(), " ")
