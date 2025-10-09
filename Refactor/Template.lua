@@ -85,8 +85,8 @@ function negotiate()
         --[[
         io.stderr:write("Error: name taken, halting operation")
         os.exit()
-        ]]
-        taken = true
+        ]] --above is if only one can exist, below is if multiple of the device can exist
+        --[[taken = true
         i = 1
         while taken do
             name:gsub("%d", "")
@@ -101,11 +101,14 @@ function negotiate()
         end
         log:close()
         addresses:close()
+        namefile:close()
+        filesystem.remove("/home/data/name.txt")
+        namefile = io.open("/home/data/name.txt", "a")
         namefile:write(name)
         namefile:close()
         names:close()
         print("Negotiation Complete")
-        return nil
+        return nil]]
     end
 end
 if dataTable[router] == nil then
