@@ -55,7 +55,7 @@ function negotiation(sender, port, message)
     log:write(serialization.serialize(message)+"\n\n\n")
     for line in io.lines("/home/router/names.txt") do
         if line == name then
-            m.send(address.gsub("\n", ""),port,"Name Taken")
+            m.send(address:gsub("\n", ""),port,"Name Taken")
             log:write("Message sent to "+message.routingData.fromaddr+"\n, \"Name Taken\"\n\n\n")
             log:close()
             return nil
@@ -67,7 +67,7 @@ function negotiation(sender, port, message)
     addresses:write(address)
     names:close()
     addresses:close()
-    m.send(address.gsub("\n", ""), port, "Negotiation Successful")
+    m.send(address:gsub("\n", ""), port, "Negotiation Successful")
     log:write("Message sent to "+message.routingData.fromaddr+"\n, \"Negotiation Successful\"\n\n\n")
     log:close()
     name = nil

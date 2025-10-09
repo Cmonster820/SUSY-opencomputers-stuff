@@ -45,3 +45,20 @@ if filesystem.exists("/home/data") == false then
     g.fill(0, 0, g.getResolution(), " ")
     LoadingScreen = nil
 end
+dataTable = {}
+curline = 1
+for line in io.lines("/home/data/names.txt") do
+    local name = line:gsub("\n")
+    local othercurline = 1
+    for otherline in io.lines("/home/data/addresses.txt") do
+        address = otherline:gsub("\n")
+        if curline == othercurline then
+            dataTable[name] = address
+            break
+        end
+        othercurline++
+    end
+    othercurline = nil
+    curline++
+end
+curline = nil
