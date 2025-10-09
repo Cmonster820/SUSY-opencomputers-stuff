@@ -33,8 +33,8 @@ packet =
     data = nil
 }
 resX, resY = g.getResolution
-loadingScreen = gui.gauge:new(resX//4, (resY//2)-1, (3*resX)//4, 3, "Setup", _, "Creating Data Files-Names", _, 0, _, _, _, _, _)
 if filesystem.exists("/home/router") == false then
+    loadingScreen = gui.gauge:new(resX//4, (resY//2)-1, (3*resX)//4, 3, "Setup", _, "Creating Data Files-Names", _, 0, _, _, _, _, _)
     filesystem.makeDirectory("/home/router/")
     names = io.open("/home/router/names.txt", "a")
     loadingScreen:refresh(33, "Names File Created, Creating Addresses File", _, _)
