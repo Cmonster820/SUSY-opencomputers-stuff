@@ -85,7 +85,7 @@ function negotiate()
         --[[
         io.stderr:write("Error: name taken, halting operation")
         os.exit()
-        ]] --above is if only one can exist, below is if multiple of the device can exist
+        ]] --above is if only one can exist (ex.: security mainframe), below is if multiple of the device can exist (ex.: access control node)
         --[[taken = true
         i = 1
         while taken do
