@@ -1,3 +1,4 @@
+--This file is the template for all devices, it contains the negotiation script required to automatically join a network
 component = require("component")
 event = require("event")
 m = component.modem
