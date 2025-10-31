@@ -1,6 +1,7 @@
 --linear algebra library
---remember that matrix index notation is row,column
+--remember that matrix index notation is row,column so you don't break everything you big dumbo writing this comment
 math = require("math")
+--below is all vector stuff
 vector = {}
 function vnew(...)
     local v = {...}
@@ -69,4 +70,33 @@ function vector:mag()
         sumsquares = sumsquares + self[i]^2
     end
     return math.sqrt(sumsquares)
+end
+function vector.__mod(v1,v2)--angle between v1 and v2
+    return math.acos((v1*v2)/(v1:mag()*v2:mag()))
+end
+function vector.__idiv(v1,v2) -- cross product is v1//v2 bc scalar division is v1/k
+    if #v1~=3 or #v2~=3 then
+        error("Ya dumbo cross product only works on 3 and 7 dimensional vectors and this doesnt support 7d because why would it and Idk how to implement octonion operations")
+    elseif #v1~=#v2 then
+        error("Ya dumbo cross product requires equal dimensions")
+    end
+    return setmetatable({v1[2]*v2[3]-v1[3]*v2[2], v1[3]*v2[1]-v1[1]*v2[3], v1[1]*v2[2]-v1[2]*v2[1]},vector)
+end
+function vector.__div(v1,k) --scalar division (v1/k = <v1_1/k,v1_2/k...v1_#v1/k>)
+    local result = {}
+    for i = 1, #v1 do
+        result[i] = v1[i]/k
+    end
+    return setmetatable(result, vector)
+end
+function vector.__eq(v1,v2)
+    if #v1~=#v2 then
+        return false
+    end
+    for i = 0, #v1 do
+        if v1[i]~=v2[i] then
+            return false
+        end
+    end
+    return true
 end
