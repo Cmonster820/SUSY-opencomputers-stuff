@@ -115,3 +115,21 @@ function vector.pow(v,exp) --dot product thing (v1*v2 applied exp times)
     end
     return setmetatable(result, vector)
 end
+--everything below is matrix stuff
+--row,column reminder
+matrix = {}
+function mtrnew(rows, columns, items)
+    if #items > rows*columns then
+        error("you really just tried to make a matrix with more items than it can hold, didn't you?")
+    end
+    local result = {}
+    local listiterator = 1
+    for i = 1, rows do
+        result[i] = {}
+        for j = 1, columns do
+            result[i][j] = items[listiterator]
+            listiterator = listiterator+1
+        end
+    end
+    return setmetatable(result,matrix)
+end
