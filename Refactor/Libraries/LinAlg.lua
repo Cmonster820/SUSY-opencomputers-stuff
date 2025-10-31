@@ -128,6 +128,7 @@ function vector.pow(v,exp) --dot product thing (v1*v2 applied exp times)
 end
 --everything below is matrix stuff
 --row,column reminder
+--mtrx[row][column]
 matrix = {}
 function mtrnew(rows, columns, items)
     if #items > rows*columns then
