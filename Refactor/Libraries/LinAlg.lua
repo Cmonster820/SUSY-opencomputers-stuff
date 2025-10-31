@@ -63,3 +63,10 @@ end
 function vector.__new(v1, v2) --google ai dont fail me now
     return vector.__mul(v2, v1)
 end
+function vector:mag()
+    sumsquares = 0
+    for i = 1, #self do
+        sumsquares = sumsquares + self[i]^2
+    end
+    return math.sqrt(sumsquares)
+end
