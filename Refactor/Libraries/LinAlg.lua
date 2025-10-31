@@ -48,6 +48,17 @@ function vector.__mul(v1,v2)
             result[i] = v2[i]*k
         end
         return setmetatable(result,vector)
+    elseif getmetatable(v1)==vector and getmetatable(v2)==matrix and #v1==#v2[1] then
+        local result = {}
+        for i = 1, #v1 do
+            local sum = 0
+            for j = 1, #v2[i] do
+                sum = sum + (v1[i]*v2[i][j])
+            end
+            result[i] = sum
+        end
+    elseif getmetatable(v1)==vector and getmetatable(v2)==matrix and #v1~=#v2[1] then
+        error("Dimension of vector is not equal to dimension of matrix")
     elseif getmetatable(v1)==vector then
         if #v1~=#v2 then
             error("bad bad naughty boy you can't do a vdot with 2 different lengths")
