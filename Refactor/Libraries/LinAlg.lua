@@ -100,3 +100,18 @@ function vector.__eq(v1,v2)
     end
     return true
 end
+function vector.__pow(v,exp) --elementwise exponentiation
+    local result = {}
+    for i = 0, #v do
+        result[i] = v[i]^exp
+    end
+    return setmetatable(result,vector)
+end
+function vector.pow(v,exp) --dot product thing (v1*v2 applied exp times)
+    result = v
+    setmetatable(result, vector)
+    for i = 0, exp do
+        result = result*v
+    end
+    return setmetatable(result, vector)
+end
