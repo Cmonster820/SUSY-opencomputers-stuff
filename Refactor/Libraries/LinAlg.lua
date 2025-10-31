@@ -40,7 +40,7 @@ function vector.__newindex(v)
     error("you just tried a bad (you tried to access a nonexistent index)")
     return nil
 end
-function vector.__mul(v1,v2) --v1 is k if scalar and this is vdot if both vec
+function vector.__mul(v1,v2)
     if type(v1)=="number" then
         local result = {}
         for i = 1, #v2 do
@@ -59,4 +59,7 @@ function vector.__mul(v1,v2) --v1 is k if scalar and this is vdot if both vec
     else
         error("what have you done")    
     end
+end
+function vector.__new(v1, v2) --google ai dont fail me now
+    return vector.__mul(v2, v1)
 end
