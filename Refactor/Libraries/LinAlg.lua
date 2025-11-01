@@ -145,3 +145,49 @@ function mtrnew(rows, columns, items)
     end
     return setmetatable(result,matrix)
 end
+function matrix.__unm(m)
+    local result = {}
+    for i = 1, #m do
+        result[i]={}
+        for j = 1, #m[1] do 
+            result[i][j] = -m[i][j]
+        end
+    end
+    return setmetatable(result,matrix)
+end
+function matrix.__add(m1, m2)
+    if (#m1~=#m2) or (#m1[1]~=#m2[1]) then
+        error("Error: matricies are not equal in size")
+    end
+    local result = {}
+    for i = 1, #m1 do
+        result[i] = {}
+        for j = 1, #m1[1] do
+            result[i][j] = m1[i][j]+m2[i][j]
+        end
+    end
+    return setmetatable(result,matrix)
+end
+function matrix.__sub(m1, m2)
+    result = m1+(-m2)
+    return setmetatable(result,matrix)
+end
+function matrix.__mul(m1, m2)
+    if type(m1)=="number" then
+        local result = {}
+        for i = 1, #m2 do
+            result[i] = {}
+            for j = 1, #m2[i] do
+                result[i][j] = m1*m2[i][j]
+            end
+        end
+        return setmetatable(result,matrix)
+    elseif getmetatable(m1) == matrix
+        if #m1[1]~=#m2 then
+            error("Columns of matrix 1 not equal to rows of matrix 2")
+        end
+        local result = {}
+        for i = 1, #m1 do
+            local sum = 0
+            for j = 1, #m2[1] do
+                sum = sum+()
