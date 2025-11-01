@@ -3,6 +3,7 @@
 math = require("math")
 --below is all vector stuff
 vector = {}
+vector.__index = vector
 function vnew(...)
     local v = {...}
     return setmetatable(v,vector)
@@ -130,6 +131,7 @@ end
 --row,column reminder
 --mtrx[row][column]
 matrix = {}
+matrix.__index = matrix
 function mtrnew(rows, columns, items)
     if #items > rows*columns then
         error("you really just tried to make a matrix with more items than it can hold, didn't you?")
@@ -144,6 +146,10 @@ function mtrnew(rows, columns, items)
         end
     end
     return setmetatable(result,matrix)
+end
+function mnew(...) --for creating from a bunch of tables
+    local result = {...}
+    return setmetatable(m,matrix)
 end
 function matrix.__unm(m)
     local result = {}
@@ -199,13 +205,63 @@ function matrix.__mul(m1, m2)
         return setmetatable(mtrnew(#m1,#m2[1],result),matrix)
     end
 end
+function matrix.__new(m1,m2) -- I hope this does what it's supposed to (though you really shouldnt put the scalar after the matrix)
+    return matrix.__mul(m2,m1)
+end
 function matrix:t()
-    result = {}
-    for i = 1, #self[i] do
+    local result = {}
+    for i = 1, #self[1] do
         result[i] = {}
         for j = 1, #self do
             result[i][j] = self[j][i]
         end
     end
     return setmetatable(result, matrix)
+end
+function matrix.__div(m,k) -- scalar division
+    local result = {}
+    for i = 1, #m do
+        result[i]={}
+        for j = 1, #m[i] do
+            result[i][j] = m[i][j]/k
+        end
+    end
+    return setmetatable(result,matrix)
+end
+local function helperGetMinor(m, colExcl, rowExcl)
+    local subM = {}
+    local subRow = 1
+    for i = 1, #m do
+        if i ~= rowExcl then
+            local subCol = 1
+            subM[subRow] = {}
+            for j = 1, #m[i] do
+                if j~=colExcl then
+                    subM[subRow][subCol] = m[i][j]
+                    subCol = subCol+1
+                end
+            end
+            subRow = subRow+1
+        end
+    end
+    return setmetatable(subM,matrix)
+end
+function matrix:det()
+    if #self~=#self[1] then
+        error("Attempted to find determinant of non-square matrix")
+    end
+    if #self == 1 then
+        return self[1][1]
+    end
+    if #self==2 then
+        return self[1][1]*self[2][2]-self[1][2]*self[2][1]
+    else
+        local sum = 0
+        for i = 1, #self do
+            local cofactorSign = ((i+1)%2==0) and 1 or -1
+            local minor = helperGetMinor(self, 1, i)
+            sum = sum + (self[1][i]*cofactorSign*minor:det())
+        end
+        return sum
+    end
 end
