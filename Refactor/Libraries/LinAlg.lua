@@ -297,3 +297,4 @@ function matrix_MT.inv()
     inverse = invDet*adj
     return inverse
 end
+--yay line 300 we're done
