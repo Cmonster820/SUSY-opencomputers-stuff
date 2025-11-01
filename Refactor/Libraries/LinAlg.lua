@@ -199,3 +199,13 @@ function matrix.__mul(m1, m2)
         return setmetatable(mtrnew(#m1,#m2[1],result),matrix)
     end
 end
+function matrix:t()
+    result = {}
+    for i = 1, #self[i] do
+        result[i] = {}
+        for j = 1, #self do
+            result[i][j] = self[j][i]
+        end
+    end
+    return setmetatable(result, matrix)
+end
