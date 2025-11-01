@@ -187,7 +187,15 @@ function matrix.__mul(m1, m2)
             error("Columns of matrix 1 not equal to rows of matrix 2")
         end
         local result = {}
+        local resultiterator = 1
         for i = 1, #m1 do
             local sum = 0
-            for j = 1, #m2[1] do
-                sum = sum+()
+            result = {}
+            for j = 1, #m1[i] do
+                sum = sum + (m1[i][j]*m2[j][i])
+            end
+            result[i] = sum
+        end
+        return setmetatable(mtrnew(#m1,#m2[1],result),matrix)
+    end
+end
