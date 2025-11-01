@@ -132,7 +132,7 @@ end
 --mtrx[row][column]
 matrix_MT = {}
 matrix_MT.__index = matrix_MT
-function mtrnew(rows, columns, items)
+function mtrnew(rows, columns, items) -- idk why I made this tbh this one sucks
     if #items > rows*columns then
         error("you really just tried to make a matrix with more items than it can hold, didn't you?")
     end
@@ -205,7 +205,7 @@ function matrix_MT.__mul(m1, m2)
         return setmetatable(mtrnew(#m1,#m2[1],result),matrix_MT)
     end
 end
-function matrix_MT.__new(m1,m2) -- I hope this does what it's supposed to (though you really shouldnt put the scalar after the matrix_MT)
+function matrix_MT.__new(m1,m2) -- I hope this does what it's supposed to (though you really shouldnt put the scalar after the matrix)
     return matrix_MT.__mul(m2,m1)
 end
 function matrix_MT:t()
