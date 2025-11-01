@@ -190,7 +190,7 @@ function matrix_MT.__mul(m1, m2)
         return setmetatable(result,matrix_MT)
     elseif getmetatable(m1) == matrix_MT
         if #m1[1]~=#m2 then
-            error("Columns of matrix_MT 1 not equal to rows of matrix_MT 2")
+            error("Columns of matrix 1 not equal to rows of matrix 2")
         end
         local result = {}
         local resultiterator = 1
