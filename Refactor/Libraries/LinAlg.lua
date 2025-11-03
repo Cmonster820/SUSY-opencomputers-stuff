@@ -9,20 +9,40 @@ function vnew(...)
     return setmetatable(v,vector_MT)
 end
 function vector_MT.__add(v1,v2)
-    local result = {}
-    local size = math.max(#v1,#v2)
-    for i = 0, size do
-        result[i] = (v1[i] or 0)+(v2[i] or 0)
+    if type(v2) == "number" then
+        local result = {}
+        for i = 1, #v1 do
+            result[i] = v1[i]+v2
+        end
+        return setmetatable(result,vector_MT)
+    elseif getmetatable(v2)~=vector_MT then
+        error("Cannot add "..getmetatable(v2).." to a vector")
+    else
+        local result = {}
+        local size = math.max(#v1,#v2)
+        for i = 1, size do
+            result[i] = (v1[i] or 0)+(v2[i] or 0)
+        end
+        return setmetatable(result,vector_MT)
     end
-    return setmetatable(result,vector_MT)
 end
 function vector_MT.__sub(v1,v2)
-    local result = {}
-    local size = math.max(#v1,#v2)
-    for i = 0, size do
-        result[i] = (v1[i] or 0)-(v2[i] or 0)
+    if type(v2) == "number" then
+        local result = {}
+        for i = 1, #v1 do
+            result[i] = v1[i]-v2
+        end
+        return setmetatable(result,vector_MT)
+    elseif getmetatable(v2)~=vector_MT then
+        error("Cannot subtract "..getmetatable(v2).." from a vector")
+    else
+        local result = {}
+        local size = math.max(#v1,#v2)
+        for i = 1, size do
+            result[i] = (v1[i] or 0)-(v2[i] or 0)
+        end
+        return setmetatable(result,vector_MT)
     end
-    return setmetatable(result,vector_MT)
 end
 function vector_MT.__unm(v)
     local result = {}
@@ -83,7 +103,7 @@ end
 function vector_MT.__mod(v1,v2)--angle between v1 and v2
     return math.acos((v1*v2)/(v1:mag()*v2:mag()))
 end
-function vector_MT.__idiv(v1,v2) -- cross product is v1//v2 bc scalar division is v1/k
+function vector_MT.__idiv(v1,v2) -- cross product is v1//v2 bc scalar division is v1/k and // is sort of a cross but it gave up
     if #v1~=3 or #v2~=3 then
         error("Ya dumbo cross product only works on 3 and 7 dimensional vectors and this doesnt support 7d because why would it and Idk how to implement octonion operations")
     elseif #v1~=#v2 then
@@ -116,11 +136,11 @@ function vector_MT.__pow(v,exp) --elementwise exponentiation
     end
     return setmetatable(result,vector_MT)
 end
-function vector_MT.pow(v,exp) --dot product thing (v1*v2 applied exp times)
-    result = v
+function vector_MT:pow(exp) --dot product thing (v1*v2 applied exp times)
+    result = self
     setmetatable(result, vector_MT)
     for i = 0, exp do
-        result = result*v
+        result = result*self
     end
     return setmetatable(result, vector_MT)
 end
@@ -159,6 +179,18 @@ function matrix_MT.__unm(m)
     return setmetatable(result,matrix_MT)
 end
 function matrix_MT.__add(m1, m2)
+    if type(m2)=="number" then
+        result = {}
+        for i = 1, #m1 do
+            result[i] = {}
+            for j = 1, #m1[i] do
+                result[i][j] = m1[i][j]+m2
+            end
+        end
+        return setmetatable(result,matrix_MT)
+    elseif getmetatable(m2)~=matrix_MT then
+        error("Cannot add a "..getmetatable(m2).." to a matrix")
+    end
     if (#m1~=#m2) or (#m1[1]~=#m2[1]) then
         error("Error: matricies are not equal in size")
     end
