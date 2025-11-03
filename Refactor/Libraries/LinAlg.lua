@@ -328,7 +328,7 @@ end
 function matrix_MT:sum()
     local sum = 0
     for i = 1, #self do
-        for j = 1, #self[1] do
+        for j = 1, #self[i] do
             sum = sum+self[i][j]
         end
     end
