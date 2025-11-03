@@ -9,7 +9,8 @@ main.vector = {
     function new(...)
         local v = {...}
         return setmetatable(v,vector_MT)
-    end
+    end,
+    vector_MT
 }
 function vector_MT.__add(v1,v2)
     if type(v2) == "number" then
@@ -167,11 +168,12 @@ main.matrix = {
             end
         end
         return setmetatable(result,matrix_MT)
-    end
+    end,
     function new(...) --for creating from a bunch of tables
         local result = {...}
         return setmetatable(m,matrix_MT)
-    end
+    end,
+    matrix_MT
 }
 function matrix_MT.__unm(m)
     local result = {}
