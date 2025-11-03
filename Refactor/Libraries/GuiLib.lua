@@ -77,7 +77,7 @@ border =
 {
 
 }
-
+main = {gauge, verticalGauge, button, border}
 function gauge:new(x, y, h, w, label, labelCol, readOut, readOutCol, fillLvl, fillCol, emptyCol, optimalEnabled, optimalLvl, optimalCol)
     o = {}
     setmetatable(o, self)
@@ -156,3 +156,4 @@ function gauge:refresh(fillLvl, readOut, fillCol, readOutCol)
     oldbg = nil
     oldfg = nil
 end
+return main
