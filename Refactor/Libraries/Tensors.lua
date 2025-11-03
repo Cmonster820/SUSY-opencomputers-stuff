@@ -62,3 +62,56 @@ local function main.divRec(t,k)
     end
     return result
 end
+function tensor:sum()
+    local result = main.sumRec(self)
+    return result
+end
+local function main.sumRec(t)
+    if type(t)=="number" then
+        return t
+    end
+    local result = 0
+    for i = 1, #t do
+        result = result+main.sumRec(t)
+    end
+    return result
+end
+function tensor:min()
+    local result = main.minRec(self)
+    return result
+end
+local function main.minRec(t)
+    local minVal = math.huge
+    if type(t)=="table" and type(t[1])=="number"
+        for i = 1, #t do
+            if t[i]<minVal then
+                minVal = t[i]
+            end
+        end
+        return minVal
+    end
+    for i = 1, #t do
+        if main.minRec(t)<minVal then
+            minVal = main.minRec(t)
+        end
+    end
+    return minVal
+end
+function tensor:itemCount()
+    local result = main.itemCountRec(self)
+    return result
+end
+local function main.itemCountRec(t)
+    if type(t)=="number" then
+        return 1
+    end
+    local sum = 0
+    for i = 1, #t do
+        sum = sum + main.itemCountRec(t)
+    end
+    return sum
+end
+function tensor:mean()
+    local result = self:sum()/self:itemCount()
+    return result
+end
