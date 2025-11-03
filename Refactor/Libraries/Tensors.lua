@@ -92,7 +92,7 @@ local function main.minRec(t)
     end
     for i = 1, #t do
         if main.minRec(t)<minVal then
-            minVal = main.minRec(t)
+            minVal = main.minRec(t[i])
         end
     end
     return minVal
@@ -107,11 +107,45 @@ local function main.itemCountRec(t)
     end
     local sum = 0
     for i = 1, #t do
-        sum = sum + main.itemCountRec(t)
+        sum = sum + main.itemCountRec(t[i])
     end
     return sum
 end
 function tensor:mean()
     local result = self:sum()/self:itemCount()
+    return result
+end
+function tensor:rank()
+    local result = main.rankRec(self)
+    return result
+end
+local function main.rankRec(t)
+    if type(t)=="table" and type(t[1])=="number" then
+        return 1
+    end
+    local sum = 0
+    for i = 1, #t do
+        sum = sum+main.rankRec(t[i])
+    end
+    return sum
+end
+function tensor:matricize()
+    local rank = self:rank()
+    local matrix = linalg.matrix.new(unpack(main.matricizeRec(self)))
+    return {rank, matrix}
+end
+main.matricizedintermediate = {}
+main.matricizedintermediateIndex = 1
+local function main.matricizeRec(t) --Unsure what this actually is but it's just making a really long matrix and returning that
+    if type(t)=="table" and type(t[1])=="number" then
+        return t
+    end
+    for i = 1, #t do
+        main.matricizedintermediate[main.matricizedintermediateIndex] = main.matricizeRec(t[i])
+        main.matricizedintermediateIndex = main.matricizedintermediateIndex+1
+    end
+    main.matricizedIntermediateIndex = 1
+    result = main.matricizedintermediate
+    main.matricizedintermediate = {}
     return result
 end
