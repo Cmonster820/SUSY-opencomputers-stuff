@@ -27,3 +27,5 @@ function main.addRec(dat1,dat2)
     end
     return result
 end
+function tensor_MT.__unm(t)
+end
