@@ -9,23 +9,56 @@ main.tensor = {
     end
 }
 function tensor_MT.__add(t1, t2)
-    local dataT1 = (getmetatable(t1)==tensor_MT) and t1.data or t1
-    local dataT2 = (getmetatable(t2)==tensor_MT) and t2.data or t2
-    local resultData = main.addRec(dataT1, dataT2)
-    return main.tensor.new(resultData)
+    local resultData = main.addRec(t1, t2)
+    return setmetatable(resultData, tensor_MT)
 end
-function main.addRec(dat1,dat2)
+local function main.addRec(dat1,dat2)
     if type(dat1)=="number" and type(dat2)=="number" then
         return dat1+dat2
     end
-    if type(data1) ~= "table" or type(data2) ~= "table" or #data1 ~= #data2 then
+    if type(dat1) ~= "table" or type(dat2) ~= "table" or #dat1 ~= #dat2 then
         error("Attempted to add tensors with incompatible shapes or types",2)
     end
     local result = {}
-    for i = 1, #data1 do
+    for i = 1, #dat1 do
         result[i] = main.addRec(dat1[i],dat2[i])
     end
     return result
 end
 function tensor_MT.__unm(t)
+    local result = main.unmRec(t)
+    return setmetatable(result,tensor_MT)
+end
+local function main.unmRec(dat)
+    if type(dat)=="number" then
+        return -dat
+    end
+    if getmetatable(dat)~=tensor_MT then
+        error("cannot do the thing to the thing (you somehow managed to call the unm metamethod on a non-tensor metatable)")
+    end
+    local result = {}
+    for i = 1, #dat do
+        result[i] = main.unmRec(dat[i])
+    end
+    return result
+end
+function tensor_MT.__sub(t1,t2)
+    return t1+(-t1)
+end
+function tensor_MT.div(t1,k)
+    if type(k)~="number" then
+        error("Can't divide tensors by anything other than a scalar")
+    end
+    local result = main.divRec(t1,k)
+    return setmetatable(result,tensor_MT)
+end
+local function main.divRec(t,k)
+    if type(t1)=="number" then
+        return t/k
+    end
+    local result = {}
+    for i = 1, #t do
+        result[i] = main.divRec(t[i],k)
+    end
+    return result
 end
