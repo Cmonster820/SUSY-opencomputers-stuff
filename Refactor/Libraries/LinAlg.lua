@@ -73,9 +73,6 @@ function vector_MT.__mul(v1,v2)
         error("what have you done")    
     end
 end
-function vector_MT.__new(v1, v2) --google ai dont fail me now
-    return vector_MT.__mul(v2, v1)
-end
 function vector_MT:mag()
     sumsquares = 0
     for i = 1, #self do
@@ -205,9 +202,6 @@ function matrix_MT.__mul(m1, m2)
         return setmetatable(mtrnew(#m1,#m2[1],result),matrix_MT)
     end
 end
-function matrix_MT.__new(m1,m2) -- I hope this does what it's supposed to (though you really shouldnt put the scalar after the matrix)
-    return matrix_MT.__mul(m2,m1)
-end
 function matrix_MT:t()
     local result = {}
     for i = 1, #self[1] do
@@ -298,3 +292,13 @@ function matrix_MT:inv()
     return inverse
 end
 --yay line 300 we're done
+--non-standard operation
+function matrix_MT:sum()
+    local sum = 0
+    for i = 1, #self do
+        for j = 1, #self[1] do
+            sum = sum+self[i][j]
+        end
+    end
+    return sum
+end
