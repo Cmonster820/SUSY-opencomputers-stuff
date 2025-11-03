@@ -62,7 +62,7 @@ local function main.divRec(t,k)
     end
     return result
 end
-function tensor:sum()
+function tensor_MT:sum()
     local result = main.sumRec(self)
     return result
 end
@@ -76,7 +76,7 @@ local function main.sumRec(t)
     end
     return result
 end
-function tensor:min()
+function tensor_MT:min()
     local result = main.minRec(self)
     return result
 end
@@ -97,7 +97,7 @@ local function main.minRec(t)
     end
     return minVal
 end
-function tensor:itemCount()
+function tensor_MT:itemCount()
     local result = main.itemCountRec(self)
     return result
 end
@@ -111,11 +111,11 @@ local function main.itemCountRec(t)
     end
     return sum
 end
-function tensor:mean()
+function tensor_MT:mean()
     local result = self:sum()/self:itemCount()
     return result
 end
-function tensor:rank()
+function tensor_MT:rank()
     local result = main.rankRec(self)
     return result
 end
@@ -129,7 +129,7 @@ local function main.rankRec(t)
     end
     return sum
 end
-function tensor:matricize()
+function tensor_MT:matricize()
     local rank = self:rank()
     local matrix = linalg.matrix.new(unpack(main.matricizeRec(self)))
     return {rank, matrix}
@@ -149,3 +149,4 @@ local function main.matricizeRec(t) --Unsure what this actually is but it's just
     main.matricizedintermediate = {}
     return result
 end
+function tensor_MT.__
