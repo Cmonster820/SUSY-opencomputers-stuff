@@ -9,15 +9,15 @@ main.tensor = {
     end
 }
 function tensor_MT.__add(t1, t2)
-    local resultData = main.addRec(t1, t2)
+    local resultData = main.opRec(t1, t2, function(x,y) return x+y end)
     return setmetatable(resultData, tensor_MT)
 end
-local function main.addRec(dat1,dat2)
+local function main.opRec(dat1,dat2, opfunc)
     if type(dat1)=="number" and type(dat2)=="number" then
-        return dat1+dat2
+        return opfunc(dat1,dat2)
     end
     if type(dat1) ~= "table" or type(dat2) ~= "table" or #dat1 ~= #dat2 then
-        error("Attempted to add tensors with incompatible shapes or types",2)
+        error("Attempted to operate on tensors with incompatible shapes or types",2)
     end
     local result = {}
     for i = 1, #dat1 do
@@ -149,4 +149,19 @@ local function main.matricizeRec(t) --Unsure what this actually is but it's just
     main.matricizedintermediate = {}
     return result
 end
-function tensor_MT.__
+function tensor_MT.__mul(t1,t2)
+    if type(t1) = "number" then
+        main.simpleMulRec(t1,t2)
+    end
+    return setmetatable(main.opRec(t1,t2,function(x,y) return x*y end),tensor_MT)
+end
+local function main.simpleMulRec(k,t)
+    if type(t) == "number" then
+        return k*t
+    end
+    result = {}
+    for i = 0, #t do
+        result[i] = main.simpleMulRec(k*t[i])
+    end
+    return result
+end
