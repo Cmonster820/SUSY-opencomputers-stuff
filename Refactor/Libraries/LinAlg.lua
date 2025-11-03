@@ -1,13 +1,16 @@
 --linear algebra library
 --remember that matrix index notation is row,column so you don't break everything you big dumbo writing this comment
 math = require("math")
+local main = {}
 --below is all vector stuff
 vector_MT = {}
 vector_MT.__index = vector_MT
-function vnew(...)
-    local v = {...}
-    return setmetatable(v,vector_MT)
-end
+main.vector = {
+    function new(...)
+        local v = {...}
+        return setmetatable(v,vector_MT)
+    end
+}
 function vector_MT.__add(v1,v2)
     if type(v2) == "number" then
         local result = {}
@@ -149,25 +152,27 @@ end
 --mtrx[row][column]
 matrix_MT = {}
 matrix_MT.__index = matrix_MT
-function mtrnew(rows, columns, items) -- idk why I made this tbh this one sucks
-    if #items > rows*columns then
-        error("you really just tried to make a matrix with more items than it can hold, didn't you?")
-    end
-    local result = {}
-    local listiterator = 1
-    for i = 1, rows do
-        result[i] = {}
-        for j = 1, columns do
-            result[i][j] = items[listiterator]
-            listiterator = listiterator+1
+main.matrix = {
+    function worsenew(rows, columns, items) -- idk why I made this tbh this one sucks
+        if #items > rows*columns then
+            error("you really just tried to make a matrix with more items than it can hold, didn't you?")
         end
+        local result = {}
+        local listiterator = 1
+        for i = 1, rows do
+            result[i] = {}
+            for j = 1, columns do
+                result[i][j] = items[listiterator]
+                listiterator = listiterator+1
+            end
+        end
+        return setmetatable(result,matrix_MT)
     end
-    return setmetatable(result,matrix_MT)
-end
-function mnew(...) --for creating from a bunch of tables
-    local result = {...}
-    return setmetatable(m,matrix_MT)
-end
+    function new(...) --for creating from a bunch of tables
+        local result = {...}
+        return setmetatable(m,matrix_MT)
+    end
+}
 function matrix_MT.__unm(m)
     local result = {}
     for i = 1, #m do
@@ -231,7 +236,7 @@ function matrix_MT.__mul(m1, m2)
             end
             result[i] = sum
         end
-        return setmetatable(mtrnew(#m1,#m2[1],result),matrix_MT)
+        return setmetatable(main.matrix.worsenew(#m1,#m2[1],result),matrix_MT)
     end
 end
 function matrix_MT:t()
@@ -301,13 +306,13 @@ function matrix_MT:inv()
     end
     if #self == 2 then
         local invDet = 1/det
-        return mnew(
+        return main.matrix.new(
             {self[2][2]*invDet,-self[1][2]*invDet},
             {-self[2][1]*invDet,self[1][1]*invDet}
         )
     end
     --google AI don't fail me now
-    local cofactorMtr = mnew()
+    local cofactorMtr = main.matrix.new()
     for i = 1, #self do
         cofactorMtr[i] = {}
         for j = 1, #self[1] do
@@ -318,7 +323,7 @@ function matrix_MT:inv()
         end
     end
     local adj = cofactorMtr:t() --adjugate matrix
-    local inverse = mnew()
+    local inverse = main.matrix.new()
     local invDet = 1/det
     inverse = invDet*adj
     return inverse
@@ -334,3 +339,4 @@ function matrix_MT:sum()
     end
     return sum
 end
+return main
