@@ -1,7 +1,7 @@
 --linear algebra library
---remember that matrix_MT index notation is row,column so you don't break everything you big dumbo writing this comment
+--remember that matrix index notation is row,column so you don't break everything you big dumbo writing this comment
 math = require("math")
---below is all vector_MT stuff
+--below is all vector stuff
 vector_MT = {}
 vector_MT.__index = vector_MT
 function vnew(...)
@@ -127,7 +127,7 @@ function vector_MT.pow(v,exp) --dot product thing (v1*v2 applied exp times)
     end
     return setmetatable(result, vector_MT)
 end
---everything below is matrix_MT stuff
+--everything below is matrix stuff
 --row,column reminder
 --mtrx[row][column]
 matrix_MT = {}
