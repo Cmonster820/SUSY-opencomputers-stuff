@@ -265,7 +265,7 @@ function matrix_MT:det()
         return sum
     end
 end
-function matrix_MT.inv()
+function matrix_MT:inv()
     if #self ~= #self[1] then
         error("Matrix must be square to be invertible")
     end
