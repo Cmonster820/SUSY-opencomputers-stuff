@@ -151,7 +151,8 @@ local function main.matricizeRec(t) --Unsure what this actually is but it's just
 end
 function tensor_MT.__mul(t1,t2)
     if type(t1) = "number" then
-        main.simpleMulRec(t1,t2)
+        result = main.simpleMulRec(t1,t2)
+        return setmetatable(result,tensor_MT)
     end
     return setmetatable(main.opRec(t1,t2,function(x,y) return x*y end),tensor_MT)
 end
