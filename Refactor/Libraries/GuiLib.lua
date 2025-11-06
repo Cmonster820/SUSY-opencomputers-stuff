@@ -14,13 +14,13 @@ g.fill(1,1,g.maxResolution()," ") -- refresh screen
 g.setDepth(g.maxDepth())
 main = {}
 line = {
-    x0 = nil,
-    y0 = nil,
-    xf = nil,
-    yf = nil,
-    m = nil,
-    colorstart = nil,
-    colorend = nil,
+    x0 = 0,
+    y0 = 0,
+    xf = 0,
+    yf = 0,
+    m = 0,
+    colorstart = 0,
+    colorend = 0,
     coords = {}
 }
 main.basic.line = line
@@ -60,4 +60,22 @@ function line:draw()
         coordIndex = coordIndex+1
     end
     return
+end
+poly = {
+    hollow = true,
+    points = {},
+    color = 0,
+    lines = {}
+}
+main.basic.poly = poly
+function poly.new(points, color, hollow)
+    result = {}
+    result.points = points
+    result.hollow = hollow or true
+    result.color = color
+    result.lines = {}
+    local lineIndex = 1
+    for i = 1, #points-1 do
+        result.lines[lineIndex] = main.basic.line.new(points[i][1],points[i][2], points[i+1][1],points[i+1][2],color)
+    end
 end
