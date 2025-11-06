@@ -1,6 +1,5 @@
 --This file is a rewrite of the original router code because it kind of sucked
 --this will have an option to store all packets to a file, to change the location, edit the code
---this file requires the guilib library I made in "testing things"
 component = require("component")
 event = require("event")
 m = component.modem
@@ -15,7 +14,6 @@ m.open(newdeviceport)
 negotiationport = 3
 m.open(negotiationport)
 g = component.gpu
-gui = require("GuiLib")
 if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true then
     print("All ports opened successfully, proceeding with bootup")
 else
@@ -34,19 +32,13 @@ packet =
 }
 resX, resY = g.getResolution
 if filesystem.exists("/home/router") == false then
-    loadingScreen = gui.gauge:new(resX//4, (resY//2)-1, (3*resX)//4, 3, "Setup", _, "Creating Data Files-Names", _, 0, _, _, _, _, _)
     filesystem.makeDirectory("/home/router/")
     names = io.open("/home/router/names.txt", "a")
-    loadingScreen:refresh(33, "Names File Created, Creating Addresses File", _, _)
     names:close
     addresses = io.open("/home/router/addresses.txt", "a")
-    loadingScreen:refresh(67, "Addresses File Created, Creating Log File", _, _)
     addresses:close
     log = io.open("/home/router/log.txt", "a")
-    loadingScreen:refresh(100, "Log File Created, Setup Complete", _, _)
     log:close
-    g.fill(0, 0, g.getResolution(), " ")
-    LoadingScreen = nil
 end
 function negotiation(sender, port, message)
     name = message.routingData.from+"\n"
