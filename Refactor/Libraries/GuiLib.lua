@@ -65,19 +65,27 @@ poly = {
     hollow = true,
     points = {},
     color = 0,
-    lines = {}
+    lines = {},
+    touchthing = false,
+    touchfunc = nil
 }
 main.basic.poly = poly
-function poly.new(points, color, hollow)
+function poly.new(points, color, hollow, button, buttonfunc)
     result = {}
     result.points = points
     result.hollow = hollow or true
     result.color = color
+    result.touchthing = button or false
+    result.touchfunc = button and buttonfunc or nil
     result.lines = {}
     local lineIndex = 1
     for i = 1, #points-1 do
         result.lines[lineIndex] = main.basic.line.new(points[i][1],points[i][2], points[i+1][1],points[i+1][2],color)
     end
+    if not hollow then
+        main.helper.drawPoly(points,color,result.lines)
+    end
+    return setmetatable(result, poly)
 end
 local function main.helper.drawPoly(points, color, lines)
     maxY = -500 --screen scanner algorithm
