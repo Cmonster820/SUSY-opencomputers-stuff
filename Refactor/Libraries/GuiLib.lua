@@ -79,3 +79,34 @@ function poly.new(points, color, hollow)
         result.lines[lineIndex] = main.basic.line.new(points[i][1],points[i][2], points[i+1][1],points[i+1][2],color)
     end
 end
+local function main.helper.drawPoly(points, color, lines)
+    maxY = -500 --screen scanner algorithm
+    for i = 1, #points do
+        if points[i][2] > maxY then
+            maxY = points[i][2]
+        end
+    end
+    minY = 500
+    for i = 1, #points do
+        if points[i][2]<minY then
+            minY = points[i][2]
+        end
+    end
+    for i = maxY, minY do
+        dodraw = false
+        for j = 1, g.getResolution()[1] do
+            for k = 1, #lines do
+                if (lines[k].coords[1] == j) and (lines[k].coords[2] == i) then
+                    dodraw = not dodraw
+                    break
+                end
+            end
+            if dodraw then
+                oldbg = g.getBackground()
+                g.setBackground(color)
+                g.set(j,i)
+                g.setBackground(oldbg)
+            end
+        end
+    end
+end
