@@ -104,7 +104,7 @@ local function main.helper.drawPoly(points, color, lines)
             if dodraw then
                 oldbg = g.getBackground()
                 g.setBackground(color)
-                g.set(j,i)
+                g.set(j,i, " ")
                 g.setBackground(oldbg)
             end
         end
