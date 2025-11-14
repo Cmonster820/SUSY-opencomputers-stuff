@@ -83,11 +83,15 @@ function poly.new(points, color, hollow, button, buttonfunc)
         result.lines[lineIndex] = main.basic.line.new(points[i][1],points[i][2], points[i+1][1],points[i+1][2],color)
     end
     if not hollow then
-        main.helper.drawPoly(points,color,result.lines)
+        result = setmetatable(result, poly)
+        result:draw()
     end
     return setmetatable(result, poly)
 end
-local function main.helper.drawPoly(points, color, lines)
+function poly:draw()
+    points = self.points
+    color = self.color
+    lines = self.lines
     maxY = -500 --screen scanner algorithm
     for i = 1, #points do
         if points[i][2] > maxY then
@@ -189,4 +193,40 @@ function main.isinsidepoly(polylist, coords)
         return false
     end
     return poly
+end
+gauge = {
+    x1 = 0,
+    y1 = 0,
+    x2 = 0,
+    y2 = 0,
+    fillcol = 0x000000,
+    emptycol = 0x000000,
+    fillLvl = 0,
+    label = "",
+    optimalData = {
+        optimalEnabled = false,
+        optimalLvl = 0,
+        optimalCol = 0x000000,
+        optimalThresh = 0
+    },
+    internal = {
+        vertical = y2-y1>x2-x1
+    }
+}
+main.gui.gauge = gauge
+function gauge.new(x1,y1,x2,y2,fillCol,emptyCol,fillLvl,label,optimal,oplvl,opcol,opthresh)
+    result = {}
+    result.x1 = x1
+    result.x2 = x2
+    result.y1 = y1
+    result.y2 = y2
+    result.internal.vertical = y2-y1>x2-x1
+    result.fillCol = fillCol or 0x00FF00 -- #00ff00
+    result.emptyCol = emptyCol or 0xFF0000 -- #ff0000
+    result.fillLvl = fillLvl or 0
+    result.label = label or ""
+    result.optimalData.optimalEnabled = optimal or false
+    result.optimalData.optimalLvl = optimal and oplvl or 0
+    result.optimalData.optimalCol = optimal and opcol or 0x000000
+    result.optimalData.optimalThresh = optimal and opthresh or 0
 end
