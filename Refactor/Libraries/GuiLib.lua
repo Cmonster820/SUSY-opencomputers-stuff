@@ -210,7 +210,8 @@ gauge = {
         optimalThresh = 0
     },
     internal = {
-        vertical = y2-y1>x2-x1
+        vertical = y2-y1>x2-x1,
+        polyList = {}
     }
 }
 main.gui.gauge = gauge
@@ -229,4 +230,5 @@ function gauge.new(x1,y1,x2,y2,fillCol,emptyCol,fillLvl,label,optimal,oplvl,opco
     result.optimalData.optimalLvl = optimal and oplvl or 0
     result.optimalData.optimalCol = optimal and opcol or 0x000000
     result.optimalData.optimalThresh = optimal and opthresh or 0
+
 end
