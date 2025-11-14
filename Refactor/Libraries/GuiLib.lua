@@ -119,11 +119,11 @@ local function main.helper.drawPoly(points, color, lines)
     end
 end
 function main.isinsidepoly(polylist, coords)
-    --find bounds of screen
-    maxY = -500
-    minY = 500
-    maxX = -1000
-    minX = 1000
+    --find bounds on screen
+    local maxY = -500
+    local minY = 500
+    local maxX = -1000
+    local minX = 1000
     for i = 1, #polylist do
         for j = 1, #polylist[i].points do
             if polylist[i].points[2]>maxY then
@@ -143,7 +143,12 @@ function main.isinsidepoly(polylist, coords)
     if not ((coords[1]<=maxX and coords[1]>=minX) and (coords[2]<=maxY and coords[2]>=minY)) then
         return false
     end
+    --find which poly
+    local poly = 0
     for i = 1, #polylist do
+        if poly!=0 then
+            break
+        end
         maxY = -500
         minY = 500
         maxX = -1000
@@ -162,8 +167,16 @@ function main.isinsidepoly(polylist, coords)
                 minX = polylist[i].points[1]
             end
             if (coords[1]<=maxX and coords[1]>=minX) and (coords[2]<=maxY and coords[2]>=minY) then
-                return i
+                poly = i
+                break
             end
         end
+    end
+    if poly == 0 then
+        return false
+    end
+    local raycount = 0
+    for i = coords[1], maxX do
+        for j = 1, polylist[i].lines.
     end
 end
