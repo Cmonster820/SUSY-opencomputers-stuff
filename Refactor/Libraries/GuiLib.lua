@@ -230,7 +230,16 @@ function gauge.new(x1,y1,x2,y2,fillCol,emptyCol,fillLvl,label,optimal,oplvl,opco
     result.optimalData.optimalEnabled = optimal or false
     result.optimalData.optimalLvl = optimal and oplvl or 0
     result.optimalData.optimalCol = optimal and opcol or 0x000000
-    result.optimalData.optimalThresh = optimal and opthresh or 0
+    result.optimalData.optimalThresh = optimal and opthresh or 0 -- I'm not really sure why I added this
     local height = y2-y1
     local width = x2-x1
+    if not result.internal.vertical then
+        result.internal.empty = main.basic.poly.new({{x1,y1},{x1,y2},{x2,y1},{x2,y2}},result.emptyCol,false,false,_)
+        local fillx2 = (width*(fillLvl//100)^(-1))+x1
+        result.internal.fillbar = main.basic.poly.new({{x1,y1},{x1,y2},{fillx2,y1},{fillx2,y2}},result.fillCol,false,false,_)
+        if result.optimalData.optimalEnabled then
+            
+        end
+    else
+    end
 end
