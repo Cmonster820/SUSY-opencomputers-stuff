@@ -235,11 +235,21 @@ function gauge.new(x1,y1,x2,y2,fillCol,emptyCol,fillLvl,label,optimal,oplvl,opco
     local width = x2-x1
     if not result.internal.vertical then
         result.internal.empty = main.basic.poly.new({{x1,y1},{x1,y2},{x2,y1},{x2,y2}},result.emptyCol,false,false,_)
-        local fillx2 = (width*(fillLvl//100)^(-1))+x1
+        local fillx2 = (width*((fillLvl//100)^(-1)))+x1
         result.internal.fillbar = main.basic.poly.new({{x1,y1},{x1,y2},{fillx2,y1},{fillx2,y2}},result.fillCol,false,false,_)
         if result.optimalData.optimalEnabled then
-            
+            local optString = "|"
+            for i = 1, height do
+                optString = optString+"|"
+            end
+            --identify x pos
+            local optX = math.floor((width*((result.optimalData.optimalLvl//100)^(-1)))+0.5)+x1
+            local oldfg = g.getForeground()
+            g.setForeground(opcol)
+            g.set(optX,y1,optString,true)
+            g.setForeground(oldfg)
         end
+        return setmetatable(result, main.gui.gauge)
     else
     end
 end
