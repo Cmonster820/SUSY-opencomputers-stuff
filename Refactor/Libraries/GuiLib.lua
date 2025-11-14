@@ -177,6 +177,14 @@ function main.isinsidepoly(polylist, coords)
     end
     local raycount = 0
     for i = coords[1], maxX do
-        for j = 1, polylist[i].lines.
+        for j = 1, #polylist[poly].lines.coords do
+            if i==polylist[poly].lines.coords[1] then
+                raycount = raycount+1
+            end
+        end
     end
+    if raycount%2==0 then
+        return false
+    end
+    return poly
 end
