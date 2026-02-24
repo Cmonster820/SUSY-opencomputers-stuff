@@ -29,62 +29,55 @@ packet =
 resX, resY = g.getResolution
 if filesystem.exists("/home/router") == false then
     filesystem.makeDirectory("/home/router/")
-    names = io.open("/home/router/names.txt", "a")
-    names:close
-    addresses = io.open("/home/router/addresses.txt", "a")
-    addresses:close
+    data = io.open("/home/router/data.csv", "a")
+    data:close
     log = io.open("/home/router/log.txt", "a")
     log:close
+    routingTableCache = {}
+else
+    routingTableCache = {}
+    for line in io.lines("/home/router/data.csv") do
+        commaIndex = line:find(",")
+        routingTableCache[line:sub(1,commaIndex-1)] = line:sub(commaIndex+1)
+    end
 end
 function negotiation(sender, port, message)
-    name = message.routingData.from.."\n"
-    address = message.routingData.fromaddr.."\n"
-    log = io.open("/home/router/log.txt", "a")
+    local name = message.routingData.from
+    local address = message.routingData.fromaddr
+    local log = io.open("/home/router/log.txt", "a")
     log:write(serialization.serialize(message).."\n\n\n")
-    for line in io.lines("/home/router/names.txt") do
-        if line == name then
-            m.send(address:gsub("\n", ""),port,"Name Taken")
-            log:write("Message sent to "..message.routingData.fromaddr.."\n, \"Name Taken\"\n\n\n")
-            log:close()
-            return nil
-        end
+    if routingTableCache[name]~=nil then
+        m.send(address,port,"Name Taken")
+        log:write("Message sent to "..message.routingData.fromaddr.."\n, \"Name Taken\"\n\n\n")
+        log:close()
+        return nil
     end
-    names = io.open("/home/router/names.txt","a")
-    addresses = io.open("/home/router/addresses.txt", "a")
-    names:write(name)
-    addresses:write(address)
-    names:close()
-    addresses:close()
-    m.send(address:gsub("\n", ""), port, "Negotiation Successful")
+    local data = io.open("/home/router/data.csv","a")
+    data:write(name..","..address)
+    routingTableCache[name] = address
+    data:close()
+    m.send(address, port, "Negotiation Successful")
     log:write("Message sent to "..message.routingData.fromaddr.."\n, \"Negotiation Successful\"\n\n\n")
     log:close()
-    name = nil
-    address = nil
 end
 function processNewName(from ,port, message)
-    log = io.open("/home/router/log.txt", "a")
+    local log = io.open("/home/router/log.txt", "a")
     log:write(serialization.serialize(message).."\n\n\n")
-    for line in io.lines("/home/router/names.txt") do
-        if message.routingData.from.."\n" == line then
-            m.send(message.routingData.fromaddr, port, "Name Taken")
-            log:write("Message sent to "..message.routingData.fromaddr.."\n, \"Name Taken\"\n\n\n")
-            log:close()
-            return nil
-        end
+    local name = message.routingData.from
+    local address = message.routingData.fromaddr
+    if routingTableCache[name] ~= nil then
+        m.send(message.routingData.fromaddr, port, "Name Taken")
+        log:write("Message sent to "..message.routingData.fromaddr.."\n, \"Name Taken\"\n\n\n")
+        log:close()
+        return nil
     end
-    name = message.routingData.from.."\n"
-    address = message.routingData.fromaddr.."\n"
-    names = io.open("/home/router/names.txt","a")
-    addresses = io.open("/home/router/addresses.txt", "a")
-    names:write(name)
-    addresses:write(address)
+    local data = io.open("/home/router/data.csv","a")
+    data:write(name..","..address)
+    routingTableCache[name] = address
     m.send(message.routingData.fromaddr, port, "Negotiation Successful")
     log:write("Message sent to "..message.routingData.fromaddr.."\n, \"Negotiation Successful\"\n\n\n")
-    names:close()
-    addresses:close()
+    data:close()
     log:close()
-    name = nil
-    address = nil
 end
 function processRouterCommands(message)
     if message.Data == "RequestPing" then
