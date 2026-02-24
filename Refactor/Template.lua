@@ -44,7 +44,7 @@ else
     local name = namefile:read()
     namefile:close()
 end
-function negotiate()
+local function negotiate()
     local data = io.open("/home/data/data.csv","a") 
     local namefile = io.open("/home/data/name.txt","a")
     local log = io.open("/home/data/log.txt", "a")

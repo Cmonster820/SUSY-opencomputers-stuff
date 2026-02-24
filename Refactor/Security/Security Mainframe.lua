@@ -56,7 +56,7 @@ local encryptedpacket =
     },
     data = nil
 }
-function negotiate()
+local function negotiate()
     local data = io.open("/home/data/data.csv","a") 
     local namefile = io.open("/home/data/name.txt","a")
     local log = io.open("/home/data/log.txt", "a")
@@ -80,7 +80,7 @@ if dataCache["router"] == nil then
     negotiate()
 end
 
-function InitiateHandShake(destination)
+local function InitiateHandShake(destination)
     packet.routingData.destination = destination
     packet.data = "prepare"
     m.send(router, mainport, serialization.serialize(packet))
@@ -91,7 +91,7 @@ function InitiateHandShake(destination)
     local rPublic = message.data
     return rPublic
 end
-function EncryptAndSendMessage(destination,data) 
+local function EncryptAndSendMessage(destination,data) 
     local rPublic = InitiateHandShake(destination)
     rPublic = d.deserializeKey(rPublic,"ec-public")
     local encryptionKey = d.md5(d.ecdh(sPrivate, rPublic))
@@ -106,7 +106,7 @@ function EncryptAndSendMessage(destination,data)
     packet.data.data = nil
     packet.routingData.destination = nil
 end
-function ReceiveAndDecrypt()
+local function ReceiveAndDecrypt()
     local _, receiver, from, port, distance, message = event.pull("modem_message")
     local message = serialization.unserialize(message)
     local rPublic = d.deserializeKey(message.data.header.sPublic,"ec-public")
@@ -116,7 +116,7 @@ function ReceiveAndDecrypt()
     local from = message.routingData.from
     ProcessMessage(from, data)
 end
-function RespondToHandshake(receiver, from, port, distance, message)
+local function RespondToHandshake(receiver, from, port, distance, message)
     packet.routingData.destination = message.routingData.from
     packet.data = sPublic.serialize()
     m.send(from, port, serialization.serialize(packet))
@@ -125,7 +125,7 @@ function RespondToHandshake(receiver, from, port, distance, message)
     ReceiveAndDecrypt()
 end
 
-function mainfunction(receiveraddr, sender, port, distance, message)
+local function mainfunction(receiveraddr, sender, port, distance, message)
     message = serialization.unserialize(message)
     if message.data == "prepare" then
         RespondToHandshake(receiver,from,port,distance,message)
