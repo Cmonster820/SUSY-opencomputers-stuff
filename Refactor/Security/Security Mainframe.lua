@@ -25,6 +25,15 @@ packet =
     },
     data = nil
 }
+encryptedpacket = 
+{
+    header =
+    {
+        iv = nil,
+        sPublic = nil
+    },
+    data = nil
+}
 resX, resY = g.getResolution
 if filesystem.exists("/home/data") == false then
     filesystem.makeDirectory("/home/data/")
