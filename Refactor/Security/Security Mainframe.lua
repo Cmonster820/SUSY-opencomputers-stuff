@@ -109,9 +109,9 @@ end
 function ReceiveAndDecrypt()
     local _, receiver, from, port, distance, message = event.pull("modem_message")
     local message = serialization.unserialize(message)
-    local rPublic = d.deserializeKey(message.data.data.header.sPublic,"ec-public")
+    local rPublic = d.deserializeKey(message.data.header.sPublic,"ec-public")
     local decryptionKey = d.md5(d.ecdh(sPrivate, rPublic))
-    local data = d.decrypt(message.data.data.data, decryptionKey, message.data.data.header.iv)
+    local data = d.decrypt(message.data.data, decryptionKey, message.data.header.iv)
     local data = serialization.unserialize(data)
     local from = message.routingData.from
     ProcessMessage(from, data)
@@ -127,7 +127,9 @@ end
 
 function mainfunction(receiveraddr, sender, port, distance, message)
     message = serialization.unserialize(message)
-    
+    if message.data == "prepare" then
+        RespondToHandshake(receiver,from,port,distance,message)
+    end
 end
 event.listen("modem_message", mainfunction)
 event.pull("interrupted")
