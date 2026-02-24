@@ -81,69 +81,18 @@ function processNewName(from ,port, message)
 end
 function processRouterCommands(message)
     if message.Data == "RequestPing" then
-        for line in io.lines("/home/router/names.txt") do
-        currentLine += 1
-        line = line:gsub("\n","")
-        othercurline = 0
-        for otherline in io.lines("/home/router/addresses.txt") do
-            otherline = otherline:gsub("\n","")
-            othercurline += 1
-            if othercurline == currentLine then
-                break
-            end
-        end
-        othercurline = nil
-        temptable[line] = otherline
-        m.send(message.routingData.fromaddr, mainport, temptable[ping])
-        temptable = nil
+        m.send(message.routingData.fromaddr, mainport, routingTableCache["ping"])
     end
 end
 function relayMessage(message)
-    local temptable = {}
-    currentLine = 0
-    for line in io.lines("/home/router/names.txt") do
-        currentLine += 1
-        line = line:gsub("\n","")
-        othercurline = 0
-        for otherline in io.lines("/home/router/addresses.txt") do
-            otherline = otherline:gsub("\n","")
-            othercurline += 1
-            if othercurline == currentLine then
-                break
-            end
-        end
-        othercurline = nil
-        temptable[line] = otherline
-    end
     log = io.open("/home/router/log.txt", "a")
     log:write(serialization.serialize(message).."\n\n\n")
     log:close()
-    m.send(temptable[message.routingData.destination], mainport, message)
+    m.send(routingTableCache[message.routingData.destination], mainport, message)
     return "Message relayed successfully"
 end
 function verifyMessage(message, sender)
-    local temptable = {}
-    currentLine = 0
-    for line in io.lines("/home/router/names.txt") do
-        currentLine += 1
-        line = line:gsub("\n","")
-        othercurline = 0
-        for otherline in io.lines("/home/router/addresses.txt") do
-            otherline = otherline:gsub("\n","")
-            othercurline += 1
-            if othercurline == currentLine then
-                break
-            end
-        end
-        othercurline = nil
-        temptable[line] = otherline 
-    end
-    if temptable[message.routingData.from] == message.routingData.fromaddr then
-        return true
-    else
-        return false
-    end
-    currentLine = nil
+    return routingTableCache[message.routingData.from] == message.routingData.fromaddr
 end
 function routing(receiveraddr, sender, port, distance, message)
     message = serialization.deserialize(message)
@@ -163,7 +112,7 @@ function routing(receiveraddr, sender, port, distance, message)
             processRouterCommands(message)
             return nil
         end
-    else print("Message invalid") return nil end
+    else print("Message invalid") local log = io.open("/home/router/log.txt","a") log:write("Received invalid message from "..message.routingData.fromaddr.."\n\n\n") log:close() return nil end
 end
 event.listen("modem_message", routing)
 event.pull("interrupted")
