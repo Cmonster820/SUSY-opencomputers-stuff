@@ -40,7 +40,8 @@ local resX, resY = g.getResolution
 if filesystem.exists("/home/data") == false then
     filesystem.makeDirectory("/home/data/")
     local ownName = io.open("/home/data/name.txt","a")
-    ownName:wrie("mainframe")
+    ownName:write("mainframe")
+    name = "mainframe"
     local data = io.open("/home/data/data.csv", "a")
     data:close()
     local log = io.open("/home/data/log.txt", "a")
@@ -53,6 +54,7 @@ else
         local commaIndex = line:find(",")
         dataCache[line:sub(1,commaIndex-1)] = line:sub(commaIndex+1)
     end
+    local name = "mainframe"
 end
 function negotiate()
     local data = io.open("/home/data/data.csv","a") 
