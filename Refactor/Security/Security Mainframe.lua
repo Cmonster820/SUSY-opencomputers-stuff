@@ -106,7 +106,24 @@ function EncryptAndSendMessage(destination,data)
     packet.data.data = nil
     packet.routingData.destination = nil
 end
-
+function ReceiveAndDecrypt()
+    local _, receiver, from, port, distance, message = event.pull("modem_message")
+    local message = serialization.unserialize(message)
+    local rPublic = d.deserializeKey(message.data.data.header.sPublic,"ec-public")
+    local decryptionKey = d.md5(d.ecdh(sPrivate, rPublic))
+    local data = d.decrypt(message.data.data.data, decryptionKey, message.data.data.header.iv)
+    local data = serialization.unserialize(data)
+    local from = message.routingData.from
+    ProcessMessage(from, data)
+end
+function RespondToHandshake(receiver, from, port, distance, message)
+    packet.routingData.destination = message.routingData.from
+    packet.data = sPublic.serialize()
+    m.send(from, port, serialization.serialize(packet))
+    packet.routingData.destination = nil
+    packet.data = nil
+    ReceiveAndDecrypt()
+end
 
 function mainfunction(receiveraddr, sender, port, distance, message) --rename if needed
 end
