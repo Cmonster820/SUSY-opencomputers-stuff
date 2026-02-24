@@ -36,19 +36,21 @@ local encryptedpacket =
     },
     data = nil
 }
-resX, resY = g.getResolution
+local resX, resY = g.getResolution
 if filesystem.exists("/home/data") == false then
     filesystem.makeDirectory("/home/data/")
-    ownName = io.open("/home/data/name.txt","a")
-    data = io.open("/home/data/data.csv", "a")
+    local ownName = io.open("/home/data/name.txt","a")
+    ownName:wrie("mainframe")
+    local data = io.open("/home/data/data.csv", "a")
     data:close()
-    log = io.open("/home/data/log.txt", "a")
+    local log = io.open("/home/data/log.txt", "a")
     log:close()
-    dataCache = {}
+    ownName:close()
+    local dataCache = {}
 else
-    dataCache = {}
+    local dataCache = {}
     for line in io.lines("/home/data/data.csv") do
-        commaIndex = line:find(",")
+        local commaIndex = line:find(",")
         dataCache[line:sub(1,commaIndex-1)] = line:sub(commaIndex+1)
     end
 end
