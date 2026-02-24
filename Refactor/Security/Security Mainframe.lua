@@ -1,0 +1,2 @@
+--new security mainframe, likely will give up before finishing because this is just a project to
+--stop me from getting bored before I leave and go home and can do the ai agent part of boot.dev
