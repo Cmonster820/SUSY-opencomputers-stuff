@@ -12,10 +12,7 @@ newdeviceport = 2
 m.open(newdeviceport)
 negotiationport = 3
 m.open(negotiationport)
-sPublic = nil
-sPrivate = nil
-rPublic = nil
-rPrivate = nil
+sPublic, sPrivate = d.generateKeyPair(384)
 d = component.data
 g = component.gpu
 assert((m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true,"Error detected, halting operation")
@@ -79,6 +76,32 @@ if dataCache["router"] == nil then
     negotiate()
 end
 
+function InitiateHandShake(destination)
+    packet.routingData.destination = destination
+    packet.data = "prepare"
+    m.send(router, mainport, serialization.serialize(packet))
+    local _, receiver, from, port, dist, message = event.pull("modem_message")
+    packet.data = nil
+    packet.routingData.destination = nil
+    local message = serialization.unserialize(message)
+    local rPublic = message.data
+    return rPublic
+end
+function EncryptAndSendMessage(destination,data) 
+    local rPublic = InitiateHandShake(destination)
+    rPublic = d.deserializeKey(rPublic,"ec-public")
+    local encryptionKey = d.md5(d.ecdh(sPrivate, rPublic))
+    packet.data.header.iv = d.random(16)
+    packet.data.header.sPublic = sPublic.serialize()
+    packet.data.data = data
+    packet.data = d.encrypt(serialization.serialize(packet.data), encryptionKey, packet.header.iv)
+    packet.routingData.destination = destination
+    m.send(router, mainport, serialization.serialize(packet))
+    packet.data.header.iv = nil
+    packet.data.header.sPublic = nil
+    packet.data.data = nil
+    packet.routingData.destination = nil
+end
 
 
 function mainfunction(receiveraddr, sender, port, distance, message) --rename if needed
