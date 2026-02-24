@@ -12,6 +12,11 @@ newdeviceport = 2
 m.open(newdeviceport)
 negotiationport = 3
 m.open(negotiationport)
+sPublic = nil
+sPrivate = nil
+rPublic = nil
+rPrivate = nil
+d = component.data
 g = component.gpu
 assert((m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true,"Error detected, halting operation")
 print("All ports opened successfully, proceeding with bootup")
@@ -72,6 +77,9 @@ end
 if dataCache[router] == nil then
     negotiate()
 end
+
+
+
 function mainfunction(receiveraddr, sender, port, distance, message) --rename if needed
 end
 event.listen("modem_message", mainfunction)
