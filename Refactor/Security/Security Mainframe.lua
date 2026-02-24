@@ -47,6 +47,7 @@ if filesystem.exists("/home/data") == false then
     data:close()
     log = io.open("/home/data/log.txt", "a")
     log:close()
+    dataCache = {}
 else
     dataCache = {}
     for line in io.lines("/home/data/data.csv") do
@@ -74,7 +75,7 @@ function negotiate()
         os.exit()
     end
 end
-if dataCache[router] == nil then
+if dataCache["router"] == nil then
     negotiate()
 end
 
