@@ -100,7 +100,7 @@ function EncryptAndSendMessage(destination,data)
     packet.data.data = data
     packet.data = d.encrypt(serialization.serialize(packet.data), encryptionKey, packet.header.iv)
     packet.routingData.destination = destination
-    m.send(router, mainport, serialization.serialize(packet))
+    m.send(dataCache["router"], mainport, serialization.serialize(packet))
     packet.data.header.iv = nil
     packet.data.header.sPublic = nil
     packet.data.data = nil
