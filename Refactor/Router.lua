@@ -6,7 +6,6 @@ m = component.modem
 filesystem = require("filesystem")
 serialization = require("serialization")
 io = require("io")
-words = {}
 mainport = 1
 m.open(mainport)
 newdeviceport = 2
