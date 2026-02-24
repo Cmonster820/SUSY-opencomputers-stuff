@@ -14,7 +14,7 @@ m.open(newdeviceport)
 negotiationport = 3
 m.open(negotiationport)
 g = component.gpu
-if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true then
+if (m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))==true then
     print("All ports opened successfully, proceeding with bootup")
 else
     io.stderr:write("Error detected, halting operation")
