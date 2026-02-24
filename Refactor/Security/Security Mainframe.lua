@@ -17,25 +17,6 @@ local d = component.data
 local g = component.gpu
 assert((m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true,"Error detected, halting operation")
 print("All ports opened successfully, proceeding with bootup")
-local packet = 
-{
-    routingData = 
-    {
-        destination = nil,
-        from = nil,
-        fromaddr = component.modem.address
-    },
-    data = nil
-}
-local encryptedpacket = 
-{
-    header =
-    {
-        iv = nil,
-        sPublic = nil
-    },
-    data = nil
-}
 local resX, resY = g.getResolution
 if filesystem.exists("/home/data") == false then
     filesystem.makeDirectory("/home/data/")
@@ -56,6 +37,25 @@ else
     end
     local name = "mainframe"
 end
+local packet = 
+{
+    routingData = 
+    {
+        destination = nil,
+        from = name,
+        fromaddr = component.modem.address
+    },
+    data = nil
+}
+local encryptedpacket = 
+{
+    header =
+    {
+        iv = nil,
+        sPublic = nil
+    },
+    data = nil
+}
 function negotiate()
     local data = io.open("/home/data/data.csv","a") 
     local namefile = io.open("/home/data/name.txt","a")
@@ -125,7 +125,9 @@ function RespondToHandshake(receiver, from, port, distance, message)
     ReceiveAndDecrypt()
 end
 
-function mainfunction(receiveraddr, sender, port, distance, message) --rename if needed
+function mainfunction(receiveraddr, sender, port, distance, message)
+    message = serialization.unserialize(message)
+    
 end
 event.listen("modem_message", mainfunction)
 event.pull("interrupted")
