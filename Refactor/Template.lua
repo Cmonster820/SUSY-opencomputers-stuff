@@ -1,17 +1,17 @@
 --This file is the template for all devices, it contains the negotiation script required to automatically join a network
-component = require("component")
-event = require("event")
-m = component.modem
-filesystem = require("filesystem")
-serialization = require("serialization")
-io = require("io")
-mainport = 1
+local component = require("component")
+local event = require("event")
+local m = component.modem
+local filesystem = require("filesystem")
+local serialization = require("serialization")
+local io = require("io")
+local mainport = 1
 m.open(mainport)
-newdeviceport = 2
+local newdeviceport = 2
 m.open(newdeviceport)
-negotiationport = 3
+local negotiationport = 3
 m.open(negotiationport)
-g = component.gpu
+local g = component.gpu
 assert((m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true,"Error detected, halting operation")
 print("All ports opened successfully, proceeding with bootup")
 packet = 

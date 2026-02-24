@@ -1,23 +1,23 @@
 --new security mainframe, likely will give up before finishing because this is just a project to
 --stop me from getting bored before I leave and go home and can do the ai agent part of boot.dev
-component = require("component")
-event = require("event")
-m = component.modem
-filesystem = require("filesystem")
-serialization = require("serialization")
-io = require("io")
-mainport = 1
+local component = require("component")
+local event = require("event")
+local m = component.modem
+local filesystem = require("filesystem")
+local serialization = require("serialization")
+local io = require("io")
+local mainport = 1
 m.open(mainport)
-newdeviceport = 2
+local newdeviceport = 2
 m.open(newdeviceport)
-negotiationport = 3
+local negotiationport = 3
 m.open(negotiationport)
-sPublic, sPrivate = d.generateKeyPair(384)
-d = component.data
-g = component.gpu
+local sPublic, sPrivate = d.generateKeyPair(384)
+local d = component.data
+local g = component.gpu
 assert((m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))=true,"Error detected, halting operation")
 print("All ports opened successfully, proceeding with bootup")
-packet = 
+local packet = 
 {
     routingData = 
     {
@@ -27,7 +27,7 @@ packet =
     },
     data = nil
 }
-encryptedpacket = 
+local encryptedpacket = 
 {
     header =
     {
