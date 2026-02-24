@@ -16,7 +16,7 @@ local g = component.gpu
 assert((m.isOpen(mainport) && m.isOpen(newdeviceport) && m.isOpen(negotiationport))==true,"Error detected, halting operation")
 print("All ports opened successfully, proceeding with bootup")
 
-packet = 
+local packet = 
 {
     routingData = 
     {
@@ -26,7 +26,7 @@ packet =
     },
     data = nil
 }
-resX, resY = g.getResolution
+local resX, resY = g.getResolution
 if filesystem.exists("/home/router") == false then
     filesystem.makeDirectory("/home/router/")
     data = io.open("/home/router/data.csv", "a")
