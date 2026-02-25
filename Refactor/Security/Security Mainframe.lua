@@ -64,9 +64,10 @@ local function negotiate()
     m.broadcast(newdeviceport, serialization.serialize(packet))
     log:write("Message broadcasted:\n"+serialization.serialize(packet)+"\n\n\n")
     local receiveraddr, sender, port, distance, message = event.pull("modem_message")
-    log:write("Message received from "+sender+" on port "+port+" message reads:\n"+serialization.deserialize(message)+"\n\n\n")
+    log:write("Message received from "+sender+" on port "+port+" message reads:\n"+serialization.unserialize(message)+"\n\n\n")
+    message = serialization.unserialize(message)
     data:write("router",sender)
-    if message == "Negotiation Successful" then
+    if message.data == "Negotiation Successful" then
         print("Negotiation Successful")
         log:close()
         data:close()
